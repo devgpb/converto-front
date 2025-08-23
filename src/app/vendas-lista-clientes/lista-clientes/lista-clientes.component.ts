@@ -5,13 +5,14 @@ import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { ClientesService, Cliente, ClientesResponse } from '../../services/clientes.service';
 import { AuthService } from '../../services/auth.service';
 import { ClienteCardComponent } from './cliente-card.component';
+import { ClienteModalComponent } from './cliente-modal.component';
 
 @Component({
   selector: 'app-lista-clientes',
   templateUrl: './lista-clientes.component.html',
   styleUrls: ['./lista-clientes.component.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, ClienteCardComponent]
+  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, ClienteCardComponent, ClienteModalComponent]
 })
 export class ListaClientesComponent implements OnInit {
   clientes: Cliente[] = [];
@@ -29,6 +30,9 @@ export class ListaClientesComponent implements OnInit {
   cidadesUnicas: string[] = [];
   meusClientes = new FormControl(false);
   tenantId: string | null;
+
+  clienteSelecionado: Cliente | null = null;
+  modalAberto = false;
 
   constructor(
     private clientesService: ClientesService,
@@ -117,6 +121,20 @@ export class ListaClientesComponent implements OnInit {
     this.cidadeFilter = 'todas';
     this.meusClientes.setValue(false);
     this.page = 1;
+    this.fetch();
+  }
+
+  openClienteModal(cliente: Cliente): void {
+    this.clienteSelecionado = cliente;
+    this.modalAberto = true;
+  }
+
+  fecharModal(): void {
+    this.modalAberto = false;
+    this.clienteSelecionado = null;
+  }
+
+  salvarCliente(): void {
     this.fetch();
   }
 
