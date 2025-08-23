@@ -1,0 +1,90 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="close()" class="cliente-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Cliente #{{ formData?.id_cliente }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="close()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding" *ngIf="formData">
+      <div class="info-box">
+        <ion-text color="medium">Cadastrado por:</ion-text>
+        <h2>{{ formData.responsavel?.nomeCompleto || '-' }}</h2>
+      </div>
+
+      <ion-list lines="full">
+        <ion-item>
+          <ion-label position="stacked">Nome *</ion-label>
+          <ion-input [(ngModel)]="formData.nome" [class.ion-invalid]="errors['nome']"></ion-input>
+          <ion-note slot="error" color="danger" *ngIf="errors['nome']">{{ errors['nome'] }}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Celular *</ion-label>
+          <ion-input [(ngModel)]="formData.celular" [class.ion-invalid]="errors['celular']" type="tel"></ion-input>
+          <ion-note slot="error" color="danger" *ngIf="errors['celular']">{{ errors['celular'] }}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Cidade</ion-label>
+          <ion-select [(ngModel)]="formData.cidade" interface="popover" placeholder="Selecionar ou digitar">
+            <ion-select-option *ngFor="let c of cidades" [value]="c">{{ c }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Status</ion-label>
+          <ion-select [(ngModel)]="formData.status" interface="popover" placeholder="Selecionar ou digitar">
+            <ion-select-option *ngFor="let s of statuses" [value]="s">{{ s }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Campanha</ion-label>
+          <ion-select [(ngModel)]="formData.campanha" interface="popover" placeholder="Selecionar ou digitar">
+            <ion-select-option *ngFor="let c of campanhas" [value]="c">{{ c }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Indicação</ion-label>
+          <ion-input [(ngModel)]="formData.indicacao"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Observações</ion-label>
+          <ion-textarea rows="3" [(ngModel)]="formData.observacao"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <ion-item lines="full">
+        <ion-label>Data de Criação</ion-label>
+        <ion-note slot="end">{{ formData.created_at | date: 'dd/MM/yyyy HH:mm' }}</ion-note>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>Última Atualização</ion-label>
+        <ion-note slot="end">{{ formData.updated_at | date: 'dd/MM/yyyy HH:mm' }}</ion-note>
+      </ion-item>
+
+      <div class="dias" *ngIf="formData.created_at">
+        Criado há {{ calcularDias(formData.created_at) }} {{ calcularDias(formData.created_at) === 1 ? 'dia' : 'dias' }}
+        <ion-badge [color]="getBadgeColor(calcularDias(formData.created_at))" class="ion-margin-start">
+          {{ getBadgeText(calcularDias(formData.created_at)) }}
+        </ion-badge>
+      </div>
+    </ion-content>
+
+    <ion-footer class="ion-padding">
+      <ion-button expand="block" (click)="save()" [disabled]="isLoading">
+        <ion-spinner slot="start" *ngIf="isLoading" name="crescent"></ion-spinner>
+        Salvar
+      </ion-button>
+      <ion-button expand="block" fill="clear" (click)="close()">Cancelar</ion-button>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
