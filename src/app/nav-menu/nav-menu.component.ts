@@ -41,7 +41,6 @@ export class NavMenuComponent {
       title: 'Administração',
       items: [
         { icon: 'people', title: 'Usuários', href: '/ref' },
-        { icon: 'settings', title: 'Minha Conta', href: '/conta' },
         { icon: 'business', title: 'Setores', href: '/setores' },
         { icon: 'person-add', title: 'Novo Usuário', href: '/usuarios/novo' },
       ],

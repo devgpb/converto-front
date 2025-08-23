@@ -34,11 +34,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'conta',
-    loadComponent: () => import('./conta/conta.page').then(m => m.ContaPage),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'setores',
     loadComponent: () => import('./setores/setores.page').then(m => m.SetoresPage),
     canActivate: [AuthGuard]
