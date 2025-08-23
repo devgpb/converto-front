@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ export class LoginPage {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  theme = inject(ThemeService);
 
   constructor() {
     this.form = this.fb.group({
@@ -30,5 +32,9 @@ export class LoginPage {
     this.auth.login(email, password).subscribe({
       next: () => this.router.navigate(['/vendas/dashboard']),
     });
+  }
+
+  toggleDark(event: CustomEvent): void {
+    this.theme.setDarkMode((event as any).detail.checked);
   }
 }
