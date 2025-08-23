@@ -12,7 +12,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<{ token: string }> {
     return this.http
-      .post<{ token: string }>(`${environment.apiUrl}/api/auth/login`, {
+      .post<{ token: string }>(`${environment.apiUrl}/auth/login`, {
         email,
         password,
       })

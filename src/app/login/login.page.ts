@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
+  standalone: false,
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
