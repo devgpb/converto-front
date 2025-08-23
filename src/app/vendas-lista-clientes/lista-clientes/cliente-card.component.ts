@@ -58,19 +58,19 @@ export class ClienteCardComponent implements OnInit, OnChanges {
     event.preventDefault();
     event.stopPropagation();
     const payload: Partial<Cliente> = {
-      idCliente: this.cliente.idCliente,
+      id_cliente: this.cliente.id_cliente,
       ultimoContato: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     this.clientesService.postCliente(payload).subscribe(() => {
       this.cliente.ultimoContato = payload.ultimoContato;
-      this.cliente.updatedAt = payload.updatedAt;
+      this.cliente.updated_at = payload.updated_at;
       this.updateDias();
     });
   }
 
   private updateDias(): void {
-    const referencia = this.cliente.updatedAt || this.cliente.createdAt || new Date().toISOString();
+    const referencia = this.cliente.updated_at || this.cliente.created_at || new Date().toISOString();
     this.dias = this.calcularDias(referencia);
     this.diasColor = this.getCorDias(this.dias);
   }

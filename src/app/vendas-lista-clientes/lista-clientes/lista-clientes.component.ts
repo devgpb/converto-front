@@ -121,7 +121,7 @@ export class ListaClientesComponent implements OnInit {
   }
 
   trackById(index: number, cliente: Cliente): number {
-    return cliente.idCliente;
+    return cliente.id_cliente;
   }
 
   get startIndex(): number {

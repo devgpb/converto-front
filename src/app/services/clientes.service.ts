@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Cliente {
-  idCliente: number;
+  id_cliente: number;
   nome: string;
   celular: string | null;
   cidade?: string | null;
@@ -13,8 +13,8 @@ export interface Cliente {
   campanha?: string | null;
   observacao?: string | null;
   tenant_id?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
   responsavel?: { nomeCompleto: string };
   ultimoContato?: string;
 }
