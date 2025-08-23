@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Cliente {
-  nome: string;
-  celular: string;
+  nome: string ;
+  celular: string | null;
   cidade?: string | null;
   status?: string | null;
   indicacao?: string | null;

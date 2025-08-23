@@ -26,6 +26,6 @@
 
   <ion-item lines="none">
     <ion-label>Modo noturno</ion-label>
-    <ion-toggle [checked]="theme.isDarkMode()" (ionChange)="toggleDark($event)"></ion-toggle>
+    <ion-toggle [checked]="theme.isDarkMode()" (ionChange)="theme.toggle()"></ion-toggle>
   </ion-item>
 </ion-content>

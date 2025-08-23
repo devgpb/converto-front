@@ -3,13 +3,16 @@ import { IonicModule, AlertController } from '@ionic/angular';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ClientesService } from '../services/clientes.service';
 import { AuthService } from '../services/auth.service';
+import { IonSelect } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { SharedDirectivesModule } from 'src/shared/shared-directives.module';
 
 @Component({
   selector: 'app-vendas-leads',
   templateUrl: './vendas-leads.page.html',
   styleUrls: ['./vendas-leads.page.scss'],
   standalone: true,
-  imports: [IonicModule, ReactiveFormsModule],
+  imports: [IonicModule, ReactiveFormsModule, CommonModule, SharedDirectivesModule],
 })
 export class VendasLeadsPage implements OnInit {
   private fb = inject(FormBuilder);
@@ -36,6 +39,10 @@ export class VendasLeadsPage implements OnInit {
     this.fetchFiltros();
   }
 
+  private waitOverlayClosed() {
+    return new Promise<void>(resolve => setTimeout(resolve, 0));
+  }
+
   get f() {
     return this.clienteForm.controls;
   }
@@ -46,8 +53,15 @@ export class VendasLeadsPage implements OnInit {
       return;
     }
     const tenantId = this.auth.getTenantId();
+    const formValue = this.clienteForm.value;
     const cliente = {
-      ...this.clienteForm.value,
+      nome: formValue.nome ?? '',
+      celular: formValue.celular ?? '',
+      cidade: formValue.cidade ?? '',
+      status: formValue.status ?? '',
+      indicacao: formValue.indicacao ?? '',
+      campanha: formValue.campanha ?? '',
+      observacao: formValue.observacao ?? '',
       tenant_id: tenantId,
     };
     this.clientesService.postCliente(cliente).subscribe({
@@ -79,12 +93,17 @@ export class VendasLeadsPage implements OnInit {
         this.cidades = data.cidades;
         this.statusList = data.status;
       },
-      error: () => {},
+      error: () => { },
     });
   }
 
-  async handleCidadeChange(ev: any) {
-    if (ev.detail.value === '__add__') {
+  async handleCidadeChange(ev: any, selectRef: IonSelect) {
+    const value = ev.detail?.value;
+    if (value === '__add__') {
+      // evita que "__add__" fique no form
+      this.clienteForm.get('cidade')?.setValue('');
+      await this.waitOverlayClosed();
+
       const alert = await this.alertController.create({
         header: 'Nova Cidade',
         inputs: [{ name: 'value', type: 'text', placeholder: 'Digite a cidade' }],
@@ -93,9 +112,11 @@ export class VendasLeadsPage implements OnInit {
           {
             text: 'Adicionar',
             handler: (data) => {
-              if (data.value) {
-                this.cidades = [data.value, ...this.cidades];
-                this.clienteForm.get('cidade')?.setValue(data.value);
+              const novo = (data?.value || '').trim();
+              if (novo) {
+                // evita duplicado
+                if (!this.cidades.includes(novo)) this.cidades = [novo, ...this.cidades];
+                this.clienteForm.get('cidade')?.setValue(novo);
               }
             },
           },
@@ -105,8 +126,12 @@ export class VendasLeadsPage implements OnInit {
     }
   }
 
-  async handleStatusChange(ev: any) {
-    if (ev.detail.value === '__add__') {
+  async handleStatusChange(ev: any, selectRef: IonSelect) {
+    const value = ev.detail?.value;
+    if (value === '__add__') {
+      this.clienteForm.get('status')?.setValue('');
+      await this.waitOverlayClosed();
+
       const alert = await this.alertController.create({
         header: 'Novo Status',
         inputs: [{ name: 'value', type: 'text', placeholder: 'Digite o status' }],
@@ -115,9 +140,10 @@ export class VendasLeadsPage implements OnInit {
           {
             text: 'Adicionar',
             handler: (data) => {
-              if (data.value) {
-                this.statusList = [data.value, ...this.statusList];
-                this.clienteForm.get('status')?.setValue(data.value);
+              const novo = (data?.value || '').trim();
+              if (novo) {
+                if (!this.statusList.includes(novo)) this.statusList = [novo, ...this.statusList];
+                this.clienteForm.get('status')?.setValue(novo);
               }
             },
           },
@@ -127,8 +153,12 @@ export class VendasLeadsPage implements OnInit {
     }
   }
 
-  async handleCampanhaChange(ev: any) {
-    if (ev.detail.value === '__add__') {
+  async handleCampanhaChange(ev: any, selectRef: IonSelect) {
+    const value = ev.detail?.value;
+    if (value === '__add__') {
+      this.clienteForm.get('campanha')?.setValue('');
+      await this.waitOverlayClosed();
+
       const alert = await this.alertController.create({
         header: 'Nova Campanha',
         inputs: [{ name: 'value', type: 'text', placeholder: 'Digite a campanha' }],
@@ -137,9 +167,10 @@ export class VendasLeadsPage implements OnInit {
           {
             text: 'Adicionar',
             handler: (data) => {
-              if (data.value) {
-                this.listaCampanhas = [data.value, ...this.listaCampanhas];
-                this.clienteForm.get('campanha')?.setValue(data.value);
+              const novo = (data?.value || '').trim();
+              if (novo) {
+                if (!this.listaCampanhas.includes(novo)) this.listaCampanhas = [novo, ...this.listaCampanhas];
+                this.clienteForm.get('campanha')?.setValue(novo);
               }
             },
           },

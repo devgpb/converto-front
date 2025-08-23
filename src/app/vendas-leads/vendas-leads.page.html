@@ -15,7 +15,7 @@
         <ion-col size="12" size-md="6">
           <ion-item>
             <ion-label position="stacked">Celular *</ion-label>
-            <ion-input type="tel" formControlName="celular" placeholder="(00) 00000-0000"></ion-input>
+            <ion-input type="tel" formControlName="celular" placeholder="(00) 00000-0000" telefoneBr></ion-input>
           </ion-item>
           <ion-text color="danger" class="form-errors" *ngIf="f['celular'].touched && f['celular'].hasError('required')">
             Celular é obrigatório.
@@ -28,7 +28,8 @@
         <ion-col size="12" size-md="6">
           <ion-item>
             <ion-label position="stacked">Cidade</ion-label>
-            <ion-select formControlName="cidade" interface="popover" placeholder="Selecione" (ionChange)="handleCidadeChange($event)">
+            <ion-select #cidadeSel formControlName="cidade" interface="popover" placeholder="Selecione"
+                        (ionChange)="handleCidadeChange($event, cidadeSel)">
               <ion-select-option *ngFor="let c of cidades" [value]="c">{{ c }}</ion-select-option>
               <ion-select-option value="__add__">Adicionar nova...</ion-select-option>
             </ion-select>
@@ -38,7 +39,8 @@
         <ion-col size="12" size-md="6">
           <ion-item>
             <ion-label position="stacked">Status</ion-label>
-            <ion-select formControlName="status" interface="popover" placeholder="Selecione" (ionChange)="handleStatusChange($event)">
+            <ion-select #statusSel formControlName="status" interface="popover" placeholder="Selecione"
+                        (ionChange)="handleStatusChange($event, statusSel)">
               <ion-select-option *ngFor="let s of statusList" [value]="s">{{ s }}</ion-select-option>
               <ion-select-option value="__add__">Adicionar novo...</ion-select-option>
             </ion-select>
@@ -55,7 +57,8 @@
         <ion-col size="12" size-md="6">
           <ion-item>
             <ion-label position="stacked">Campanha</ion-label>
-            <ion-select formControlName="campanha" interface="popover" placeholder="Selecione" (ionChange)="handleCampanhaChange($event)">
+            <ion-select #campanhaSel formControlName="campanha" interface="popover" placeholder="Selecione"
+                        (ionChange)="handleCampanhaChange($event, campanhaSel)">
               <ion-select-option *ngFor="let c of listaCampanhas" [value]="c">{{ c }}</ion-select-option>
               <ion-select-option value="__add__">Adicionar nova...</ion-select-option>
             </ion-select>

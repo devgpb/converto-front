@@ -22,4 +22,11 @@ export class AppComponent {
         this.isLoginPage = e.urlAfterRedirects === '/login';
       });
   }
+  
+  toggleDark(ev: CustomEvent) {
+    this.theme.setDarkMode(ev.detail.checked);
+  }
+
+
+
 }

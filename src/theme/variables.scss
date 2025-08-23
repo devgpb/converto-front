@@ -1,27 +1,28 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
-// Ionic Variables and Theming
-// --------------------------------------------------
-// As variáveis abaixo controlam o tema global do app.
+/*
+  Variáveis globais do app
+  -----------------------------------------------------
+  Tema claro: :root
+  Tema escuro: .dark
+*/
 
-// Cores principais
+/* ====== LIGHT MODE (default) ====== */
 :root {
   /** Cores principais **/
-  --ion-color-primary: #00c16a; // verde principal (logo + vibe WhatsApp)
+  --ion-color-primary: #00c16a;
   --ion-color-primary-rgb: 0, 193, 106;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
   --ion-color-primary-shade: #00a85b;
   --ion-color-primary-tint: #26cc81;
 
-  --ion-color-secondary: #25d366; // tom de verde secundário (whatsapp vibe)
+  --ion-color-secondary: #25d366;
   --ion-color-secondary-rgb: 37, 211, 102;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
   --ion-color-secondary-shade: #20b85a;
   --ion-color-secondary-tint: #44dc7a;
 
-  --ion-color-tertiary: #128c7e; // verde mais escuro para contrastes
+  --ion-color-tertiary: #128c7e;
   --ion-color-tertiary-rgb: 18, 140, 126;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
@@ -49,17 +50,29 @@
   --ion-item-background: #ffffff;
   --ion-item-color: #1e1e1e;
 
-  --ion-label-color: #ffffff;
+  --ion-label-color: #000000;
 
-  /** Floating Action Button (conceito automação/ação rápida) **/
+  /** Floating Action Button **/
   --ion-color-fab: var(--ion-color-secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ion-background-color: #1e1e1e;
-    --ion-text-color: #ffffff;
-    --ion-item-background: #1e1e1e;
-    --ion-item-color: #ffffff;
-  }
+/* ====== DARK MODE (ativado pelo ThemeService) ====== */
+.dark {
+  /** Background e textos **/
+  --ion-background-color: #121212;
+  --ion-background-color-rgb: 18, 18, 18;
+
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+
+  /** Itens **/
+  --ion-item-background: #1e1e1e;
+  --ion-item-color: #ffffff;
+
+  /** Toolbar **/
+  --ion-toolbar-background: #1f1f1f;
+  --ion-toolbar-color: #ffffff;
+
+  /** Label **/
+  --ion-label-color: #ffffff;
 }
