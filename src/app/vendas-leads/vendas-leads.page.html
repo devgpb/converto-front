@@ -1,3 +1,79 @@
 <ion-content class="ion-padding">
-  <h1>Vendas Leads</h1>
+  <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label position="stacked">Nome *</ion-label>
+            <ion-input type="text" formControlName="nome" placeholder="Nome do Cliente"></ion-input>
+          </ion-item>
+          <ion-text color="danger" class="form-errors" *ngIf="f['nome'].touched && f['nome'].invalid">
+            Nome é obrigatório.
+          </ion-text>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label position="stacked">Celular *</ion-label>
+            <ion-input type="tel" formControlName="celular" placeholder="(00) 00000-0000"></ion-input>
+          </ion-item>
+          <ion-text color="danger" class="form-errors" *ngIf="f['celular'].touched && f['celular'].hasError('required')">
+            Celular é obrigatório.
+          </ion-text>
+          <ion-text color="danger" class="form-errors" *ngIf="f['celular'].touched && f['celular'].hasError('celularIncompleto')">
+            Número incompleto. Digite todos os dígitos. Use (00) 00000-0000.
+          </ion-text>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label position="stacked">Cidade</ion-label>
+            <ion-select formControlName="cidade" interface="popover" placeholder="Selecione" (ionChange)="handleCidadeChange($event)">
+              <ion-select-option *ngFor="let c of cidades" [value]="c">{{ c }}</ion-select-option>
+              <ion-select-option value="__add__">Adicionar nova...</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label position="stacked">Status</ion-label>
+            <ion-select formControlName="status" interface="popover" placeholder="Selecione" (ionChange)="handleStatusChange($event)">
+              <ion-select-option *ngFor="let s of statusList" [value]="s">{{ s }}</ion-select-option>
+              <ion-select-option value="__add__">Adicionar novo...</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label position="stacked">Indicação</ion-label>
+            <ion-input type="text" formControlName="indicacao" placeholder="Quem indicou o cliente?"></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label position="stacked">Campanha</ion-label>
+            <ion-select formControlName="campanha" interface="popover" placeholder="Selecione" (ionChange)="handleCampanhaChange($event)">
+              <ion-select-option *ngFor="let c of listaCampanhas" [value]="c">{{ c }}</ion-select-option>
+              <ion-select-option value="__add__">Adicionar nova...</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="stacked">Observação</ion-label>
+            <ion-textarea rows="3" formControlName="observacao" placeholder="Alguma observação?"></ion-textarea>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12">
+          <ion-button type="submit" expand="block" class="ion-margin-top">Salvar Cliente</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
+
