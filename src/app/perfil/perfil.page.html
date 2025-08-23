@@ -1,3 +1,26 @@
 <ion-content class="ion-padding">
-  <h1>Perfil</h1>
+  <ion-card *ngIf="tenant">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+        Perfil
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Tenant:</strong> {{ tenant.name }}</p>
+      <p><strong>ID:</strong> {{ tenant.id }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="billing">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="card-outline" slot="start"></ion-icon>
+        Assinatura
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Status:</strong> {{ billing.status_billing }}</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

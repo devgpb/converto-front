@@ -53,6 +53,19 @@ export class AuthService {
     }
   }
 
+  getTenantId(): string | null {
+    const token = this.token$.value;
+    if (!token) {
+      return null;
+    }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.tenant_id || null;
+    } catch {
+      return null;
+    }
+  }
+
   logout(): void {
     this.token$.next(null);
     localStorage.removeItem('token');
