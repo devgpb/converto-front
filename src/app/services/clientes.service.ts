@@ -40,7 +40,7 @@ export class ClientesService {
     return this.http.get<{ cidades: string[]; status: string[] }>(`${this.api}/filtros`);
   }
 
-  getClientes(params: any): Observable<ClientesResponse> {
-    return this.http.get<ClientesResponse>(this.api, { params });
+  getClientes(params: any): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(this.api, { params });
   }
 }

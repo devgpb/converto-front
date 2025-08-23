@@ -72,10 +72,11 @@ export class ListaClientesComponent implements OnInit {
   fetch(): void {
     this.carregandoBusca = true;
     this.clientesService.getClientes(this.buildParams()).subscribe({
-      next: (resp: ClientesResponse) => {
-        this.clientes = resp.data;
-        this.total = resp.meta.total;
-        this.totalPages = resp.meta.totalPages;
+      next: (resp: Cliente[]) => {
+        console.log(resp)
+        this.clientes = resp;
+        this.total = resp.length;
+        this.totalPages = 1;
         this.carregandoBusca = false;
       },
       error: () => (this.carregandoBusca = false),
@@ -86,10 +87,10 @@ export class ListaClientesComponent implements OnInit {
     this.page = 1;
     this.carregandoBusca = true;
     this.clientesService.getClientes(this.buildParams({ fromSearch: true })).subscribe({
-      next: (resp: ClientesResponse) => {
-        this.clientes = resp.data;
-        this.total = resp.meta.total;
-        this.totalPages = resp.meta.totalPages;
+      next: (resp: Cliente[]) => {
+        this.clientes = resp;
+        this.total = resp.length;
+        this.totalPages = 1;
         this.carregandoBusca = false;
       },
       error: () => (this.carregandoBusca = false),
