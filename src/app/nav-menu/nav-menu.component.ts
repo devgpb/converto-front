@@ -42,6 +42,8 @@ export class NavMenuComponent {
       items: [
         { icon: 'people', title: 'Usuários', href: '/ref' },
         { icon: 'business', title: 'Setores', href: '/setores' },
+        { icon: 'create', title: 'Empresa', href: '/empresa' },
+        { icon: 'people-circle', title: 'Assentos', href: '/assentos' },
         { icon: 'person-add', title: 'Novo Usuário', href: '/usuarios/novo' },
       ],
     },

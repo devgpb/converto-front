@@ -1,0 +1,39 @@
+<ion-content class="ion-padding">
+  <ion-card *ngIf="usage">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="people-circle-outline" slot="start"></ion-icon>
+        Assentos
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Assentos pagos:</strong> {{ usage.paid_seats }}</p>
+      <p><strong>Usuários ativos:</strong> {{ usage.active_users }}</p>
+      <p><strong>Disponíveis:</strong> {{ usage.seats_available }}</p>
+      <ion-button size="small" (click)="sync()">
+        <ion-icon name="sync-outline" slot="start"></ion-icon>
+        Sincronizar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Gerenciar Usuário</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">ID do Usuário</ion-label>
+        <ion-input [(ngModel)]="userId"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="add()">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        Ativar
+      </ion-button>
+      <ion-button expand="block" color="danger" (click)="remove()">
+        <ion-icon name="person-remove-outline" slot="start"></ion-icon>
+        Desativar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
