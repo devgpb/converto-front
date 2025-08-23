@@ -52,3 +52,12 @@
   /** Floating Action Button (conceito automação/ação rápida) **/
   --ion-color-fab: var(--ion-color-secondary);
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #1e1e1e;
+    --ion-text-color: #ffffff;
+    --ion-item-background: #1e1e1e;
+    --ion-item-color: #ffffff;
+  }
+}
