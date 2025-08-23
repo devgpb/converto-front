@@ -1,0 +1,44 @@
+.cliente-card {
+  height: 100%;
+  cursor: pointer;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ion-color-step-150, #e0e0e0);
+  margin-bottom: 8px;
+}
+
+.footer {
+  border-top: 1px solid var(--ion-color-step-150, #e0e0e0);
+  padding-top: 8px;
+}
+
+.separator {
+  margin: 0 4px;
+}

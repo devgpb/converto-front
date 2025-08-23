@@ -1,0 +1,118 @@
+<div class="lista-clientes ion-padding">
+  <!-- Header -->
+  <div class="header">
+    <div class="title">
+      <ion-icon name="people-circle-outline" color="primary"></ion-icon>
+      <h1>Clientes</h1>
+    </div>
+    <ion-note>
+      <ng-container *ngIf="total > 0">
+        Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }} clientes
+      </ng-container>
+      <ng-container *ngIf="total === 0">
+        0 de 0 clientes
+      </ng-container>
+    </ion-note>
+  </div>
+
+  <!-- Filtros -->
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row class="ion-align-items-end">
+          <ion-col size="12" size-md="6">
+            <ion-searchbar [(ngModel)]="searchTerm" placeholder="Pesquisar por nome, ID, celular, cidade, campanha ou status..."></ion-searchbar>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <ion-item>
+              <ion-label>Status</ion-label>
+              <ion-select [(ngModel)]="statusFilter">
+                <ion-select-option value="todos">Todos os status</ion-select-option>
+                <ion-select-option *ngFor="let s of statusUnicos" [value]="s.toLowerCase()">{{ s }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <ion-item>
+              <ion-label>Cidade</ion-label>
+              <ion-select [(ngModel)]="cidadeFilter">
+                <ion-select-option value="todas">Todas as cidades</ion-select-option>
+                <ion-select-option *ngFor="let c of cidadesUnicas" [value]="c.toLowerCase()">{{ c }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <ion-item>
+              <ion-label>Ordenar por</ion-label>
+              <ion-select [(ngModel)]="sortBy">
+                <ion-select-option value="recente">Mais recente</ion-select-option>
+                <ion-select-option value="antigo">Mais antigo</ion-select-option>
+                <ion-select-option value="nome">Nome A-Z</ion-select-option>
+                <ion-select-option value="id">ID crescente</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <ion-item lines="none">
+              <ion-label>Meus Clientes</ion-label>
+              <ion-toggle [formControl]="meusClientes"></ion-toggle>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <ion-item lines="none">
+              <ion-label>Por página</ion-label>
+              <ion-select [ngModel]="pageSize" (ngModelChange)="changePageSize($event)">
+                <ion-select-option [value]="10">10</ion-select-option>
+                <ion-select-option [value]="20">20</ion-select-option>
+                <ion-select-option [value]="50">50</ion-select-option>
+                <ion-select-option [value]="100">100</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6" class="ion-text-right">
+            <ion-button color="primary" (click)="pesquisaAvancada()" [disabled]="carregandoBusca">
+              <ion-spinner slot="start" *ngIf="carregandoBusca" name="crescent"></ion-spinner>
+              Buscar na base
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="12" class="ion-text-right" *ngIf="searchTerm || statusFilter !== 'todos' || cidadeFilter !== 'todas' || meusClientes.value">
+            <ion-button fill="clear" (click)="clearFilters()">Limpar filtros</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Lista de cards -->
+  <div class="ion-text-center ion-padding" *ngIf="clientes.length === 0">
+    <ion-icon name="people-outline" size="large" color="medium"></ion-icon>
+    <h5 class="ion-margin-top">Nenhum cliente encontrado</h5>
+    <p class="ion-text-muted">Tente ajustar os filtros ou termos de pesquisa.</p>
+  </div>
+
+  <ion-grid *ngIf="clientes.length > 0">
+    <ion-row>
+      <ion-col size="12" size-sm="6" size-lg="3" *ngFor="let cliente of clientes; trackBy: trackById">
+        <app-cliente-card [cliente]="cliente"></app-cliente-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Paginação -->
+  <div class="pagination">
+    <ion-note>Página {{ page }} de {{ totalPages }}</ion-note>
+    <ion-buttons>
+      <ion-button (click)="goToPage(1)" [disabled]="page === 1">« Primeiro</ion-button>
+      <ion-button (click)="goToPage(page - 1)" [disabled]="page === 1">‹ Anterior</ion-button>
+      <ion-button (click)="goToPage(page + 1)" [disabled]="page === totalPages || totalPages === 0">Próximo ›</ion-button>
+      <ion-button (click)="goToPage(totalPages)" [disabled]="page === totalPages || totalPages === 0">Último »</ion-button>
+    </ion-buttons>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<ion-card class="cliente-card" (click)="onEdit()">
+  <ion-card-content>
+    <div class="card-header">
+      <ion-badge color="medium">ID: {{ cliente.idCliente }}</ion-badge>
+      <ion-badge color="primary">{{ cliente.status || 'Sem status' }}</ion-badge>
+      <ion-badge [color]="diasColor">{{ dias }} {{ dias === 1 ? 'dia' : 'dias' }}</ion-badge>
+    </div>
+
+    <h3 class="card-title">{{ cliente.nome }}</h3>
+
+    <div class="info">
+      <ng-container *ngIf="cliente.cidade">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>{{ cliente.cidade }}</span>
+      </ng-container>
+      <ng-container *ngIf="cliente.cidade && cliente.campanha && cliente.campanha !== 'Sem Campanha'">
+        <span class="separator">|</span>
+      </ng-container>
+      <ng-container *ngIf="cliente.campanha && cliente.campanha !== 'Sem Campanha'">
+        <ion-icon name="megaphone-outline"></ion-icon>
+        <span class="ion-text-primary">{{ cliente.campanha }}</span>
+      </ng-container>
+    </div>
+
+    <div class="actions">
+      <ion-button color="success" size="small" (click)="abrirWhatsapp($event)">
+        <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+        WhatsApp
+      </ion-button>
+      <ion-button color="primary" size="small" (click)="marcarContato($event)" [disabled]="isUltimoContatoHoje">
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+        Marcar contato
+      </ion-button>
+    </div>
+
+    <div class="footer">
+      <ion-note>
+        Criado em: {{ cliente.createdAt | date:'dd/MM/yyyy' }}
+        {{ cliente.responsavel ? 'por ' + getPrimeiroNome(cliente.responsavel.nomeCompleto) : '' }}
+      </ion-note>
+    </div>
+  </ion-card-content>
+</ion-card>
