@@ -1,0 +1,54 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+// Ionic Variables and Theming
+// --------------------------------------------------
+// As variáveis abaixo controlam o tema global do app.
+
+// Cores principais
+:root {
+  /** Cores principais **/
+  --ion-color-primary: #00c16a; // verde principal (logo + vibe WhatsApp)
+  --ion-color-primary-rgb: 0, 193, 106;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #00a85b;
+  --ion-color-primary-tint: #26cc81;
+
+  --ion-color-secondary: #25d366; // tom de verde secundário (whatsapp vibe)
+  --ion-color-secondary-rgb: 37, 211, 102;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #20b85a;
+  --ion-color-secondary-tint: #44dc7a;
+
+  --ion-color-tertiary: #128c7e; // verde mais escuro para contrastes
+  --ion-color-tertiary-rgb: 18, 140, 126;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #107a6f;
+  --ion-color-tertiary-tint: #2aa497;
+
+  /** Suporte **/
+  --ion-color-success: #00c16a;
+  --ion-color-warning: #ffba00;
+  --ion-color-danger: #eb445a;
+  --ion-color-dark: #1e1e1e;
+  --ion-color-medium: #8c8c8c;
+  --ion-color-light: #f4f4f4;
+
+  /** Background e textos **/
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+
+  --ion-text-color: #1e1e1e;
+  --ion-text-color-rgb: 30, 30, 30;
+
+  /** Botões e inputs **/
+  --ion-toolbar-background: var(--ion-color-primary);
+  --ion-toolbar-color: #fff;
+  --ion-item-background: #ffffff;
+  --ion-item-color: #1e1e1e;
+
+  /** Floating Action Button (conceito automação/ação rápida) **/
+  --ion-color-fab: var(--ion-color-secondary);
+}
