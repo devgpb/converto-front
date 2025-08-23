@@ -35,3 +35,13 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Largura do menu quando o split-pane está visível (desktop) */
+@media (min-width: 1024px) {
+  ion-split-pane.split-desktop {
+    --side-width: 300px;      /* largura exata */
+    --side-min-width: 300px;  /* trava o mínimo */
+    --side-max-width: 300px;  /* trava o máximo */
+  }
+}
+
