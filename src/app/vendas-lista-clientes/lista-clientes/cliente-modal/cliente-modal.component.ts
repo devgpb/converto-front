@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { Cliente, ClientesService } from '../../services/clientes.service';
+import { Cliente, ClientesService } from '../../../services/clientes.service';
 
 @Component({
   selector: 'app-cliente-modal',

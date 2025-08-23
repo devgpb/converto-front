@@ -4,8 +4,8 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { ClientesService, Cliente, ClientesResponse } from '../../services/clientes.service';
 import { AuthService } from '../../services/auth.service';
-import { ClienteCardComponent } from './cliente-card.component';
-import { ClienteModalComponent } from './cliente-modal.component';
+import { ClienteCardComponent } from './cliente-card/cliente-card.component';
+import { ClienteModalComponent } from './cliente-modal/cliente-modal.component';
 
 @Component({
   selector: 'app-lista-clientes',
