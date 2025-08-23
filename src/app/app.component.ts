@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { ThemeService } from './services/theme.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,9 +10,11 @@ import { filter } from 'rxjs';
 })
 export class AppComponent {
   private router = inject(Router);
+  private theme = inject(ThemeService);
   public isLoginPage = false;
 
   constructor() {
+    this.theme.init();
     this.isLoginPage = this.router.url === '/login';
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))

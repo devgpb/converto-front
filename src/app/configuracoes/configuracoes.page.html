@@ -1,3 +1,7 @@
 <ion-content class="ion-padding">
   <h1>Configurações</h1>
+  <ion-item lines="none">
+    <ion-label>Modo noturno</ion-label>
+    <ion-toggle [checked]="theme.isDarkMode()" (ionChange)="toggleDark($event)"></ion-toggle>
+  </ion-item>
 </ion-content>

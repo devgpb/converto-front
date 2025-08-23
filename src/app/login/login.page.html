@@ -23,4 +23,9 @@
     </ion-list>
     <ion-button expand="full" type="submit">Entrar</ion-button>
   </form>
+
+  <ion-item lines="none">
+    <ion-label>Modo noturno</ion-label>
+    <ion-toggle [checked]="theme.isDarkMode()" (ionChange)="toggleDark($event)"></ion-toggle>
+  </ion-item>
 </ion-content>
