@@ -10,6 +10,13 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
+  constructor() {
+    const saved = localStorage.getItem('token');
+    if (saved) {
+      this.token$.next(saved);
+    }
+  }
+
   login(email: string, password: string): Observable<{ token: string }> {
     return this.http
       .post<{ token: string }>(`${environment.apiUrl}/auth/login`, {
@@ -19,6 +26,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.token$.next(res.token);
+          localStorage.setItem('token', res.token);
         })
       );
   }
@@ -47,6 +55,7 @@ export class AuthService {
 
   logout(): void {
     this.token$.next(null);
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 }

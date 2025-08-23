@@ -28,7 +28,7 @@ export class LoginPage {
     }
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: () => this.router.navigate(['/folder/inbox']),
+      next: () => this.router.navigate(['/vendas/dashboard']),
     });
   }
 }

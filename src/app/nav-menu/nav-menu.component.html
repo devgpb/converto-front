@@ -1,29 +1,47 @@
-<ion-list *ngFor="let section of menuSections">
-  <ion-list-header>{{ section.title }}</ion-list-header>
-  <ng-container *ngFor="let item of section.items">
-    <ng-container *ngIf="item.hasSubmenu; else regularItem">
-      <ion-accordion-group>
-        <ion-accordion value="{{ item.title }}">
-          <ion-item slot="header">
-            <ion-icon slot="start" [name]="item.icon"></ion-icon>
-            <ion-label>{{ item.title }}</ion-label>
-          </ion-item>
-          <ion-list slot="content">
-            <ion-item *ngFor="let sub of getSubItems(item.title)" [routerLink]="[sub.route]">
-              <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-              <ion-label>{{ sub.title }}</ion-label>
+<div class="menu-wrapper">
+  <div class="menu-sections">
+    <ion-list *ngFor="let section of menuSections">
+      <ion-list-header>{{ section.title }}</ion-list-header>
+      <ng-container *ngFor="let item of section.items">
+        <ng-container *ngIf="item.hasSubmenu; else regularItem">
+          <ion-accordion-group>
+            <ion-accordion value="{{ item.title }}">
+              <ion-item slot="header">
+                <ion-icon slot="start" [name]="item.icon"></ion-icon>
+                <ion-label>{{ item.title }}</ion-label>
+              </ion-item>
+              <ion-list slot="content">
+                <ion-item *ngFor="let sub of getSubItems(item.title)" [routerLink]="[sub.route]">
+                  <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                  <ion-label>{{ sub.title }}</ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ng-container>
+        <ng-template #regularItem>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerLink]="[item.href]" lines="none" detail="false">
+              <ion-icon slot="start" [name]="item.icon"></ion-icon>
+              <ion-label>{{ item.title }}</ion-label>
             </ion-item>
-          </ion-list>
-        </ion-accordion>
-      </ion-accordion-group>
-    </ng-container>
-    <ng-template #regularItem>
-      <ion-menu-toggle auto-hide="false">
-        <ion-item [routerLink]="[item.href]" lines="none" detail="false">
-          <ion-icon slot="start" [name]="item.icon"></ion-icon>
-          <ion-label>{{ item.title }}</ion-label>
-        </ion-item>
-      </ion-menu-toggle>
-    </ng-template>
-  </ng-container>
-</ion-list>
+          </ion-menu-toggle>
+        </ng-template>
+      </ng-container>
+    </ion-list>
+  </div>
+  <div class="user-actions">
+    <ion-item routerLink="/perfil" lines="none">
+      <ion-icon slot="start" name="person-circle"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-item>
+    <ion-item routerLink="/configuracoes" lines="none">
+      <ion-icon slot="start" name="settings"></ion-icon>
+      <ion-label>Configurações</ion-label>
+    </ion-item>
+    <ion-item lines="none" (click)="logout()">
+      <ion-icon slot="start" name="log-out"></ion-icon>
+      <ion-label>Sair</ion-label>
+    </ion-item>
+  </div>
+</div>

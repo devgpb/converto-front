@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 interface MenuItem {
   icon: string;
@@ -26,6 +27,7 @@ interface SubItem {
   standalone: false,
 })
 export class NavMenuComponent {
+  private auth = inject(AuthService);
   public menuSections: MenuSection[] = [
     {
       title: 'Vendas',
@@ -60,6 +62,10 @@ export class NavMenuComponent {
       default:
         return [];
     }
+  }
+
+  logout(): void {
+    this.auth.logout();
   }
 }
 

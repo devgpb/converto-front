@@ -1,1 +1,16 @@
 /* Custom styles for nav menu */
+
+.menu-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menu-sections {
+  flex: 1;
+  overflow: auto;
+}
+
+.user-actions ion-item {
+  --padding-start: 16px;
+}
