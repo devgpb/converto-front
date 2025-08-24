@@ -90,17 +90,68 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Lista de cards -->
+  <div class="view-toggle">
+    <ion-label>Visualização</ion-label>
+    <ion-radio-group [(ngModel)]="viewMode" (ionChange)="onViewModeChange($event.detail.value)" class="ion-margin-start">
+      <ion-item lines="none">
+        <ion-label>Cards</ion-label>
+        <ion-radio slot="start" value="cards"></ion-radio>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Tabela</ion-label>
+        <ion-radio slot="start" value="table"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </div>
+
+  <!-- Lista -->
   <div class="ion-text-center ion-padding" *ngIf="clientes.length === 0">
     <ion-icon name="people-outline" size="large" color="medium"></ion-icon>
     <h5 class="ion-margin-top">Nenhum cliente encontrado</h5>
     <p class="ion-text-muted">Tente ajustar os filtros ou termos de pesquisa.</p>
   </div>
 
-  <ion-grid *ngIf="clientes.length > 0">
+  <ion-grid *ngIf="clientes.length > 0 && viewMode === 'cards'">
     <ion-row>
       <ion-col size="12" size-sm="6" size-lg="3" *ngFor="let cliente of clientes; trackBy: trackById">
         <app-cliente-card [cliente]="cliente" (edit)="openClienteModal($event)"></app-cliente-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="clientes.length > 0 && viewMode === 'table'" class="table-view">
+    <ion-row class="table-header">
+      <ion-col size="1">ID</ion-col>
+      <ion-col size="3">Nome</ion-col>
+      <ion-col size="2">Cidade</ion-col>
+      <ion-col size="2">Campanha</ion-col>
+      <ion-col size="1">Status</ion-col>
+      <ion-col size="1">Dias</ion-col>
+      <ion-col size="2">Criado</ion-col>
+      <ion-col size="2">Ações</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let cliente of clientes; trackBy: trackById" (click)="openClienteModal(cliente)" class="table-row">
+      <ion-col size="1">{{ cliente.id_cliente }}</ion-col>
+      <ion-col size="3">{{ cliente.nome }}</ion-col>
+      <ion-col size="2">{{ cliente.cidade }}</ion-col>
+      <ion-col size="2">{{ cliente.campanha && cliente.campanha !== 'Sem Campanha' ? cliente.campanha : '' }}</ion-col>
+      <ion-col size="1">{{ cliente.status || 'Sem status' }}</ion-col>
+      <ion-col size="1">
+        <ion-badge [color]="getDiasColor(cliente)">{{ getDias(cliente) }}</ion-badge>
+      </ion-col>
+      <ion-col size="2">
+        {{ cliente.created_at | date:'dd/MM/yyyy' }}
+        {{ cliente.responsavel ? 'por ' + getPrimeiroNome(cliente.responsavel.name) : '' }}
+      </ion-col>
+      <ion-col size="2">
+        <ion-button color="success" size="small" (click)="abrirWhatsapp(cliente, $event)">
+          <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+          WhatsApp
+        </ion-button>
+        <ion-button color="primary" size="small" (click)="marcarContato(cliente, $event)" [disabled]="isUltimoContatoHoje(cliente)">
+          <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+          Marcar contato
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
