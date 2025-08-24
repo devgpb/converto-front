@@ -122,9 +122,9 @@
   <ion-grid *ngIf="clientes.length > 0 && viewMode === 'table'" class="table-view">
     <ion-row class="table-header">
       <ion-col size="1">ID</ion-col>
-      <ion-col size="3">Nome</ion-col>
+      <ion-col size="2">Nome</ion-col>
       <ion-col size="2">Cidade</ion-col>
-      <ion-col size="2">Campanha</ion-col>
+      <ion-col size="1">Campanha</ion-col>
       <ion-col size="1">Status</ion-col>
       <ion-col size="1">Dias</ion-col>
       <ion-col size="2">Criado</ion-col>
@@ -132,9 +132,9 @@
     </ion-row>
     <ion-row *ngFor="let cliente of clientes; trackBy: trackById" (click)="openClienteModal(cliente)" class="table-row">
       <ion-col size="1">{{ cliente.id_cliente }}</ion-col>
-      <ion-col size="3">{{ cliente.nome }}</ion-col>
+      <ion-col size="2">{{ cliente.nome }}</ion-col>
       <ion-col size="2">{{ cliente.cidade }}</ion-col>
-      <ion-col size="2">{{ cliente.campanha && cliente.campanha !== 'Sem Campanha' ? cliente.campanha : '' }}</ion-col>
+      <ion-col size="1">{{ cliente.campanha && cliente.campanha !== 'Sem Campanha' ? cliente.campanha : '' }}</ion-col>
       <ion-col size="1">{{ cliente.status || 'Sem status' }}</ion-col>
       <ion-col size="1">
         <ion-badge [color]="getDiasColor(cliente)">{{ getDias(cliente) }}</ion-badge>
@@ -144,14 +144,16 @@
         {{ cliente.responsavel ? 'por ' + getPrimeiroNome(cliente.responsavel.name) : '' }}
       </ion-col>
       <ion-col size="2">
-        <ion-button color="success" size="small" (click)="abrirWhatsapp(cliente, $event)">
-          <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
-          WhatsApp
-        </ion-button>
-        <ion-button color="primary" size="small" (click)="marcarContato(cliente, $event)" [disabled]="isUltimoContatoHoje(cliente)">
-          <ion-icon slot="start" name="checkmark-outline"></ion-icon>
-          Marcar contato
-        </ion-button>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <ion-button color="success" size="small" (click)="abrirWhatsapp(cliente, $event)">
+        <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+        WhatsApp
+          </ion-button>
+          <ion-button color="primary" size="small" (click)="marcarContato(cliente, $event)" [disabled]="isUltimoContatoHoje(cliente)">
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+        Marcar contato
+          </ion-button>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>
