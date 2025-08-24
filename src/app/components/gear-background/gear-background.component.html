@@ -1,0 +1,13 @@
+<div class="gears-bg">
+  <ion-icon
+    *ngFor="let gear of gears"
+    name="cog-outline"
+    class="gear"
+    [style.left.%]="gear.left"
+    [style.bottom.px]="-gear.size"
+    [style.font-size.px]="gear.size"
+    [style.animation-duration.s]="gear.duration"
+    [style.animation-delay.s]="gear.delay"
+    [style.color]="color"
+  ></ion-icon>
+</div>
