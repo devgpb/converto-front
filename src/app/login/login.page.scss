@@ -4,17 +4,6 @@ ion-content {
   position: relative;
 }
 
-.vanta-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.vanta-bg canvas {
-  opacity: 0.2;
-  pointer-events: none;
-}
-
 .content-wrapper {
   position: relative;
   z-index: 1;
