@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class ViewPreferenceService {
   private readonly STORAGE_KEY = 'clientesViewMode';
 
-  getViewMode(): 'cards' | 'table' {
+  getViewMode(): 'cards' | 'table' | undefined{
     const mode = localStorage.getItem(this.STORAGE_KEY);
     return mode === 'table' ? 'table' : 'cards';
   }

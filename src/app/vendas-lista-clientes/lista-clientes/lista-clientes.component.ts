@@ -23,7 +23,8 @@ export class ListaClientesComponent implements OnInit {
   pageSize = 50;
   carregandoBusca = false;
 
-  viewMode: 'cards' | 'table' = 'cards';
+  viewMode: any = 'cards';
+
 
   searchTerm = '';
   statusFilter = 'todos';
@@ -129,9 +130,9 @@ export class ListaClientesComponent implements OnInit {
     this.fetch();
   }
 
-  onViewModeChange(mode: 'cards' | 'table'): void {
-    this.viewMode = mode;
-    this.viewPref.setViewMode(mode);
+  onViewModeChange(mode: any): void {
+    this.viewMode = mode ?? 'cards';  // se vier undefined, cai no padrão
+    this.viewPref.setViewMode(this.viewMode);
   }
 
   abrirWhatsapp(cliente: Cliente, event: Event): void {
