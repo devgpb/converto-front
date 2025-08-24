@@ -1,198 +1,221 @@
-<div class="p-6 space-y-6">
-  @if (loading()) {
-    <div class="animate-pulse space-y-4">
-      <div class="h-8 bg-gray-200 rounded w-1/4"></div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        @for (_ of [1,2,3,4]; track _) {
-          <div class="h-32 bg-gray-200 rounded"></div>
-        }
-      </div>
-    </div>
-  }
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Relatório de Atendimento</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  @if (!loading() && error()) {
-    <div class="text-center text-gray-500">{{ error() }}</div>
-  }
+<ion-content>
+  <div class="ion-padding">
+    @if (loading()) {
+      <ion-skeleton-text animated style="width:25%;height:32px"></ion-skeleton-text>
+      <ion-grid class="ion-margin-top">
+        <ion-row>
+          @for (_ of [1,2,3,4]; track _) {
+            <ion-col size="12" size-md="6" size-lg="3">
+              <ion-card>
+                <ion-skeleton-text animated style="height:128px"></ion-skeleton-text>
+              </ion-card>
+            </ion-col>
+          }
+        </ion-row>
+      </ion-grid>
+    }
 
-  @if (!loading() && data(); as d) {
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900">Relatório de Atendimento</h1>
-        <p class="text-gray-600">Acompanhe o desempenho do atendimento ao cliente</p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="relative">
-          <input
-            type="date"
-            class="pl-12 px-3 py-1.5 border rounded"
-            [value]="range.start"
-            (change)="onRangeChange('start', $event.target.value)"
-            placeholder="Início" />
-        </div>
-        <span class="text-gray-400">—</span>
-        <div class="relative">
-          <input
-            type="date"
-            class="pl-8 px-3 py-1.5 border rounded"
-            [value]="range.end"
-            (change)="onRangeChange('end', $event.target.value)"
-            placeholder="Fim" />
-        </div>
-        <button class="px-3 py-1.5 rounded border" [class.bg-gray-900]="rangeValid" [class.text-white]="rangeValid" [disabled]="!rangeValid" (click)="applyRange()">Aplicar</button>
-        <div *ngIf="rangeError" class="text-xs text-red-600 ml-1">{{ rangeError }}</div>
-      </div>
-      <div class="flex gap-2">
-        <button (click)="setPeriod('hoje')" class="px-3 py-1.5 rounded border" [class.bg-gray-900]="selectedPeriod()==='hoje'" [class.text-white]="selectedPeriod()==='hoje'">Hoje</button>
-        <button (click)="setPeriod('semana')" class="px-3 py-1.5 rounded border" [class.bg-gray-900]="selectedPeriod()==='semana'" [class.text-white]="selectedPeriod()==='semana'">Esta Semana</button>
-        <button (click)="setPeriod('mes')" class="px-3 py-1.5 rounded border" [class.bg-gray-900]="selectedPeriod()==='mes'" [class.text-white]="selectedPeriod()==='mes'">Este Mês</button>
-      </div>
-    </div>
+    @if (!loading() && error()) {
+      <ion-text color="medium" class="ion-text-center">{{ error() }}</ion-text>
+    }
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="border rounded-xl p-4 hover:shadow-sm cursor-pointer" (click)="openModal('novos')">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Clientes Novos</div>
-          <lucide-icon name="user-plus" class="h-4 w-4 text-green-600"></lucide-icon>
+    @if (!loading() && data(); as d) {
+      <div class="header">
+        <div>
+          <h2 class="ion-no-margin">Relatório de Atendimento</h2>
+          <p>Acompanhe o desempenho do atendimento ao cliente</p>
         </div>
-        <div class="text-2xl font-bold text-green-600">{{ d.clientesNovosHoje }}</div>
-        <p class="text-xs text-gray-600">{{ selectedPeriod()==='hoje' ? 'hoje' : ('neste ' + selectedPeriod()) }}</p>
-      </div>
-
-      <div class="border rounded-xl p-4 hover:shadow-sm cursor-pointer" (click)="openModal('atendidos')">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Clientes Atendidos</div>
-          <lucide-icon name="phone" class="h-4 w-4 text-blue-600"></lucide-icon>
+        <div class="filters">
+          <ion-item class="range-picker">
+            <ion-input type="date" [value]="range.start" (ionChange)="onRangeChange('start', $event.detail.value)" placeholder="Início"></ion-input>
+          </ion-item>
+          <ion-item class="range-picker">
+            <ion-input type="date" [value]="range.end" (ionChange)="onRangeChange('end', $event.detail.value)" placeholder="Fim"></ion-input>
+          </ion-item>
+          <ion-button fill="outline" [disabled]="!rangeValid" (click)="applyRange()">Aplicar</ion-button>
+          <ion-text color="danger" *ngIf="rangeError">{{ rangeError }}</ion-text>
         </div>
-        <div class="text-2xl font-bold text-blue-600">{{ d.clientesAtendidosHoje }}</div>
-        <p class="text-xs text-gray-600">{{ selectedPeriod()==='hoje' ? 'hoje' : ('neste ' + selectedPeriod()) }}</p>
-      </div>
-
-      <div class="border rounded-xl p-4">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Total Cadastrados</div>
-          <lucide-icon name="users" class="h-4 w-4 text-purple-600"></lucide-icon>
-        </div>
-        <div class="text-2xl font-bold text-purple-600">{{ d.totalClientesCadastrados }}</div>
-        <p class="text-xs text-gray-600">clientes ativos</p>
-      </div>
-
-      <div class="border rounded-xl p-4 hover:shadow-sm cursor-pointer" (click)="openModal('eventos')">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Eventos Marcados</div>
-          <lucide-icon name="calendar" class="h-4 w-4 text-blue-600"></lucide-icon>
-        </div>
-        <div class="text-2xl font-bold text-blue-600">{{ d.eventosMarcados }}</div>
-        <p class="text-xs text-gray-600">Eventos marcados</p>
-      </div>
-
-      <div class="border rounded-xl p-4 hover:shadow-sm cursor-pointer" (click)="openModal('fechados')">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Fechados</div>
-          <lucide-icon name="receipt" class="h-4 w-4 text-green-600"></lucide-icon>
-        </div>
-        <div class="text-2xl font-bold text-green-600">{{ d.clientesFechados }}</div>
-        <p class="text-xs text-gray-600">Vendas Fechadas</p>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div class="border rounded-xl p-4">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Clientes por Status</div>
-        </div>
-        <div *ngIf="statusChart() as s">
-          <apx-chart [series]="s.series" [chart]="s.chart" [xaxis]="s.xaxis" [plotOptions]="s.plotOptions" [dataLabels]="s.dataLabels" [stroke]="s.stroke" [tooltip]="s.tooltip" [fill]="s.fill"></apx-chart>
+        <div class="filters">
+          <ion-button size="small" fill="outline" [color]="selectedPeriod()==='hoje' ? 'primary' : undefined" (click)="setPeriod('hoje')">Hoje</ion-button>
+          <ion-button size="small" fill="outline" [color]="selectedPeriod()==='semana' ? 'primary' : undefined" (click)="setPeriod('semana')">Esta Semana</ion-button>
+          <ion-button size="small" fill="outline" [color]="selectedPeriod()==='mes' ? 'primary' : undefined" (click)="setPeriod('mes')">Este Mês</ion-button>
         </div>
       </div>
 
-      <div class="border rounded-xl p-4">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Clientes por Campanha</div>
-        </div>
-        <div *ngIf="campanhaChart() as c">
-          <apx-chart [series]="c.series" [chart]="c.chart" [labels]="c.labels" [legend]="c.legend" [tooltip]="c.tooltip" [responsive]="c.responsive"></apx-chart>
-        </div>
-      </div>
+      <ion-grid class="kpi-grid">
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card (click)="openModal('novos')">
+              <ion-card-header>
+                <ion-card-subtitle>Clientes Novos</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="kpi-value">{{ d.clientesNovosHoje }}</div>
+                <div class="kpi-desc">{{ selectedPeriod()==='hoje' ? 'hoje' : ('neste ' + selectedPeriod()) }}</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
 
-      <div class="border rounded-xl p-4 lg:col-span-2">
-        <div class="flex items-center justify-between pb-2">
-          <div class="text-sm font-medium">Contatos por dia (último contato)</div>
-        </div>
-        <div *ngIf="contatosChart() as ct">
-          <apx-chart [series]="ct.series" [chart]="ct.chart" [xaxis]="ct.xaxis" [dataLabels]="ct.dataLabels" [stroke]="ct.stroke" [tooltip]="ct.tooltip" [fill]="ct.fill"></apx-chart>
-        </div>
-      </div>
-    </div>
-  }
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card (click)="openModal('atendidos')">
+              <ion-card-header>
+                <ion-card-subtitle>Clientes Atendidos</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="kpi-value">{{ d.clientesAtendidosHoje }}</div>
+                <div class="kpi-desc">{{ selectedPeriod()==='hoje' ? 'hoje' : ('neste ' + selectedPeriod()) }}</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
 
-  <ion-modal [isOpen]="modalOpen()" (didDismiss)="closeModal()">
-    <ng-template>
-      <div class="p-4 space-y-4">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold">{{ modalTitle() }}</h2>
-          <button class="px-3 py-1.5 border rounded" (click)="closeModal()">Fechar</button>
-        </div>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-subtitle>Total Cadastrados</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="kpi-value">{{ d.totalClientesCadastrados }}</div>
+                <div class="kpi-desc">clientes ativos</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
 
-        @if (modalLoading()) {
-          <div class="space-y-2">
-            @for (_ of [1,2,3,4,5,6]; track _) {
-              <div class="h-16 bg-gray-100 animate-pulse rounded"></div>
-            }
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card (click)="openModal('eventos')">
+              <ion-card-header>
+                <ion-card-subtitle>Eventos Marcados</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="kpi-value">{{ d.eventosMarcados }}</div>
+                <div class="kpi-desc">Eventos marcados</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card (click)="openModal('fechados')">
+              <ion-card-header>
+                <ion-card-subtitle>Fechados</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="kpi-value">{{ d.clientesFechados }}</div>
+                <div class="kpi-desc">Vendas Fechadas</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-lg="6">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-subtitle>Clientes por Status</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content *ngIf="statusChart() as s">
+                <apx-chart [series]="s.series" [chart]="s.chart" [xaxis]="s.xaxis" [plotOptions]="s.plotOptions" [dataLabels]="s.dataLabels" [stroke]="s.stroke" [tooltip]="s.tooltip" [fill]="s.fill"></apx-chart>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col size="12" size-lg="6">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-subtitle>Clientes por Campanha</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content *ngIf="campanhaChart() as c">
+                <apx-chart [series]="c.series" [chart]="c.chart" [labels]="c.labels" [legend]="c.legend" [tooltip]="c.tooltip" [responsive]="c.responsive"></apx-chart>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-subtitle>Contatos por dia (último contato)</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content *ngIf="contatosChart() as ct">
+                <apx-chart [series]="ct.series" [chart]="ct.chart" [xaxis]="ct.xaxis" [dataLabels]="ct.dataLabels" [stroke]="ct.stroke" [tooltip]="ct.tooltip" [fill]="ct.fill"></apx-chart>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    }
+
+    <ion-modal [isOpen]="modalOpen()" (didDismiss)="closeModal()">
+      <ng-template>
+        <ion-content class="ion-padding">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold">{{ modalTitle() }}</h2>
+            <ion-button fill="clear" (click)="closeModal()">Fechar</ion-button>
           </div>
-        } @else if (modalError()) {
-          <div class="text-red-600">{{ modalError() }}</div>
-        } @else if (modalItems().length === 0) {
-          <div class="text-gray-500">Nenhum registro no período.</div>
-        } @else {
-          @if (isClientList()) {
-            <div class="grid grid-cols-1 gap-3">
-              @for (c of modalItems(); track c['nome'] + c['updatedAt']) {
-                <div class="border rounded-xl p-3">
-                  <div class="flex items-center justify-between">
-                    <div class="font-semibold text-gray-900">{{ c['nome'] }}</div>
-                    <span class="text-xs px-2 py-1 rounded-full" [class]="statusPillClass(c['status'])">{{ c['status'] || 'Sem status' }}</span>
-                  </div>
-                  <div class="text-xs text-gray-500 mt-1">
-                    Atualizado em {{ formatDate(c['updatedAt']) }}
-                    @if (c['fechado']) {
-                      <span class="ml-2 text-green-700 font-semibold">fechado {{ formatDate(c['fechado']) }}</span>
-                    }
-                    @if (c['ultimoContato']) {
-                      <span class="ml-2 text-green-700 font-semibold">Contato Mais Recente {{ formatDate(c['ultimoContato']) }}</span>
-                    }
-                  </div>
-                  <div class="text-sm text-gray-700 mt-2">{{ short(c['observacao']) }}</div>
-                </div>
-              }
-            </div>
-          } @else {
-            <div class="grid grid-cols-1 gap-3">
-              @for (e of modalItems(); track e['data'] + (e['usuario']?.nome || '')) {
-                <div class="border rounded-xl p-3">
-                  <div class="flex items-center justify-between">
-                    <div class="text-sm">
-                      <div class="font-semibold">Cliente: {{e['cliente']?.nome || '-'}} | Data: {{ formatDate(e['data']) }}</div>
-                      <div class="text-gray-700">Evento: {{ e['evento'] || '-' }}</div>
-                    </div>
-                    <span class="text-xs px-2 py-1 rounded-full" [ngClass]="e['confirmado'] ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'">{{ e['confirmado'] ? 'Confirmado' : 'Pendente' }}</span>
-                  </div>
-                  <div class="text-xs text-gray-500 mt-1">Usuário: {{ e['usuario']?.nomeCompleto || '-' }}</div>
-                </div>
-              }
-            </div>
-          }
 
-          @if (modalMeta(); as m) {
-            <div class="flex items-center justify-between pt-3">
-              <div class="text-sm text-gray-600">Página {{ m.page }} de {{ m.totalPages }} — {{ m.total }} registros</div>
-              <div class="flex gap-2">
-                <button class="px-3 py-1.5 border rounded" [disabled]="modalLoading() || m.page <= 1" (click)="prevPage()">Anterior</button>
-                <button class="px-3 py-1.5 border rounded" [disabled]="modalLoading() || m.page >= m.totalPages" (click)="nextPage()">Próxima</button>
-              </div>
-            </div>
+          @if (modalLoading()) {
+            @for (_ of [1,2,3,4,5,6]; track _) {
+              <ion-skeleton-text animated style="height:64px" class="ion-margin-vertical"></ion-skeleton-text>
+            }
+          } @else if (modalError()) {
+            <ion-text color="danger">{{ modalError() }}</ion-text>
+          } @else if (modalItems().length === 0) {
+            <ion-text color="medium">Nenhum registro no período.</ion-text>
+          } @else {
+            @if (isClientList()) {
+              <ion-list>
+                @for (c of modalItems(); track c['nome'] + c['updatedAt']) {
+                  <ion-item lines="full">
+                    <ion-label class="ion-text-wrap">
+                      <h3>{{ c['nome'] }}</h3>
+                      <p class="ion-text-xs">Atualizado em {{ formatDate(c['updatedAt']) }}</p>
+                      @if (c['fechado']) {
+                        <p class="ion-text-xs">fechado {{ formatDate(c['fechado']) }}</p>
+                      }
+                      @if (c['ultimoContato']) {
+                        <p class="ion-text-xs">Contato Mais Recente {{ formatDate(c['ultimoContato']) }}</p>
+                      }
+                      <p>{{ short(c['observacao']) }}</p>
+                    </ion-label>
+                    <ion-badge slot="end" [class]="statusPillClass(c['status'])">{{ c['status'] || 'Sem status' }}</ion-badge>
+                  </ion-item>
+                }
+              </ion-list>
+            } @else {
+              <ion-list>
+                @for (e of modalItems(); track e['data'] + (e['usuario']?.nome || '')) {
+                  <ion-item lines="full">
+                    <ion-label class="ion-text-wrap">
+                      <h3>Cliente: {{e['cliente']?.nome || '-'}} | Data: {{ formatDate(e['data']) }}</h3>
+                      <p>Evento: {{ e['evento'] || '-' }}</p>
+                      <p class="ion-text-xs">Usuário: {{ e['usuario']?.nomeCompleto || '-' }}</p>
+                    </ion-label>
+                    <ion-badge slot="end" [color]="e['confirmado'] ? 'success' : 'medium'">{{ e['confirmado'] ? 'Confirmado' : 'Pendente' }}</ion-badge>
+                  </ion-item>
+                }
+              </ion-list>
+            }
+
+            @if (modalMeta(); as m) {
+              <ion-row class="ion-justify-content-between ion-align-items-center ion-padding-top">
+                <ion-col size="12" class="ion-text-center">
+                  <ion-text color="medium">Página {{ m.page }} de {{ m.totalPages }} — {{ m.total }} registros</ion-text>
+                </ion-col>
+                <ion-col size="12" class="ion-text-center">
+                  <ion-button size="small" fill="outline" [disabled]="modalLoading() || m.page <= 1" (click)="prevPage()">Anterior</ion-button>
+                  <ion-button size="small" fill="outline" [disabled]="modalLoading() || m.page >= m.totalPages" (click)="nextPage()">Próxima</ion-button>
+                </ion-col>
+              </ion-row>
+            }
           }
-        }
-      </div>
-    </ng-template>
-  </ion-modal>
-</div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </div>
+</ion-content>
+
