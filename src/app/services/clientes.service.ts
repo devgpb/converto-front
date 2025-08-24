@@ -15,7 +15,7 @@ export interface Cliente {
   tenant_id?: string | null;
   created_at?: string;
   updated_at?: string;
-  responsavel?: { nomeCompleto: string };
+  responsavel?: { name: string };
   ultimoContato?: string;
 }
 

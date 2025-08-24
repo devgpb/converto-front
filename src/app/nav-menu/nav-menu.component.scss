@@ -14,3 +14,12 @@
 .user-actions ion-item {
   --padding-start: 16px;
 }
+
+.user-actions ion-item {
+  --background-hover: rgba(0,0,0,0.05); /* efeito hover */
+  cursor: pointer; /* mãozinha no hover */
+}
+
+.dark .user-actions ion-item {
+  --background-hover: rgba(255,255,255,0.08); /* hover no dark */
+}

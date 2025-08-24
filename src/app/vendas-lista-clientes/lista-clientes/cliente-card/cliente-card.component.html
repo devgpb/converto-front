@@ -36,7 +36,7 @@
     <div class="footer">
       <ion-note>
         Criado em: {{ cliente.created_at | date:'dd/MM/yyyy' }}
-        {{ cliente.responsavel ? 'por ' + getPrimeiroNome(cliente.responsavel.nomeCompleto) : '' }}
+        {{ cliente.responsavel ? 'por ' + getPrimeiroNome(cliente.responsavel.name) : '' }}
       </ion-note>
     </div>
   </ion-card-content>

@@ -171,13 +171,11 @@
         <ng-container *ngIf="isClientList(); else eventosTpl">
           <ion-list>
             <ion-item *ngFor="let c of modalItems">
-              <ion-label>
-                <h2>{{ (c as any).nome }}</h2>
-                <p>{{ formatDate((c as any).updatedAt) }}</p>
-                <p>{{ short((c as any).observacao) }}</p>
-              </ion-label>
-              <ion-badge slot="end" [color]="statusBadgeColor((c as any).status)">
-                {{ (c as any).status || 'Sem status' }}
+              <h2>{{ c['evento'] }}</h2>
+              <p>{{ formatDate(c['updatedAt']) }}</p>
+              <p>{{ short(c['observacao']) }}</p>
+              <ion-badge slot="end" [color]="statusBadgeColor(c['status'])">
+                {{ c['status'] || 'Sem status' }}
               </ion-badge>
             </ion-item>
           </ion-list>
@@ -185,14 +183,12 @@
         <ng-template #eventosTpl>
           <ion-list>
             <ion-item *ngFor="let e of modalItems">
-              <ion-label>
-                <h2>Cliente: {{ (e as any).cliente || '-' }}</h2>
-                <p>Data: {{ formatDate((e as any).data) }}</p>
-                <p>Evento: {{ (e as any).evento || '-' }}</p>
-                <p>Usuário: {{ (e as any).usuario || '-' }}</p>
-              </ion-label>
-              <ion-badge slot="end" [color]="(e as any).confirmado ? 'success' : 'medium'">
-                {{ (e as any).confirmado ? 'Confirmado' : 'Pendente' }}
+              <h2>Cliente: {{ e['cliente'] || '-' }}</h2>
+              <p>Data: {{ formatDate(e['data']) }}</p>
+              <p>Evento: {{ e['evento'] || '-' }}</p>
+              <p>Usuário: {{ e['usuario'] || '-' }}</p>
+              <ion-badge slot="end" [color]="e['confirmado'] ? 'success' : 'medium'">
+                {{ e['confirmado'] ? 'Confirmado' : 'Pendente' }}
               </ion-badge>
             </ion-item>
           </ion-list>

@@ -38,7 +38,7 @@
   --ion-color-light: #f4f4f4;
 
   /** Background e textos **/
-  --ion-background-color: #ffffff;
+  --ion-background-color: #ece9e9;
   --ion-background-color-rgb: 255, 255, 255;
 
   --ion-text-color: #1e1e1e;
@@ -68,6 +68,24 @@
   /** Itens **/
   --ion-item-background: #1e1e1e;
   --ion-item-color: #ffffff;
+
+  /* Placeholder dos inputs */
+  --ion-input-placeholder-color: #8c8c8c;
+
+  --ion-card-title-color: #ffffff;
+
+  ion-searchbar {
+    --color: var(--ion-text-color); /* texto do search */
+  }
+
+  ion-card-title {
+    color: var(--ion-text-color);
+  }
+
+  /* Placeholder */
+  ion-searchbar {
+    --placeholder-color: var(--ion-input-placeholder-color);
+  }
 
   /** Toolbar **/
   --ion-toolbar-background: #1f1f1f;

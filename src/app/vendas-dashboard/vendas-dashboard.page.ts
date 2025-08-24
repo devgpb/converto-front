@@ -57,7 +57,7 @@ export class VendasDashboardPage implements OnInit {
 
   modalOpen = false;
   modalKind: ModalKind = null;
-  modalItems: (Cliente | Evento)[] = [];
+  modalItems: any[] = [];
 
   ngOnInit(): void {
     this.loadData();

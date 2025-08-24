@@ -14,7 +14,7 @@ interface Gear {
   styleUrls: ['./gear-background.component.scss'],
 })
 export class GearBackgroundComponent implements OnInit {
-  @Input() gearCount = 6;
+  @Input() gearCount = 8;
   @Input() color = '#00c16a';
   @Input() minSize = 40;
   @Input() maxSize = 80;

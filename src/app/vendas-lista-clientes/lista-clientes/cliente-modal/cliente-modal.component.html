@@ -14,7 +14,7 @@
     <ion-content class="ion-padding" *ngIf="formData">
       <div class="info-box">
         <ion-text color="medium">Cadastrado por:</ion-text>
-        <h2>{{ formData.responsavel?.nomeCompleto || '-' }}</h2>
+        <h2>{{ formData.responsavel?.name || '-' }}</h2>
       </div>
 
       <ion-list lines="full">
