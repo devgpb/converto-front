@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonViewDidEnter, IonicModule } from '@ionic/angular';
+import { ViewDidEnter , IonicModule } from '@ionic/angular';
 import { ListaClientesComponent } from './lista-clientes/lista-clientes.component';
 
 @Component({
@@ -8,7 +8,7 @@ import { ListaClientesComponent } from './lista-clientes/lista-clientes.componen
   standalone: true,
   imports: [IonicModule, ListaClientesComponent],
 })
-export class VendasListaClientesPage implements IonViewDidEnter {
+export class VendasListaClientesPage implements ViewDidEnter  {
   @ViewChild(ListaClientesComponent) listaClientes!: ListaClientesComponent;
 
   ionViewDidEnter(): void {

@@ -33,10 +33,21 @@
         </div>
         <div class="filters">
           <ion-item class="range-picker">
-            <ion-input type="date" [value]="range.start" (ionChange)="onRangeChange('start', $event.detail.value)" placeholder="Início"></ion-input>
+            <ion-input
+              type="date"
+              [value]="range.start"
+              (ionChange)="onRangeChange('start', $event.detail.value ?? '')"
+              placeholder="Início">
+            </ion-input>
           </ion-item>
           <ion-item class="range-picker">
-            <ion-input type="date" [value]="range.end" (ionChange)="onRangeChange('end', $event.detail.value)" placeholder="Fim"></ion-input>
+
+            <ion-input
+              type="date"
+              [value]="range.end"
+              (ionChange)="onRangeChange('end', $event.detail.value ?? '')"
+              placeholder="Fim">
+            </ion-input>
           </ion-item>
           <ion-button fill="outline" [disabled]="!rangeValid" (click)="applyRange()">Aplicar</ion-button>
           <ion-text color="danger" *ngIf="rangeError">{{ rangeError }}</ion-text>
