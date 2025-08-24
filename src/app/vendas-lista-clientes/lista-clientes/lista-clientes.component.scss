@@ -21,3 +21,25 @@
   align-items: center;
   margin-top: 16px;
 }
+
+.view-toggle {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  ion-item {
+    --padding-start: 0;
+  }
+}
+
+.table-view {
+  overflow-x: auto;
+  .table-header {
+    font-weight: bold;
+  }
+  .table-row {
+    cursor: pointer;
+  }
+  ion-col {
+    display: flex;
+    align-items: center;
+  }
+}

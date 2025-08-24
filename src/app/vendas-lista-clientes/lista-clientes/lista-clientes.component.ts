@@ -6,6 +6,7 @@ import { ClientesService, Cliente, ClientesResponse } from '../../services/clien
 import { AuthService } from '../../services/auth.service';
 import { ClienteCardComponent } from './cliente-card/cliente-card.component';
 import { ClienteModalComponent } from './cliente-modal/cliente-modal.component';
+import { ViewPreferenceService } from '../../services/view-preference.service';
 
 @Component({
   selector: 'app-lista-clientes',
@@ -22,6 +23,8 @@ export class ListaClientesComponent implements OnInit {
   pageSize = 50;
   carregandoBusca = false;
 
+  viewMode: 'cards' | 'table' = 'cards';
+
   searchTerm = '';
   statusFilter = 'todos';
   cidadeFilter = 'todas';
@@ -36,12 +39,14 @@ export class ListaClientesComponent implements OnInit {
 
   constructor(
     private clientesService: ClientesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private viewPref: ViewPreferenceService
   ) {
     this.tenantId = this.authService.getTenantId();
   }
 
   ngOnInit(): void {
+    this.viewMode = this.viewPref.getViewMode();
     this.carregarFiltros();
     this.fetch();
   }
@@ -124,6 +129,67 @@ export class ListaClientesComponent implements OnInit {
     this.fetch();
   }
 
+  onViewModeChange(mode: 'cards' | 'table'): void {
+    this.viewMode = mode;
+    this.viewPref.setViewMode(mode);
+  }
+
+  abrirWhatsapp(cliente: Cliente, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const celularRaw = cliente?.celular || '';
+    const celularLimpo = celularRaw.replace(/\D/g, '');
+    const celularComDDI = celularLimpo.startsWith('55') ? celularLimpo : `55${celularLimpo}`;
+    const url = `https://wa.me/${celularComDDI}`;
+    window.open(url, '_blank');
+  }
+
+  isUltimoContatoHoje(cliente: Cliente): boolean {
+    if (!cliente.ultimoContato) return false;
+    const ultimoContatoDate = new Date(cliente.ultimoContato);
+    const hoje = new Date();
+    return (
+      ultimoContatoDate.getDate() === hoje.getDate() &&
+      ultimoContatoDate.getMonth() === hoje.getMonth() &&
+      ultimoContatoDate.getFullYear() === hoje.getFullYear()
+    );
+  }
+
+  marcarContato(cliente: Cliente, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const payload: Partial<Cliente> = {
+      id_cliente: cliente.id_cliente,
+      ultimoContato: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    this.clientesService.postCliente(payload).subscribe(() => {
+      cliente.ultimoContato = payload.ultimoContato;
+      cliente.updated_at = payload.updated_at;
+    });
+  }
+
+  getDias(cliente: Cliente): number {
+    const referencia = cliente.updated_at || cliente.created_at || new Date().toISOString();
+    const hoje = new Date();
+    const refDate = new Date(referencia);
+    hoje.setHours(0, 0, 0, 0);
+    refDate.setHours(0, 0, 0, 0);
+    const diffMs = hoje.getTime() - refDate.getTime();
+    return Math.max(0, Math.floor(diffMs / 86400000));
+  }
+
+  getDiasColor(cliente: Cliente): string {
+    const dias = this.getDias(cliente);
+    if (dias <= 7) return 'success';
+    if (dias <= 15) return 'warning';
+    if (dias <= 30) return 'medium';
+    return 'danger';
+  }
+
+  getPrimeiroNome(nome: string): string {
+    return nome.trim().split(' ')[0];
+  }
   openClienteModal(cliente: Cliente): void {
     this.clienteSelecionado = cliente;
     this.modalAberto = true;
