@@ -45,3 +45,12 @@
   }
 }
 
+/* Detalhes em verde para os componentes padrão */
+ion-item {
+  --highlight-color-focused: var(--ion-color-success);
+}
+
+ion-card {
+  border-left: 4px solid var(--ion-color-success);
+}
+

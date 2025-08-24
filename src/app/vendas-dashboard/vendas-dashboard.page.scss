@@ -30,6 +30,37 @@
   text-align: center;
 }
 
+.kpi-card {
+  border-left: none;
+  border-top: 4px solid var(--card-color);
+}
+
+.kpi-card ion-icon {
+  font-size: 2rem;
+  color: var(--card-color);
+  margin-bottom: 0.5rem;
+}
+
+.kpi-card.novos {
+  --card-color: var(--ion-color-primary);
+}
+
+.kpi-card.atendidos {
+  --card-color: var(--ion-color-secondary);
+}
+
+.kpi-card.total {
+  --card-color: var(--ion-color-tertiary);
+}
+
+.kpi-card.eventos {
+  --card-color: var(--ion-color-warning);
+}
+
+.kpi-card.fechados {
+  --card-color: var(--ion-color-success);
+}
+
 .kpi-value {
   font-size: 1.5rem;
   font-weight: 700;

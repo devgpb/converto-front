@@ -49,7 +49,6 @@ export class ListaClientesComponent implements OnInit {
   ngOnInit(): void {
     this.viewMode = this.viewPref.getViewMode();
     this.carregarFiltros();
-    this.fetch();
   }
 
   private buildParams(extra: any = {}) {

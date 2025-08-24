@@ -51,11 +51,12 @@
       <ion-grid class="kpi-grid">
         <ion-row>
           <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card (click)="openModal('novos')">
+            <ion-card class="kpi-card novos" (click)="openModal('novos')">
               <ion-card-header>
                 <ion-card-subtitle>Clientes Novos</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                <ion-icon name="person-add-outline"></ion-icon>
                 <div class="kpi-value">{{ d.clientesNovosHoje }}</div>
                 <div class="kpi-desc">{{ selectedPeriod()==='hoje' ? 'hoje' : ('neste ' + selectedPeriod()) }}</div>
               </ion-card-content>
@@ -63,11 +64,12 @@
           </ion-col>
 
           <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card (click)="openModal('atendidos')">
+            <ion-card class="kpi-card atendidos" (click)="openModal('atendidos')">
               <ion-card-header>
                 <ion-card-subtitle>Clientes Atendidos</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                <ion-icon name="chatbubbles-outline"></ion-icon>
                 <div class="kpi-value">{{ d.clientesAtendidosHoje }}</div>
                 <div class="kpi-desc">{{ selectedPeriod()==='hoje' ? 'hoje' : ('neste ' + selectedPeriod()) }}</div>
               </ion-card-content>
@@ -75,11 +77,12 @@
           </ion-col>
 
           <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card>
+            <ion-card class="kpi-card total">
               <ion-card-header>
                 <ion-card-subtitle>Total Cadastrados</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                <ion-icon name="people-outline"></ion-icon>
                 <div class="kpi-value">{{ d.totalClientesCadastrados }}</div>
                 <div class="kpi-desc">clientes ativos</div>
               </ion-card-content>
@@ -87,11 +90,12 @@
           </ion-col>
 
           <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card (click)="openModal('eventos')">
+            <ion-card class="kpi-card eventos" (click)="openModal('eventos')">
               <ion-card-header>
                 <ion-card-subtitle>Eventos Marcados</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                <ion-icon name="calendar-outline"></ion-icon>
                 <div class="kpi-value">{{ d.eventosMarcados }}</div>
                 <div class="kpi-desc">Eventos marcados</div>
               </ion-card-content>
@@ -99,11 +103,12 @@
           </ion-col>
 
           <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card (click)="openModal('fechados')">
+            <ion-card class="kpi-card fechados" (click)="openModal('fechados')">
               <ion-card-header>
                 <ion-card-subtitle>Fechados</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                <ion-icon name="checkmark-done-outline"></ion-icon>
                 <div class="kpi-value">{{ d.clientesFechados }}</div>
                 <div class="kpi-desc">Vendas Fechadas</div>
               </ion-card-content>
