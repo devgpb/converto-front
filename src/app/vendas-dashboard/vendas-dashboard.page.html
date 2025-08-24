@@ -1,3 +1,205 @@
 <ion-content class="ion-padding">
-  <h1>Vendas Dashboard</h1>
+
+  <!-- Loading -->
+  <ng-container *ngIf="loading">
+    <ion-skeleton-text animated style="width: 60%; height: 24px;"></ion-skeleton-text>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" size-md="3" *ngFor="let _ of [1,2,3,4]">
+          <ion-card>
+            <ion-card-content>
+              <ion-skeleton-text animated style="width:40%"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width:20%"></ion-skeleton-text>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
+
+  <!-- Error -->
+  <ion-text color="medium" *ngIf="!loading && error">
+    {{ error }}
+  </ion-text>
+
+  <!-- Content -->
+  <ng-container *ngIf="!loading && data as d">
+
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1 class="title">Relatório de Atendimento</h1>
+        <p class="subtitle">Acompanhe o desempenho do atendimento ao cliente</p>
+      </div>
+      <div class="filters">
+        <ion-item lines="none" class="range-picker">
+          <ion-input type="date" [value]="range.start" (ionChange)="onRangeChange('start', $event)" placeholder="Início"></ion-input>
+          <span>—</span>
+          <ion-input type="date" [value]="range.end" (ionChange)="onRangeChange('end', $event)" placeholder="Fim"></ion-input>
+          <ion-button size="small" (click)="applyRange()" [disabled]="!rangeValid">Aplicar</ion-button>
+        </ion-item>
+        <ion-text color="danger" *ngIf="rangeError">{{ rangeError }}</ion-text>
+
+        <ion-buttons>
+          <ion-button size="small" [fill]="selectedPeriod==='hoje' ? 'solid' : 'outline'" (click)="setPeriod('hoje')">Hoje</ion-button>
+          <ion-button size="small" [fill]="selectedPeriod==='semana' ? 'solid' : 'outline'" (click)="setPeriod('semana')">Esta Semana</ion-button>
+          <ion-button size="small" [fill]="selectedPeriod==='mes' ? 'solid' : 'outline'" (click)="setPeriod('mes')">Este Mês</ion-button>
+        </ion-buttons>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <ion-grid class="kpi-grid">
+      <ion-row>
+        <ion-col size="6" size-md="3">
+          <ion-card button (click)="openModal('novos')">
+            <ion-card-header>
+              <ion-card-subtitle>Clientes Novos</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ d.clientesNovosHoje }}</div>
+              <div class="kpi-desc">{{ selectedPeriodLabel() }}</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" size-md="3">
+          <ion-card button (click)="openModal('atendidos')">
+            <ion-card-header>
+              <ion-card-subtitle>Clientes Atendidos</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ d.clientesAtendidosHoje }}</div>
+              <div class="kpi-desc">{{ selectedPeriodLabel() }}</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" size-md="3">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle>Total Cadastrados</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ d.totalClientesCadastrados }}</div>
+              <div class="kpi-desc">clientes ativos</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" size-md="3">
+          <ion-card button (click)="openModal('eventos')">
+            <ion-card-header>
+              <ion-card-subtitle>Eventos Marcados</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ d.eventosMarcados }}</div>
+              <div class="kpi-desc">Eventos marcados</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6" size-md="3">
+          <ion-card button (click)="openModal('fechados')">
+            <ion-card-header>
+              <ion-card-subtitle>Fechados</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ d.clientesFechados }}</div>
+              <div class="kpi-desc">Vendas Fechadas</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Secondary KPIs -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Clientes por Status</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngFor="let s of d.statusDistribution" class="status-row">
+          <span>{{ s.status || 'Sem status' }}</span>
+          <ion-progress-bar [value]="s.count / maxStatus"></ion-progress-bar>
+          <span class="count">{{ s.count }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Clientes por Campanha</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngFor="let c of d.campanhaDistribution" class="status-row">
+          <span>{{ c.campanha || 'Sem campanha' }}</span>
+          <ion-progress-bar [value]="c.count / totalCampanhas"></ion-progress-bar>
+          <span class="count">{{ c.count }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Contatos por dia (último contato)</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item *ngFor="let ct of d.contatosPorDia">
+            <ion-label>{{ formatDate(ct.date) }}</ion-label>
+            <ion-badge slot="end">{{ ct.count }}</ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+  </ng-container>
+
+  <!-- MODAL -->
+  <ion-modal [isOpen]="modalOpen" (didDismiss)="closeModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ modalTitle() }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeModal()">Fechar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ng-container *ngIf="isClientList(); else eventosTpl">
+          <ion-list>
+            <ion-item *ngFor="let c of modalItems">
+              <ion-label>
+                <h2>{{ (c as any).nome }}</h2>
+                <p>{{ formatDate((c as any).updatedAt) }}</p>
+                <p>{{ short((c as any).observacao) }}</p>
+              </ion-label>
+              <ion-badge slot="end" [color]="statusBadgeColor((c as any).status)">
+                {{ (c as any).status || 'Sem status' }}
+              </ion-badge>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+        <ng-template #eventosTpl>
+          <ion-list>
+            <ion-item *ngFor="let e of modalItems">
+              <ion-label>
+                <h2>Cliente: {{ (e as any).cliente || '-' }}</h2>
+                <p>Data: {{ formatDate((e as any).data) }}</p>
+                <p>Evento: {{ (e as any).evento || '-' }}</p>
+                <p>Usuário: {{ (e as any).usuario || '-' }}</p>
+              </ion-label>
+              <ion-badge slot="end" [color]="(e as any).confirmado ? 'success' : 'medium'">
+                {{ (e as any).confirmado ? 'Confirmado' : 'Pendente' }}
+              </ion-badge>
+            </ion-item>
+          </ion-list>
+        </ng-template>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
 </ion-content>
+
