@@ -92,16 +92,14 @@
 
   <div class="view-toggle">
     <ion-label>Visualização</ion-label>
-    <ion-radio-group [(ngModel)]="viewMode" (ionChange)="onViewModeChange($event.detail.value)" class="ion-margin-start">
-      <ion-item lines="none">
+    <ion-segment [(ngModel)]="viewMode" (ionChange)="onViewModeChange($event.detail.value)" class="ion-margin-start">
+      <ion-segment-button value="cards">
         <ion-label>Cards</ion-label>
-        <ion-radio slot="start" value="cards"></ion-radio>
-      </ion-item>
-      <ion-item lines="none">
+      </ion-segment-button>
+      <ion-segment-button value="table">
         <ion-label>Tabela</ion-label>
-        <ion-radio slot="start" value="table"></ion-radio>
-      </ion-item>
-    </ion-radio-group>
+      </ion-segment-button>
+    </ion-segment>
   </div>
 
   <!-- Lista -->

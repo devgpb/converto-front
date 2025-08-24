@@ -25,8 +25,11 @@
 .view-toggle {
   margin-top: 16px;
   margin-bottom: 16px;
-  ion-item {
-    --padding-start: 0;
+  display: flex;
+  align-items: center;
+
+  ion-segment {
+    margin-left: 8px;
   }
 }
 
