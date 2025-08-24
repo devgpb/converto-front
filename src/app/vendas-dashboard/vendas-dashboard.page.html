@@ -26,7 +26,7 @@
             type="date"
             class="pl-12 px-3 py-1.5 border rounded"
             [value]="range.start"
-            (change)="onRangeChange('start', $event.target.value ? new Date($event.target.value) : null)"
+            (change)="onRangeChange('start', $event.target.value)"
             placeholder="Início" />
         </div>
         <span class="text-gray-400">—</span>
@@ -35,7 +35,7 @@
             type="date"
             class="pl-8 px-3 py-1.5 border rounded"
             [value]="range.end"
-            (change)="onRangeChange('end', $event.target.value ? new Date($event.target.value) : null)"
+            (change)="onRangeChange('end', $event.target.value)"
             placeholder="Fim" />
         </div>
         <button class="px-3 py-1.5 rounded border" [class.bg-gray-900]="rangeValid" [class.text-white]="rangeValid" [disabled]="!rangeValid" (click)="applyRange()">Aplicar</button>

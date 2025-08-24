@@ -43,7 +43,7 @@ export type EventoUsuarioDTO = {
 
 @Injectable({ providedIn: 'root' })
 export class VendasService {
-  private base = `${environment.apiURL}/clientes/dashboard`;
+  private base = `${environment.apiUrl}/clientes/dashboard`;
 
   constructor(private http: HttpClient) {}
 
@@ -78,19 +78,19 @@ export class VendasService {
   }
 
   getContatos(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiURL}/vendas`);
+    return this.http.get<any[]>(`${environment.apiUrl}/vendas`);
   }
 
   marcarContato(dados: any): Observable<any[]> {
-    return this.http.post<any[]>(`${environment.apiURL}/automacao/marcarContato`, dados);
+    return this.http.post<any[]>(`${environment.apiUrl}/automacao/marcarContato`, dados);
   }
 
   confirmarEvento(idEvento: any) {
-    return this.http.post<any[]>(`${environment.apiURL}/clientes/eventos/${idEvento}/confirmar`, {});
+    return this.http.post<any[]>(`${environment.apiUrl}/clientes/eventos/${idEvento}/confirmar`, {});
   }
 
   cancelarEvento(idEvento: any) {
-    return this.http.post<any[]>(`${environment.apiURL}/clientes/eventos/${idEvento}/cancelar`, {});
+    return this.http.post<any[]>(`${environment.apiUrl}/clientes/eventos/${idEvento}/cancelar`, {});
   }
 
   getEventosUsuario(
@@ -104,7 +104,7 @@ export class VendasService {
       ...(opts.confirmados !== undefined ? { confirmados: String(!!opts.confirmados) } : {}),
     };
     return this.http.get<EventoUsuarioDTO[]>(
-      `${environment.apiURL}/clientes/eventos`,
+      `${environment.apiUrl}/clientes/eventos`,
       { params }
     );
   }
@@ -115,7 +115,7 @@ export class VendasService {
     tz = 'America/Maceio'
   ): Observable<(EventoItem & { dataISO?: string; dataLocal?: string })[]> {
     return this.http.get<(EventoItem & { dataISO?: string; dataLocal?: string })[]>(
-      `${environment.apiURL}/eventos/intervalo`,
+      `${environment.apiUrl}/eventos/intervalo`,
       { params: { inicio, fim, tz } }
     );
   }

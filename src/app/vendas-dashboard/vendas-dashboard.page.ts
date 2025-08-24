@@ -17,7 +17,9 @@ import {
   ApexResponsive,
 } from 'ng-apexcharts';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { LucideAngularModule, UserPlus, Phone, Users, Calendar, Receipt } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+
+
 
 type ChartOptionsLine = {
   series: ApexAxisChartSeries;
@@ -61,7 +63,7 @@ type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | null;
     IonicModule,
     CommonModule,
     NgApexchartsModule,
-    LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt }),
+    LucideAngularModule,
   ],
 })
 export class VendasDashboardPage implements OnInit {
@@ -72,7 +74,7 @@ export class VendasDashboardPage implements OnInit {
   statusChart = signal<ChartOptionsBar | null>(null);
   campanhaChart = signal<ChartOptionsDonut | null>(null);
   contatosChart = signal<ChartOptionsLine | null>(null);
-  range = { start: null as Date | null, end: null as Date | null };
+  range = { start: null as string | null, end: null as string | null };
   rangeError: string | null = null;
   get rangeValid() {
     return !!this.range.start && !!this.range.end && !this.rangeError;
@@ -133,7 +135,7 @@ export class VendasDashboardPage implements OnInit {
     const page = this.modalPage();
     const perPage = this.modalPerPage;
 
-    let req$;
+    let req$: import('rxjs').Observable<any>;
     switch (kind) {
       case 'novos':
         req$ = this.api.getClientesNovosList(periodo, page, perPage);
@@ -149,7 +151,7 @@ export class VendasDashboardPage implements OnInit {
         break;
     }
 
-    req$.subscribe({
+    req$?.subscribe({
       next: (res: any) => {
         this.modalItems.set(res.data ?? []);
         this.modalMeta.set(res.meta ?? null);
@@ -316,15 +318,19 @@ export class VendasDashboardPage implements OnInit {
 
   private periodoPayload(): 'hoje' | 'semana' | 'mes' | [string, string] {
     if (this.rangeValid) {
-      return [this.toYmd(this.range.start!), this.toYmd(this.range.end!)];
+      return [this.range.start!, this.range.end!]; // já são YYYY-MM-DD
     }
     return this.selectedPeriod();
   }
 
-  onRangeChange(which: 'start' | 'end', val: Date | null) {
-    this.range[which] = val;
-    this.rangeError = this.validateRange(this.range.start, this.range.end);
+
+  onRangeChange(which: 'start' | 'end', value: string) {
+    this.range[which] = value || null;
+    const start = this.range.start ? new Date(this.range.start) : null;
+    const end = this.range.end ? new Date(this.range.end) : null;
+    this.rangeError = this.validateRange(start, end);
   }
+
 
   private validateRange(start: Date | null, end: Date | null): string | null {
     if (!start || !end) return 'Selecione as duas datas';
