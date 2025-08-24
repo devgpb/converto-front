@@ -1,34 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { VendasService } from 'src/app/services/vendas/vendas.service';
+import { IDashboardVendas } from 'src/app/interfaces/IDashboardVendas';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexPlotOptions,
+  ApexDataLabels,
+  ApexStroke,
+  ApexTooltip,
+  ApexFill,
+  ApexNonAxisChartSeries,
+  ApexLegend,
+  ApexResponsive,
+} from 'ng-apexcharts';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { LucideAngularModule, UserPlus, Phone, Users, Calendar, Receipt } from 'lucide-angular';
 
-interface DashboardData {
-  clientesNovosHoje: number;
-  clientesAtendidosHoje: number;
-  totalClientesCadastrados: number;
-  eventosMarcados: number;
-  clientesFechados: number;
-  statusDistribution: { status: string; count: number }[];
-  campanhaDistribution: { campanha: string; count: number }[];
-  contatosPorDia: { date: string; count: number }[];
-}
+type ChartOptionsLine = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+};
 
-interface Cliente {
-  nome: string;
-  status?: string;
-  updatedAt?: string;
-  fechado?: string;
-  ultimoContato?: string;
-  observacao?: string;
-}
+type ChartOptionsBar = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  plotOptions: ApexPlotOptions;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+};
 
-interface Evento {
-  cliente?: string;
-  data?: string;
-  evento?: string;
-  confirmado?: boolean;
-  usuario?: string;
-}
+type ChartOptionsDonut = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  dataLabels: ApexDataLabels;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+  responsive: ApexResponsive[];
+};
 
 type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | null;
 
@@ -37,195 +57,296 @@ type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | null;
   templateUrl: './vendas-dashboard.page.html',
   styleUrls: ['./vendas-dashboard.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [
+    IonicModule,
+    CommonModule,
+    NgApexchartsModule,
+    LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt }),
+  ],
 })
 export class VendasDashboardPage implements OnInit {
-  loading = true;
-  error: string | null = null;
-  selectedPeriod: 'hoje' | 'semana' | 'mes' = 'hoje';
-
-  range = { start: '', end: '' };
+  data = signal<IDashboardVendas | null>(null);
+  loading = signal<boolean>(true);
+  error = signal<string | null>(null);
+  selectedPeriod = signal<'hoje' | 'semana' | 'mes'>('hoje');
+  statusChart = signal<ChartOptionsBar | null>(null);
+  campanhaChart = signal<ChartOptionsDonut | null>(null);
+  contatosChart = signal<ChartOptionsLine | null>(null);
+  range = { start: null as Date | null, end: null as Date | null };
   rangeError: string | null = null;
-  get rangeValid(): boolean {
+  get rangeValid() {
     return !!this.range.start && !!this.range.end && !this.rangeError;
   }
 
-  data: DashboardData | null = null;
+  modalOpen = signal<boolean>(false);
+  modalKind = signal<ModalKind>(null);
+  modalLoading = signal<boolean>(false);
+  modalError = signal<string | null>(null);
+  modalItems = signal<any[]>([]);
+  modalMeta = signal<any>(null);
+  modalPage = signal<number>(1);
+  readonly modalPerPage = 12;
 
-  maxStatus = 1;
-  totalCampanhas = 1;
-
-  modalOpen = false;
-  modalKind: ModalKind = null;
-  modalItems: any[] = [];
+  constructor(private api: VendasService) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.fetch();
   }
 
-  loadData(): void {
-    this.loading = true;
-    this.error = null;
-
-    // simulate async request
-    setTimeout(() => {
-      this.data = {
-        clientesNovosHoje: 5,
-        clientesAtendidosHoje: 12,
-        totalClientesCadastrados: 240,
-        eventosMarcados: 3,
-        clientesFechados: 7,
-        statusDistribution: [
-          { status: 'Novo', count: 20 },
-          { status: 'Atendido', count: 15 },
-          { status: 'Fechado', count: 7 },
-        ],
-        campanhaDistribution: [
-          { campanha: 'Verão', count: 14 },
-          { campanha: 'Inverno', count: 8 },
-          { campanha: 'Sem campanha', count: 5 },
-        ],
-        contatosPorDia: [
-          { date: '2024-01-01', count: 5 },
-          { date: '2024-01-02', count: 7 },
-          { date: '2024-01-03', count: 3 },
-          { date: '2024-01-04', count: 9 },
-        ],
-      };
-
-      this.maxStatus = Math.max(
-        ...this.data.statusDistribution.map((s) => s.count),
-        1
-      );
-      this.totalCampanhas =
-        this.data.campanhaDistribution.reduce((a, c) => a + c.count, 0) || 1;
-
-      this.loading = false;
-    }, 600);
+  openModal(kind: Exclude<ModalKind, null>) {
+    this.modalKind.set(kind);
+    this.modalPage.set(1);
+    this.modalOpen.set(true);
+    this.fetchModal();
   }
 
-  setPeriod(p: 'hoje' | 'semana' | 'mes'): void {
-    if (this.selectedPeriod !== p) {
-      this.selectedPeriod = p;
-      this.range = { start: '', end: '' };
-      this.rangeError = null;
-      this.loadData();
+  closeModal() {
+    this.modalOpen.set(false);
+  }
+
+  nextPage() {
+    const meta = this.modalMeta();
+    if (!meta) return;
+    if (meta.page < meta.totalPages) {
+      this.modalPage.set(meta.page + 1);
+      this.fetchModal();
     }
   }
 
-  selectedPeriodLabel(): string {
-    return this.selectedPeriod === 'hoje'
-      ? 'hoje'
-      : this.selectedPeriod === 'semana'
-      ? 'nesta semana'
-      : 'neste mês';
+  prevPage() {
+    const meta = this.modalMeta();
+    if (!meta) return;
+    if (meta.page > 1) {
+      this.modalPage.set(meta.page - 1);
+      this.fetchModal();
+    }
   }
 
-  onRangeChange(which: 'start' | 'end', ev: any): void {
-    this.range[which] = ev.detail.value;
-    this.rangeError = this.validateRange();
+  private fetchModal() {
+    const kind = this.modalKind();
+    if (!kind) return;
+
+    this.modalLoading.set(true);
+    this.modalError.set(null);
+
+    const periodo = this.periodoPayload();
+    const page = this.modalPage();
+    const perPage = this.modalPerPage;
+
+    let req$;
+    switch (kind) {
+      case 'novos':
+        req$ = this.api.getClientesNovosList(periodo, page, perPage);
+        break;
+      case 'atendidos':
+        req$ = this.api.getClientesAtendidosList(periodo, page, perPage);
+        break;
+      case 'fechados':
+        req$ = this.api.getClientesFechadosList(periodo, page, perPage);
+        break;
+      case 'eventos':
+        req$ = this.api.getEventosMarcadosList(periodo, page, perPage);
+        break;
+    }
+
+    req$.subscribe({
+      next: (res: any) => {
+        this.modalItems.set(res.data ?? []);
+        this.modalMeta.set(res.meta ?? null);
+        this.modalLoading.set(false);
+      },
+      error: () => {
+        this.modalError.set('Erro ao carregar a lista');
+        this.modalLoading.set(false);
+      },
+    });
   }
 
-  validateRange(): string | null {
-    const start = this.range.start ? new Date(this.range.start) : null;
-    const end = this.range.end ? new Date(this.range.end) : null;
+  setPeriod(p: 'hoje' | 'semana' | 'mes') {
+    if (this.selectedPeriod() !== p) {
+      this.selectedPeriod.set(p);
+      this.range = { start: null, end: null };
+      this.rangeError = null;
+      this.fetch();
+      this.fetchModal();
+    }
+  }
 
+  private fetch() {
+    this.loading.set(true);
+    this.error.set(null);
+    const periodo = this.periodoPayload();
+
+    this.api.getAtendimento(periodo).subscribe({
+      next: (res) => {
+        this.data.set(res);
+        this.buildStatusChart(res);
+        this.buildCampanhaChart(res);
+        this.buildContatosChart(res);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Erro ao carregar dados do dashboard');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private buildStatusChart(d: IDashboardVendas) {
+    const ordered = [...(d.statusDistribution || [])].sort((a, b) => b.count - a.count);
+    const labels = ordered.map((s) => s.status || 'Sem status');
+    const values = ordered.map((s) => s.count);
+
+    this.statusChart.set({
+      series: [{ name: 'Clientes', data: values }],
+      chart: { type: 'bar', height: 360, toolbar: { show: false } },
+      plotOptions: { bar: { horizontal: true, borderRadius: 6 } },
+      dataLabels: {
+        enabled: true,
+        style: { fontSize: '16px', fontWeight: 'bold', colors: ['#fff'] },
+        dropShadow: { enabled: true, top: 1, left: 1, blur: 2, color: '#000', opacity: 0.7 },
+      },
+      stroke: { show: false },
+      xaxis: { categories: labels, labels: { rotate: 0 } },
+      tooltip: { y: { formatter: (val: number) => `${val} clientes` } },
+      fill: { opacity: 1 },
+    });
+  }
+
+  private buildCampanhaChart(d: IDashboardVendas) {
+    const map = new Map<string, number>();
+
+    for (const it of d.campanhaDistribution ?? []) {
+      const rotuloRaw = (it.campanha ?? 'Sem campanha').trim();
+      const rotulo = rotuloRaw.length ? rotuloRaw : 'Sem campanha';
+      const key = rotulo.toLowerCase();
+      const val = Number(it.count ?? 0);
+      map.set(key, (map.get(key) ?? 0) + (isFinite(val) ? val : 0));
+    }
+
+    if (map.size === 0) {
+      map.set('sem campanha', 0);
+    }
+
+    const entries = Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
+    const labels = entries.map(([k]) =>
+      k === 'sem campanha' ? 'Sem campanha' : k.replace(/\b\w/g, (c) => c.toUpperCase())
+    );
+    const values = entries.map(([, v]) => v);
+    const series = labels.map((_, i) => Number(values[i] ?? 0));
+
+    this.campanhaChart.set({
+      series,
+      chart: { type: 'donut', height: 360, toolbar: { show: false } },
+      labels,
+      legend: { position: 'bottom' },
+      dataLabels: {
+        enabled: true,
+        style: { fontSize: '16px', fontWeight: 'bold', colors: ['#fff'] },
+        dropShadow: { enabled: true, top: 1, left: 1, blur: 2, color: '#000', opacity: 0.7 },
+      },
+      tooltip: { y: { formatter: (val: number) => `${val} clientes` } },
+      responsive: [{ breakpoint: 1024, options: { legend: { position: 'bottom' } } }],
+    });
+  }
+
+  private buildContatosChart(d: IDashboardVendas) {
+    const items = (d.contatosPorDia ?? []).slice().sort((a, b) => a.date.localeCompare(b.date));
+    const labels = items.map((i) =>
+      new Date(i.date + 'T00:00:00').toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+      })
+    );
+    const values = items.map((i) => Number(i.count || 0));
+
+    this.contatosChart.set({
+      series: [{ name: 'Contatos/dia', data: values }],
+      chart: { type: 'area', height: 360, toolbar: { show: false } },
+      xaxis: { categories: labels, labels: { rotate: 0 } },
+      dataLabels: { enabled: false },
+      stroke: { curve: 'smooth', width: 3 },
+      tooltip: { y: { formatter: (val: number) => `${val} contato${val === 1 ? '' : 's'}` } },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 0.2,
+          opacityFrom: 0.5,
+          opacityTo: 0.1,
+          stops: [0, 90, 100],
+        },
+      },
+    });
+  }
+
+  formatDate(d?: string | null) {
+    if (!d) return '';
+    return new Date(d).toLocaleDateString('pt-BR');
+  }
+
+  modalTitle() {
+    const k = this.modalKind();
+    return k === 'novos'
+      ? 'Clientes novos'
+      : k === 'atendidos'
+      ? 'Clientes atendidos'
+      : k === 'fechados'
+      ? 'Clientes fechados'
+      : k === 'eventos'
+      ? 'Eventos marcados'
+      : '';
+  }
+
+  isClientList() {
+    return this.modalKind() === 'novos' || this.modalKind() === 'atendidos' || this.modalKind() === 'fechados';
+  }
+
+  statusPillClass(status?: string | null) {
+    const s = (status ?? '').toLowerCase();
+    if (['fechado', 'vendido'].includes(s)) return 'bg-green-100 text-green-700';
+    if (['aguardando', 'pendente', 'novo'].includes(s)) return 'bg-orange-100 text-orange-700';
+    if (['em negociação', 'negociando', 'atendido'].includes(s)) return 'bg-blue-100 text-blue-700';
+    return 'bg-gray-100 text-gray-700';
+  }
+
+  short(t?: string | null, max = 140) {
+    if (!t) return '';
+    return t.length > max ? t.slice(0, max - 1) + '…' : t;
+  }
+
+  private periodoPayload(): 'hoje' | 'semana' | 'mes' | [string, string] {
+    if (this.rangeValid) {
+      return [this.toYmd(this.range.start!), this.toYmd(this.range.end!)];
+    }
+    return this.selectedPeriod();
+  }
+
+  onRangeChange(which: 'start' | 'end', val: Date | null) {
+    this.range[which] = val;
+    this.rangeError = this.validateRange(this.range.start, this.range.end);
+  }
+
+  private validateRange(start: Date | null, end: Date | null): string | null {
     if (!start || !end) return 'Selecione as duas datas';
     if (end < start) return 'Data final não pode ser antes da inicial';
-
-    const months =
-      (end.getFullYear() - start.getFullYear()) * 12 +
-      (end.getMonth() - start.getMonth());
+    const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
     if (months > 12 || (months === 12 && end.getDate() > start.getDate())) {
       return 'Intervalo máximo é de 12 meses';
     }
     return null;
   }
 
-  applyRange(): void {
-    if (this.rangeValid) {
-      this.selectedPeriod = 'mes';
-      this.loadData();
-    }
+  applyRange() {
+    if (!this.rangeValid) return;
+    this.fetch();
+    this.fetchModal();
   }
 
-  openModal(kind: Exclude<ModalKind, null>): void {
-    this.modalKind = kind;
-    this.modalOpen = true;
-
-    if (this.isClientList()) {
-      this.modalItems = [
-        {
-          nome: 'João da Silva',
-          status: 'Novo',
-          updatedAt: '2024-01-03',
-          observacao: 'Interessado no pacote premium.',
-        },
-        {
-          nome: 'Maria Souza',
-          status: 'Atendido',
-          updatedAt: '2024-01-02',
-          observacao: 'Aguardando resposta.',
-        },
-      ];
-    } else {
-      this.modalItems = [
-        {
-          cliente: 'Carlos Pereira',
-          data: '2024-01-05',
-          evento: 'Reunião',
-          confirmado: false,
-          usuario: 'Marina',
-        },
-      ];
-    }
-  }
-
-  closeModal(): void {
-    this.modalOpen = false;
-    this.modalKind = null;
-  }
-
-  modalTitle(): string {
-    switch (this.modalKind) {
-      case 'novos':
-        return 'Clientes novos';
-      case 'atendidos':
-        return 'Clientes atendidos';
-      case 'fechados':
-        return 'Clientes fechados';
-      case 'eventos':
-        return 'Eventos marcados';
-      default:
-        return '';
-    }
-  }
-
-  isClientList(): boolean {
-    return (
-      this.modalKind === 'novos' ||
-      this.modalKind === 'atendidos' ||
-      this.modalKind === 'fechados'
-    );
-  }
-
-  statusBadgeColor(status?: string): string {
-    const s = (status ?? '').toLowerCase();
-    if (['fechado', 'vendido'].includes(s)) return 'success';
-    if (['aguardando', 'pendente', 'novo'].includes(s)) return 'warning';
-    if (['em negociação', 'negociando', 'atendido'].includes(s))
-      return 'primary';
-    return 'medium';
-  }
-
-  formatDate(d?: string): string {
-    if (!d) return '';
-    return new Date(d).toLocaleDateString('pt-BR');
-  }
-
-  short(t?: string, max = 140): string {
-    if (!t) return '';
-    return t.length > max ? t.slice(0, max - 1) + '…' : t;
+  private toYmd(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 }
 

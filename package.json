@@ -27,7 +27,10 @@
     "@capacitor/keyboard": "7.0.2",
     "@capacitor/status-bar": "7.0.2",
     "@ionic/angular": "^8.0.0",
+    "apexcharts": "^5.3.4",
     "ionicons": "^7.0.0",
+    "lucide-angular": "^0.541.0",
+    "ng-apexcharts": "^2.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
