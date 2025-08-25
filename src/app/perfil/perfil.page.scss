@@ -1,0 +1,35 @@
+.profile-card {
+  ion-card-header {
+    background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+  }
+}
+
+.seats-card {
+  ion-card-header {
+    background: var(--ion-color-secondary);
+    color: var(--ion-color-secondary-contrast);
+  }
+}
+
+ion-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+ion-item {
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+
+  h2 {
+    font-size: 0.9rem;
+    margin: 0;
+    color: var(--ion-color-medium);
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
