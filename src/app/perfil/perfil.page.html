@@ -1,5 +1,5 @@
 <ion-content class="ion-padding">
-  <ion-card *ngIf="tenant">
+  <ion-card *ngIf="profile">
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="person-circle-outline" slot="start"></ion-icon>
@@ -7,20 +7,47 @@
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Tenant:</strong> {{ tenant.name }}</p>
-      <p><strong>ID:</strong> {{ tenant.id }}</p>
+      <p><strong>Nome:</strong> {{ profile.name }}</p>
+      <p><strong>Email:</strong> {{ profile.email }}</p>
+      <p><strong>Função:</strong> {{ profile.role }}</p>
+      <p *ngIf="profile.tenant"><strong>Tenant:</strong> {{ profile.tenant?.name }}</p>
+      <p *ngIf="profile.enterprise"><strong>Empresa:</strong> {{ profile.enterprise?.name }}</p>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="billing">
+  <ion-card *ngIf="profile?.seats">
     <ion-card-header>
-      <ion-card-title>
-        <ion-icon name="card-outline" slot="start"></ion-icon>
-        Assinatura
-      </ion-card-title>
+      <ion-card-title>Assentos</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Status:</strong> {{ billing.status_billing }}</p>
+      <p><strong>Pagos:</strong> {{ profile.seats?.paid }}</p>
+      <p><strong>Usuários ativos:</strong> {{ profile.seats?.active_users }}</p>
+      <p><strong>Total de usuários:</strong> {{ profile.seats?.total_users }}</p>
+      <p><strong>Disponíveis:</strong> {{ profile.seats?.available }}</p>
+      <p><strong>Status:</strong> {{ profile.seats?.subscription_status }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Alterar senha</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="form" (ngSubmit)="changePassword()">
+        <ion-item>
+          <ion-label position="stacked">Senha atual</ion-label>
+          <ion-input type="password" formControlName="oldPassword"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Nova senha</ion-label>
+          <ion-input type="password" formControlName="newPassword"></ion-input>
+        </ion-item>
+        <ion-button expand="block" type="submit">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Salvar
+        </ion-button>
+      </form>
     </ion-card-content>
   </ion-card>
 </ion-content>
+
