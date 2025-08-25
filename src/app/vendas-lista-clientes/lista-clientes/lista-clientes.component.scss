@@ -33,16 +33,4 @@
   }
 }
 
-.table-view {
-  overflow-x: auto;
-  .table-header {
-    font-weight: bold;
-  }
-  .table-row {
-    cursor: pointer;
-  }
-  ion-col {
-    display: flex;
-    align-items: center;
-  }
-}
+

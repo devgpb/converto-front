@@ -94,3 +94,37 @@
   /** Label **/
   --ion-label-color: #ffffff;
 }
+
+/* ====== Estilo padrão para tabelas ====== */
+.table-view {
+  overflow-x: auto;
+  border: 1px solid rgba(var(--ion-color-success-rgb), 0.3);
+  border-radius: 8px;
+  background: var(--ion-item-background);
+
+  ion-row.table-header {
+    background: rgba(var(--ion-color-success-rgb), 0.15);
+    font-weight: bold;
+  }
+
+  ion-row.table-row {
+    cursor: pointer;
+    border-top: 1px solid rgba(var(--ion-color-success-rgb), 0.1);
+    border-left: 4px solid transparent;
+    transition: background 0.2s, border-left 0.2s;
+  }
+
+  ion-row.table-row:nth-child(even) {
+    background: rgba(var(--ion-color-success-rgb), 0.05);
+  }
+
+  ion-row.table-row:hover {
+    background: rgba(var(--ion-color-success-rgb), 0.15);
+    border-left: 4px solid var(--ion-color-success);
+  }
+
+  ion-col {
+    display: flex;
+    align-items: center;
+  }
+}
