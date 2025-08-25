@@ -37,7 +37,7 @@ export class GearBackgroundComponent implements OnInit {
         left: Math.random() * 100,
         size,
         duration: this.random(this.minDuration, this.maxDuration),
-        delay: Math.random() * this.maxDuration,
+        delay: Math.random() * 2,
       };
     });
   }

@@ -12,35 +12,35 @@
           <ion-icon slot="start" name="person-outline" color="primary"></ion-icon>
           <ion-label>
             <h2>Nome</h2>
-            <p>{{ profile.name }}</p>
+            <p>{{ profile?.name }}</p>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
           <ion-icon slot="start" name="mail-outline" color="primary"></ion-icon>
           <ion-label>
             <h2>Email</h2>
-            <p>{{ profile.email }}</p>
+            <p>{{ profile?.email }}</p>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
           <ion-icon slot="start" name="briefcase-outline" color="primary"></ion-icon>
           <ion-label>
             <h2>Função</h2>
-            <p>{{ profile.role }}</p>
+            <p>{{ profile?.role }}</p>
           </ion-label>
         </ion-item>
-        <ion-item *ngIf="profile.tenant" lines="none">
+        <ion-item *ngIf="profile?.tenant" lines="none">
           <ion-icon slot="start" name="business-outline" color="primary"></ion-icon>
           <ion-label>
             <h2>Tenant</h2>
-            <p>{{ profile.tenant?.name }}</p>
+            <p>{{ profile?.tenant?.name }}</p>
           </ion-label>
         </ion-item>
-        <ion-item *ngIf="profile.enterprise" lines="none">
+        <ion-item *ngIf="profile?.enterprise" lines="none">
           <ion-icon slot="start" name="home-outline" color="primary"></ion-icon>
           <ion-label>
             <h2>Empresa</h2>
-            <p>{{ profile.enterprise?.name }}</p>
+            <p>{{ profile?.enterprise?.name }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -60,35 +60,35 @@
           <ion-icon slot="start" name="card-outline" color="secondary"></ion-icon>
           <ion-label>
             <h2>Pagos</h2>
-            <p>{{ profile.seats?.paid }}</p>
+            <p>{{ profile?.seats?.paid }}</p>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
           <ion-icon slot="start" name="people-outline" color="secondary"></ion-icon>
           <ion-label>
             <h2>Usuários ativos</h2>
-            <p>{{ profile.seats?.active_users }}</p>
+            <p>{{ profile?.seats?.active_users }}</p>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
           <ion-icon slot="start" name="list-outline" color="secondary"></ion-icon>
           <ion-label>
             <h2>Total de usuários</h2>
-            <p>{{ profile.seats?.total_users }}</p>
+            <p>{{ profile?.seats?.total_users }}</p>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
           <ion-icon slot="start" name="person-add-outline" color="secondary"></ion-icon>
           <ion-label>
             <h2>Disponíveis</h2>
-            <p>{{ profile.seats?.available }}</p>
+            <p>{{ profile?.seats?.available }}</p>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
           <ion-icon slot="start" name="information-circle-outline" color="secondary"></ion-icon>
           <ion-label>
             <h2>Status</h2>
-            <p>{{ profile.seats?.subscription_status }}</p>
+            <p>{{ profile?.seats?.subscription_status }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
