@@ -7,6 +7,7 @@ import { ProfileService, Profile } from '../services/profile.service';
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.page.html',
+  styleUrls: ['./perfil.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, ReactiveFormsModule],
 })

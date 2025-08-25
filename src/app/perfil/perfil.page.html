@@ -1,5 +1,5 @@
 <ion-content class="ion-padding">
-  <ion-card *ngIf="profile">
+  <ion-card *ngIf="profile" class="profile-card">
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="person-circle-outline" slot="start"></ion-icon>
@@ -7,24 +7,91 @@
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Nome:</strong> {{ profile.name }}</p>
-      <p><strong>Email:</strong> {{ profile.email }}</p>
-      <p><strong>Função:</strong> {{ profile.role }}</p>
-      <p *ngIf="profile.tenant"><strong>Tenant:</strong> {{ profile.tenant?.name }}</p>
-      <p *ngIf="profile.enterprise"><strong>Empresa:</strong> {{ profile.enterprise?.name }}</p>
+      <ion-list>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="person-outline" color="primary"></ion-icon>
+          <ion-label>
+            <h2>Nome</h2>
+            <p>{{ profile.name }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="mail-outline" color="primary"></ion-icon>
+          <ion-label>
+            <h2>Email</h2>
+            <p>{{ profile.email }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="briefcase-outline" color="primary"></ion-icon>
+          <ion-label>
+            <h2>Função</h2>
+            <p>{{ profile.role }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item *ngIf="profile.tenant" lines="none">
+          <ion-icon slot="start" name="business-outline" color="primary"></ion-icon>
+          <ion-label>
+            <h2>Tenant</h2>
+            <p>{{ profile.tenant?.name }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item *ngIf="profile.enterprise" lines="none">
+          <ion-icon slot="start" name="home-outline" color="primary"></ion-icon>
+          <ion-label>
+            <h2>Empresa</h2>
+            <p>{{ profile.enterprise?.name }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="profile?.seats">
+  <ion-card *ngIf="profile?.seats" class="seats-card">
     <ion-card-header>
-      <ion-card-title>Assentos</ion-card-title>
+      <ion-card-title>
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+        Assentos
+      </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Pagos:</strong> {{ profile.seats?.paid }}</p>
-      <p><strong>Usuários ativos:</strong> {{ profile.seats?.active_users }}</p>
-      <p><strong>Total de usuários:</strong> {{ profile.seats?.total_users }}</p>
-      <p><strong>Disponíveis:</strong> {{ profile.seats?.available }}</p>
-      <p><strong>Status:</strong> {{ profile.seats?.subscription_status }}</p>
+      <ion-list>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="card-outline" color="secondary"></ion-icon>
+          <ion-label>
+            <h2>Pagos</h2>
+            <p>{{ profile.seats?.paid }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="people-outline" color="secondary"></ion-icon>
+          <ion-label>
+            <h2>Usuários ativos</h2>
+            <p>{{ profile.seats?.active_users }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="list-outline" color="secondary"></ion-icon>
+          <ion-label>
+            <h2>Total de usuários</h2>
+            <p>{{ profile.seats?.total_users }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="person-add-outline" color="secondary"></ion-icon>
+          <ion-label>
+            <h2>Disponíveis</h2>
+            <p>{{ profile.seats?.available }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="information-circle-outline" color="secondary"></ion-icon>
+          <ion-label>
+            <h2>Status</h2>
+            <p>{{ profile.seats?.subscription_status }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 
