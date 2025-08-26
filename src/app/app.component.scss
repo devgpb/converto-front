@@ -118,3 +118,13 @@ ion-item.selected {
   --color: var(--ion-color-primary);
 }
 
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main-content ion-router-outlet {
+  flex: 1;
+}
+

@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" class="menu-toggle">
+      <ion-button (click)="toggleMenu()" class="menu-button">
+        <ion-icon name="menu" class="menu-icon" [class.open]="menuOpen"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
