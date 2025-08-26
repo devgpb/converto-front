@@ -9,7 +9,10 @@
           <app-nav-menu></app-nav-menu>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet id="main-content"></ion-router-outlet>
+      <div id="main-content" class="main-content">
+        <app-header></app-header>
+        <ion-router-outlet></ion-router-outlet>
+      </div>
     </ion-split-pane>
   </ng-template>
 </ion-app>
