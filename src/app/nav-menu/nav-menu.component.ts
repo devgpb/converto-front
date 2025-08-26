@@ -34,17 +34,17 @@ export class NavMenuComponent {
       title: 'Vendas',
       items: [
         { icon: 'stats-chart', title: 'Relatório de Vendas', href: '/vendas/dashboard' },
-        { icon: 'person-add', title: 'Cadastrar Clientes', href: '/vendas/leads' },
+        { icon: 'person-add-outline', title: 'Cadastrar Clientes', href: '/vendas/leads' },
         { icon: 'people', title: 'Lista de Clientes', href: '/vendas/lista/clientes' },
       ],
     },
     {
       title: 'Administração',
       items: [
-        { icon: 'people', title: 'Usuários', href: '/ref' },
+        { icon: 'person-circle', title: 'Usuários', href: '/ref' },
         // { icon: 'business', title: 'Setores', href: '/setores' },
-        { icon: 'create', title: 'Empresa', href: '/empresa' },
-        { icon: 'people-circle', title: 'Assentos', href: '/assentos' },
+        { icon: 'business', title: 'Empresa', href: '/empresa' },
+        { icon: 'grid', title: 'Assentos', href: '/assentos' },
         { icon: 'person-add', title: 'Novo Usuário', href: '/usuarios/novo' },
       ],
     },
