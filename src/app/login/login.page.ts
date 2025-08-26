@@ -39,7 +39,8 @@ export class LoginPage {
     this.auth.login(email, password).subscribe({
       next: () => this.router.navigate(['/vendas/dashboard']),
       error: async (error) => {
-        const message = error?.error?.message ?? 'Erro ao fazer login.';
+        console.log(error)
+        const message = error?.error.error ?? 'Erro ao fazer login.';
         const toast = await this.toastController.create({
           message,
           duration: 3000,

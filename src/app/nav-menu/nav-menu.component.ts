@@ -73,7 +73,13 @@ export class NavMenuComponent {
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
     const menu = document.querySelector('ion-menu.menu-desktop');
-    menu?.classList.toggle('collapsed', this.collapsed);
+    if (menu) {
+      if (this.collapsed) {
+        menu.classList.add('collapsed');
+      } else {
+        menu.classList.remove('collapsed');
+      }
+    }
   }
 }
 

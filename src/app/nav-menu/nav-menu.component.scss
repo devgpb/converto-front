@@ -42,6 +42,23 @@
   display: none;
 }
 
+:host(.collapsed) {
+  ion-menu.menu-desktop {
+    --side-width: 60px;   /* largura reduzida */
+    --side-min-width: 60px;
+    --side-max-width: 60px;
+  }
+}
+
+.menu-wrapper {
+  width: 300px;
+  transition: width 0.3s ease;
+}
+
+:host-context(ion-menu.collapsed) .menu-wrapper {
+  width: 60px;
+}
+
 :host(.collapsed) ion-item {
   --padding-start: 0;
   --inner-padding-end: 0;
