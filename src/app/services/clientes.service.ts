@@ -24,6 +24,15 @@ export interface ClientesResponse {
   meta: { total: number; totalPages: number };
 }
 
+export interface ClienteEvento {
+  idEvento: number;
+  idCliente: number;
+  data: string;
+  dataLocal?: string;
+  evento?: string | null;
+  confirmado?: boolean | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ClientesService {
   private http = inject(HttpClient);
@@ -42,5 +51,19 @@ export class ClientesService {
 
   getClientes(params: any): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.api, { params });
+  }
+
+  getEventosDoCliente(idCliente: number, params: any = {}): Observable<ClienteEvento[]> {
+    return this.http.get<ClienteEvento[]>(`${this.api}/${idCliente}/eventos`, { params });
+  }
+
+  criarEvento(payload: {
+    idCliente: number;
+    idUsuario?: number;
+    data: string;
+    evento?: string | null;
+    tz?: string;
+  }): Observable<ClienteEvento> {
+    return this.http.post<ClienteEvento>(`${this.api}/eventos`, payload);
   }
 }
