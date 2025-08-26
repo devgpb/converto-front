@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { Cliente, ClientesService } from '../../../services/clientes.service';
+import { Cliente, ClientesService, ClienteEvento } from '../../../services/clientes.service';
+import { VendasService } from '../../../services/vendas/vendas.service';
 
 @Component({
   selector: 'app-cliente-modal',
@@ -22,10 +23,18 @@ export class ClienteModalComponent implements OnChanges {
   statuses: string[] = [];
   campanhas: string[] = [];
 
+  // eventos
+  eventos: ClienteEvento[] = [];
+  evTitulo = '';
+  evData = '';
+  isSavingEvento = false;
+  isLoadingEventos = false;
+  tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Maceio';
+
   errors: Record<string, string> = {};
   isLoading = false;
 
-  constructor(private clientesService: ClientesService) {}
+  constructor(private clientesService: ClientesService, private vendasService: VendasService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['cliente'] && this.cliente) {
@@ -36,6 +45,7 @@ export class ClienteModalComponent implements OnChanges {
         this.clientesService.listaDeCampanhas.push(this.formData.campanha);
       }
       this.campanhas = this.clientesService.listaDeCampanhas;
+      this.carregarEventosCliente();
     }
   }
 
@@ -102,6 +112,62 @@ export class ClienteModalComponent implements OnChanges {
     if (dias <= 15) return 'Normal';
     if (dias <= 30) return 'Atenção';
     return 'Crítico';
+  }
+
+  // ===== eventos =====
+  private carregarEventosCliente() {
+    if (!this.formData?.id_cliente) return;
+    this.isLoadingEventos = true;
+    this.clientesService.getEventosDoCliente(this.formData.id_cliente, { tz: this.tz }).subscribe({
+      next: lista => {
+        this.eventos = lista || [];
+        this.isLoadingEventos = false;
+      },
+      error: () => {
+        this.isLoadingEventos = false;
+      }
+    });
+  }
+
+  marcarEvento() {
+    if (!this.evData) {
+      return;
+    }
+    this.isSavingEvento = true;
+    this.clientesService.criarEvento({
+      idCliente: this.formData.id_cliente,
+      data: this.evData,
+      evento: this.evTitulo || null,
+      tz: this.tz
+    }).subscribe({
+      next: novo => {
+        this.eventos.unshift(novo);
+        this.evTitulo = '';
+        this.evData = '';
+        this.isSavingEvento = false;
+      },
+      error: () => {
+        this.isSavingEvento = false;
+      }
+    });
+  }
+
+  confirmarEventoLocal(ev: ClienteEvento) {
+    ev.confirmado = true;
+    this.vendasService.confirmarEvento(ev.idEvento).subscribe({
+      error: () => {
+        ev.confirmado = null;
+      }
+    });
+  }
+
+  cancelarEventoLocal(ev: ClienteEvento) {
+    this.vendasService.cancelarEvento(ev.idEvento).subscribe({
+      next: () => {
+        this.eventos = this.eventos.filter(e => e.idEvento !== ev.idEvento);
+      },
+      error: () => {}
+    });
   }
 }
 
