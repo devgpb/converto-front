@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { ThemeService } from '../services/theme.service';
 
@@ -16,6 +17,7 @@ export class LoginPage {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private toastController = inject(ToastController);
   theme = inject(ThemeService);
 
   constructor() {
@@ -36,6 +38,15 @@ export class LoginPage {
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
       next: () => this.router.navigate(['/vendas/dashboard']),
+      error: async (error) => {
+        const message = error?.error?.message ?? 'Erro ao fazer login.';
+        const toast = await this.toastController.create({
+          message,
+          duration: 3000,
+          color: 'danger',
+        });
+        await toast.present();
+      },
     });
   }
 }
