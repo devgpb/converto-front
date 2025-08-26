@@ -52,7 +52,28 @@
 
 .menu-wrapper {
   width: 300px;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease; /* anima para abrir e fechar */
+  overflow: hidden;            /* evita quebrar quando fecha */
+}
+
+/* Labels desaparecem com fade */
+ion-label,
+ion-list-header {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+
+:host-context(ion-menu.collapsed) ion-label,
+:host-context(ion-menu.collapsed) ion-list-header {
+  opacity: 0;
+}
+
+/* Ícones centralizados no colapso */
+:host-context(ion-menu.collapsed) ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  justify-content: center;
 }
 
 :host-context(ion-menu.collapsed) .menu-wrapper {
