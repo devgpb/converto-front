@@ -54,6 +54,10 @@
 
   /** Floating Action Button **/
   --ion-color-fab: var(--ion-color-secondary);
+
+  ion-input {
+    --padding-start: 10px;
+  }
 }
 
 /* ====== DARK MODE (ativado pelo ThemeService) ====== */

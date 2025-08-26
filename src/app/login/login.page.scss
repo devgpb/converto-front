@@ -23,8 +23,52 @@ ion-content {
   ion-list{
     width: 100%;
   }
+  ion-list {
+    --background: transparent !important;
+    background: transparent !important;
+  }
 
+  ion-item {
+    --background: transparent;    /* tira fundo */
+    --inner-padding-start: 0;     /* remove padding interno */
+    --inner-padding-end: 0;
+    --padding-start: 0;           /* remove padding externo */
+    --padding-end: 0;
+    border: none;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  ion-input {
+    --padding-start: 12px;        /* agora controla o texto */
+    border: 1px solid #ccc;       /* opcional: dá “caixinha” */
+    border-radius: 6px;
+    background: #fff;             /* ou transparente */
+  }
   ion-button{
     margin-top: 20px;
   }
 }
+
+input{
+  background: #fff;          /* FUNDO branco */
+
+}
+
+ion-input.custom-input {
+  --background: #fff;          /* FUNDO branco */
+  --color: #000;               /* texto preto */
+  --placeholder-color: #666;   /* placeholder cinza */
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+
+  border: 1px solid #ccc;      /* borda externa */
+  border-radius: 6px;
+  margin-bottom: 12px;
+
+  /* opcional: sombra leve */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
