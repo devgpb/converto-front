@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 interface MenuItem {
@@ -28,6 +28,7 @@ interface SubItem {
 })
 export class NavMenuComponent {
   private auth = inject(AuthService);
+  @HostBinding('class.collapsed') collapsed = false;
   public menuSections: MenuSection[] = [
     {
       title: 'Vendas',
@@ -67,6 +68,12 @@ export class NavMenuComponent {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  toggleCollapse(): void {
+    this.collapsed = !this.collapsed;
+    const menu = document.querySelector('ion-menu.menu-desktop');
+    menu?.classList.toggle('collapsed', this.collapsed);
   }
 }
 

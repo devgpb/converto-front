@@ -1,4 +1,7 @@
 <div class="menu-wrapper">
+  <div class="collapse-toggle" (click)="toggleCollapse()">
+    <ion-icon [name]="collapsed ? 'chevron-forward-outline' : 'chevron-back-outline'"></ion-icon>
+  </div>
   <div class="menu-sections">
     <ion-list *ngFor="let section of menuSections">
       <ion-list-header>{{ section.title }}</ion-list-header>
@@ -10,32 +13,32 @@
                 <ion-icon slot="start" [name]="item.icon"></ion-icon>
                 <ion-label>{{ item.title }}</ion-label>
               </ion-item>
-              <ion-list slot="content">
-                <ion-item *ngFor="let sub of getSubItems(item.title)" [routerLink]="[sub.route]">
-                  <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-                  <ion-label>{{ sub.title }}</ion-label>
-                </ion-item>
-              </ion-list>
-            </ion-accordion>
-          </ion-accordion-group>
-        </ng-container>
-        <ng-template #regularItem>
-          <ion-menu-toggle auto-hide="false">
-            <ion-item [routerLink]="[item.href]" lines="none" detail="false">
-              <ion-icon slot="start" [name]="item.icon"></ion-icon>
-              <ion-label>{{ item.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ng-template>
+            <ion-list slot="content">
+              <ion-item *ngFor="let sub of getSubItems(item.title)" [routerLink]="[sub.route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                <ion-label>{{ sub.title }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ng-container>
+      <ng-template #regularItem>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item [routerLink]="[item.href]" lines="none" detail="false" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <ion-icon slot="start" [name]="item.icon"></ion-icon>
+            <ion-label>{{ item.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ng-template>
       </ng-container>
     </ion-list>
   </div>
   <div class="user-actions">
-    <ion-item routerLink="/perfil" lines="none">
+    <ion-item routerLink="/perfil" lines="none" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <ion-icon slot="start" name="person-circle"></ion-icon>
       <ion-label>Perfil</ion-label>
     </ion-item>
-    <ion-item routerLink="/configuracoes" lines="none">
+    <ion-item routerLink="/configuracoes" lines="none" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <ion-icon slot="start" name="settings"></ion-icon>
       <ion-label>Configurações</ion-label>
     </ion-item>
