@@ -60,14 +60,18 @@
 ion-label,
 ion-list-header {
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transform: translateX(0);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  white-space: nowrap;  /* evita quebra feia quando fecha */
 }
 
-
-:host-context(ion-menu.collapsed) ion-label,
-:host-context(ion-menu.collapsed) ion-list-header {
+ion-menu.menu-desktop.collapsed ion-label,
+ion-menu.menu-desktop.collapsed ion-list-header {
   opacity: 0;
+  transform: translateX(-10px); /* desliza levemente para dentro */
+  pointer-events: none;         /* evita clique em elementos invisíveis */
 }
+
 
 /* Ícones centralizados no colapso */
 :host-context(ion-menu.collapsed) ion-item {
