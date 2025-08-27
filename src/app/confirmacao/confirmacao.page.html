@@ -1,0 +1,8 @@
+<ion-content class="ion-padding">
+  <div *ngIf="status">
+    <h2>Pagamento confirmado!</h2>
+    <p>Status: {{ status.status_billing }}</p>
+    <ion-button expand="block" (click)="goToUsuarios()">Cadastrar mais usuários</ion-button>
+    <ion-button expand="block" color="success" (click)="goToSistema()">Ir para o sistema</ion-button>
+  </div>
+</ion-content>

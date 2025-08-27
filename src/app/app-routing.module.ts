@@ -14,6 +14,22 @@ const routes: Routes = [
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
   {
+    path: 'planos',
+    loadChildren: () => import('./planos/planos.module').then(m => m.PlanosPageModule)
+  },
+  {
+    path: 'cadastro',
+    loadChildren: () => import('./cadastro/cadastro.module').then(m => m.CadastroPageModule)
+  },
+  {
+    path: 'checkout',
+    loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutPageModule)
+  },
+  {
+    path: 'confirmacao',
+    loadChildren: () => import('./confirmacao/confirmacao.module').then(m => m.ConfirmacaoPageModule)
+  },
+  {
     path: 'vendas/dashboard',
     loadComponent: () => import('./vendas-dashboard/vendas-dashboard.page').then(m => m.VendasDashboardPage),
     canActivate: [AuthGuard],
