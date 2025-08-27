@@ -8,6 +8,7 @@ import { AuthService } from '../services/auth.service';
   selector: 'app-confirmacao',
   templateUrl: './confirmacao.page.html',
   styleUrls: ['./confirmacao.page.scss'],
+  standalone: false,
 })
 export class ConfirmacaoPage implements OnInit {
   status: any;

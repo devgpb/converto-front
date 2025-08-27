@@ -11,6 +11,7 @@ interface Plan {
   selector: 'app-planos',
   templateUrl: './planos.page.html',
   styleUrls: ['./planos.page.scss'],
+  standalone: false,
 })
 export class PlanosPage {
   plans: Plan[] = [
@@ -22,7 +23,7 @@ export class PlanosPage {
 
   constructor(private router: Router) {}
 
-  começar(): void {
+  comecar(): void {
     this.router.navigate(['/cadastro']);
   }
 }

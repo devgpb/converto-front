@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
   selector: 'app-cadastro',
   templateUrl: './cadastro.page.html',
   styleUrls: ['./cadastro.page.scss'],
+  standalone: false,
 })
 export class CadastroPage {
   form: FormGroup;
