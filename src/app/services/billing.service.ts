@@ -8,6 +8,16 @@ export class BillingService {
   private http = inject(HttpClient);
   private api = `${environment.apiUrl}/billing`;
 
+  checkout(data: {
+    tenant_id: string;
+    price_id: string;
+    seatCountInicial: number;
+    success_url: string;
+    cancel_url: string;
+  }): Observable<any> {
+    return this.http.post<any>(`${this.api}/checkout`, data);
+  }
+
   getStatus(tenantId: string): Observable<any> {
     return this.http.get<any>(`${this.api}/status/${tenantId}`);
   }

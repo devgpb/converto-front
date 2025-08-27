@@ -31,6 +31,22 @@ export class AuthService {
       );
   }
 
+  register(data: {
+    tenant_id: string;
+    email: string;
+    password: string;
+    name: string;
+  }): Observable<{ token: string }> {
+    return this.http
+      .post<{ token: string }>(`${environment.apiUrl}/auth/register`, data)
+      .pipe(
+        tap((res) => {
+          this.token$.next(res.token);
+          localStorage.setItem('token', res.token);
+        })
+      );
+  }
+
   get token(): string | null {
     return this.token$.value;
   }

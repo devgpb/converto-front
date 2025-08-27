@@ -1,0 +1,16 @@
+<ion-content class="ion-padding">
+  <h1>7 dias grátis</h1>
+  <p>O Converto custa de 0 na primeira semana. Veja os planos:</p>
+
+  <ion-card *ngFor="let plan of plans">
+    <ion-card-header>
+      <ion-card-title>{{ plan.title }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ plan.description }}</p>
+      <strong>{{ plan.price }}</strong>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" (click)="começar()">Começar agora</ion-button>
+</ion-content>

@@ -1,0 +1,20 @@
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <ion-item>
+      <ion-input formControlName="empresa" placeholder="Nome da empresa"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input formControlName="emailEmpresa" type="email" placeholder="Email de contato"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input formControlName="adminNome" placeholder="Nome do administrador"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input formControlName="adminEmail" type="email" placeholder="Email do administrador"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input formControlName="senha" type="password" placeholder="Senha"></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit">Continuar</ion-button>
+  </form>
+</ion-content>
