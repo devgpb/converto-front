@@ -2,6 +2,21 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './guards/auth.guard';
+import { PlanosPage } from './planos/planos.page';
+import { CadastroPage } from './cadastro/cadastro.page';
+import { CheckoutPage } from './checkout/checkout.page';
+import { ConfirmacaoPage } from './confirmacao/confirmacao.page';
+import { VendasDashboardPage } from './vendas-dashboard/vendas-dashboard.page';
+import { VendasLeadsPage } from './vendas-leads/vendas-leads.page';
+import { VendasListaClientesPage } from './vendas-lista-clientes/vendas-lista-clientes.page';
+import { RefPage } from './ref/ref.page';
+import { SetoresPage } from './setores/setores.page';
+import { UsuariosNovoPage } from './usuarios-novo/usuarios-novo.page';
+import { PerfilPage } from './perfil/perfil.page';
+import { EmpresaPage } from './empresa/empresa.page';
+import { AssentosPage } from './assentos/assentos.page';
+import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
+import { FolderPage } from './folder/folder.page';
 
 const routes: Routes = [
   {
@@ -15,83 +30,83 @@ const routes: Routes = [
   },
   {
     path: 'planos',
-    loadChildren: () => import('./planos/planos.module').then(m => m.PlanosPageModule)
+    component: PlanosPage
   },
   {
     path: 'cadastro',
-    loadChildren: () => import('./cadastro/cadastro.module').then(m => m.CadastroPageModule)
+    component: CadastroPage
   },
   {
     path: 'checkout',
-    loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutPageModule)
+    component: CheckoutPage
   },
   {
     path: 'confirmacao',
-    loadChildren: () => import('./confirmacao/confirmacao.module').then(m => m.ConfirmacaoPageModule)
+    component: ConfirmacaoPage
   },
   {
     path: 'vendas/dashboard',
-    loadChildren: () => import('./vendas-dashboard/vendas-dashboard.module').then(m => m.VendasDashboardPageModule),
+    component: VendasDashboardPage,
     canActivate: [AuthGuard],
     data: { title: 'Relatório de Atendimento' }
   },
   {
     path: 'vendas/leads',
-    loadChildren: () => import('./vendas-leads/vendas-leads.module').then(m => m.VendasLeadsPageModule),
+    component: VendasLeadsPage,
     canActivate: [AuthGuard],
     data: { title: 'Cadastrar Clientes' }
   },
   {
     path: 'vendas/lista/clientes',
-    loadChildren: () => import('./vendas-lista-clientes/vendas-lista-clientes.module').then(m => m.VendasListaClientesPageModule),
+    component: VendasListaClientesPage,
     canActivate: [AuthGuard],
     data: { title: 'Lista de Clientes' }
   },
   {
     path: 'ref',
-    loadChildren: () => import('./ref/ref.module').then(m => m.RefPageModule),
+    component: RefPage,
     canActivate: [AuthGuard],
     data: { title: 'Usuários' }
   },
   {
     path: 'setores',
-    loadChildren: () => import('./setores/setores.module').then(m => m.SetoresPageModule),
+    component: SetoresPage,
     canActivate: [AuthGuard],
     data: { title: 'Setores' }
   },
   {
     path: 'usuarios/novo',
-    loadChildren: () => import('./usuarios-novo/usuarios-novo.module').then(m => m.UsuariosNovoPageModule),
+    component: UsuariosNovoPage,
     canActivate: [AuthGuard],
     data: { title: 'Novo Usuário' }
   },
   {
     path: 'perfil',
-    loadChildren: () => import('./perfil/perfil.module').then(m => m.PerfilPageModule),
+    component: PerfilPage,
     canActivate: [AuthGuard],
     data: { title: 'Perfil' }
   },
   {
     path: 'empresa',
-    loadChildren: () => import('./empresa/empresa.module').then(m => m.EmpresaPageModule),
+    component: EmpresaPage,
     canActivate: [AuthGuard],
     data: { title: 'Empresa' }
   },
   {
     path: 'assentos',
-    loadChildren: () => import('./assentos/assentos.module').then(m => m.AssentosPageModule),
+    component: AssentosPage,
     canActivate: [AuthGuard],
     data: { title: 'Assentos' }
   },
   {
     path: 'configuracoes',
-    loadChildren: () => import('./configuracoes/configuracoes.module').then(m => m.ConfiguracoesPageModule),
+    component: ConfiguracoesPage,
     canActivate: [AuthGuard],
     data: { title: 'Configurações' }
   },
   {
     path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
+    component: FolderPage,
     canActivate: [AuthGuard],
     data: { title: 'Folder' }
   }

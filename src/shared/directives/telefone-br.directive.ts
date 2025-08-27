@@ -1,12 +1,13 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, HostListener, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[telefoneBr]',
   standalone: false
 })
 export class TelefoneBrDirective {
-  constructor(private control: NgControl) {}
+  private control = inject(NgControl);
 
   @HostListener('input', ['$event'])
   onInput(event: any) {
