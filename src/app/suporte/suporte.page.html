@@ -1,0 +1,49 @@
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        Contato
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-label>{{ email }}</ion-label>
+        <ion-button fill="clear" slot="end" (click)="copyEmail()">
+          <ion-icon name="copy-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        <ion-label>+55 99 9999-9999</ion-label>
+        <ion-button slot="end" (click)="openWhatsApp()">Entrar em contato</ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Sugestões e Reportes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Envie suas sugestões ou reporte bugs para melhorar o Converto.</p>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <ion-item>
+          <ion-label position="stacked">Tipo</ion-label>
+          <ion-select formControlName="type">
+            <ion-select-option value="Comentário">Comentário</ion-select-option>
+            <ion-select-option value="Bug">Bug</ion-select-option>
+            <ion-select-option value="Sugestão">Sugestão</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Mensagem</ion-label>
+          <ion-textarea formControlName="message" autoGrow="true" [maxlength]="800" counter="true"></ion-textarea>
+        </ion-item>
+        <ion-button type="submit" expand="block">Enviar</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
