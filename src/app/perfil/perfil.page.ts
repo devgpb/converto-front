@@ -1,15 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { IonicModule, AlertController } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
+import { FormBuilder } from '@angular/forms';
 import { ProfileService, Profile } from '../services/profile.service';
 
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.page.html',
   styleUrls: ['./perfil.page.scss'],
-  standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule],
+  standalone: false,
 })
 export class PerfilPage {
   private profileService = inject(ProfileService);

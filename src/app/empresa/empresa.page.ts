@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { IonicModule, AlertController } from '@ionic/angular';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
+import { FormBuilder } from '@angular/forms';
 import { EnterpriseService, Enterprise } from '../services/enterprise.service';
 
 @Component({
   selector: 'app-empresa',
   templateUrl: './empresa.page.html',
-  standalone: true,
-  imports: [IonicModule, ReactiveFormsModule],
+  standalone: false,
 })
 export class EmpresaPage {
   private service = inject(EnterpriseService);

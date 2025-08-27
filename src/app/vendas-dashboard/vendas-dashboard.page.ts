@@ -1,6 +1,4 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { VendasService } from 'src/app/services/vendas/vendas.service';
 import { IDashboardVendas } from 'src/app/interfaces/IDashboardVendas';
 import {
@@ -16,8 +14,6 @@ import {
   ApexLegend,
   ApexResponsive,
 } from 'ng-apexcharts';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { LucideAngularModule } from 'lucide-angular';
 
 
 
@@ -58,13 +54,7 @@ type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | null;
   selector: 'app-vendas-dashboard',
   templateUrl: './vendas-dashboard.page.html',
   styleUrls: ['./vendas-dashboard.page.scss'],
-  standalone: true,
-  imports: [
-    IonicModule,
-    CommonModule,
-    NgApexchartsModule,
-    LucideAngularModule,
-  ],
+  standalone: false,
 })
 export class VendasDashboardPage implements OnInit {
   data = signal<IDashboardVendas | null>(null);

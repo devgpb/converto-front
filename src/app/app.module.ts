@@ -11,11 +11,11 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HeaderComponent } from './components/header/header.component';
+import { ComponentsModule } from './components/components.module';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, HeaderComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,
+  declarations: [AppComponent, NavMenuComponent],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],
   providers: [

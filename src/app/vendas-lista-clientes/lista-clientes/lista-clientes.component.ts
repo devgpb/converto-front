@@ -1,19 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { ClientesService, Cliente, ClientesResponse } from '../../services/clientes.service';
+import { FormControl } from '@angular/forms';
+import { ClientesService, Cliente } from '../../services/clientes.service';
 import { AuthService } from '../../services/auth.service';
-import { ClienteCardComponent } from './cliente-card/cliente-card.component';
-import { ClienteModalComponent } from './cliente-modal/cliente-modal.component';
 import { ViewPreferenceService } from '../../services/view-preference.service';
 
 @Component({
   selector: 'app-lista-clientes',
   templateUrl: './lista-clientes.component.html',
   styleUrls: ['./lista-clientes.component.scss'],
-  standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, ClienteCardComponent, ClienteModalComponent]
+  standalone: false,
 })
 export class ListaClientesComponent implements OnInit {
   clientes: Cliente[] = [];

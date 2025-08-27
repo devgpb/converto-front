@@ -31,61 +31,61 @@ const routes: Routes = [
   },
   {
     path: 'vendas/dashboard',
-    loadComponent: () => import('./vendas-dashboard/vendas-dashboard.page').then(m => m.VendasDashboardPage),
+    loadChildren: () => import('./vendas-dashboard/vendas-dashboard.module').then(m => m.VendasDashboardPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Relatório de Atendimento' }
   },
   {
     path: 'vendas/leads',
-    loadComponent: () => import('./vendas-leads/vendas-leads.page').then(m => m.VendasLeadsPage),
+    loadChildren: () => import('./vendas-leads/vendas-leads.module').then(m => m.VendasLeadsPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Cadastrar Clientes' }
   },
   {
     path: 'vendas/lista/clientes',
-    loadComponent: () => import('./vendas-lista-clientes/vendas-lista-clientes.page').then(m => m.VendasListaClientesPage),
+    loadChildren: () => import('./vendas-lista-clientes/vendas-lista-clientes.module').then(m => m.VendasListaClientesPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Lista de Clientes' }
   },
   {
     path: 'ref',
-    loadComponent: () => import('./ref/ref.page').then(m => m.RefPage),
+    loadChildren: () => import('./ref/ref.module').then(m => m.RefPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Usuários' }
   },
   {
     path: 'setores',
-    loadComponent: () => import('./setores/setores.page').then(m => m.SetoresPage),
+    loadChildren: () => import('./setores/setores.module').then(m => m.SetoresPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Setores' }
   },
   {
     path: 'usuarios/novo',
-    loadComponent: () => import('./usuarios-novo/usuarios-novo.page').then(m => m.UsuariosNovoPage),
+    loadChildren: () => import('./usuarios-novo/usuarios-novo.module').then(m => m.UsuariosNovoPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Novo Usuário' }
   },
   {
     path: 'perfil',
-    loadComponent: () => import('./perfil/perfil.page').then(m => m.PerfilPage),
+    loadChildren: () => import('./perfil/perfil.module').then(m => m.PerfilPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Perfil' }
   },
   {
     path: 'empresa',
-    loadComponent: () => import('./empresa/empresa.page').then(m => m.EmpresaPage),
+    loadChildren: () => import('./empresa/empresa.module').then(m => m.EmpresaPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Empresa' }
   },
   {
     path: 'assentos',
-    loadComponent: () => import('./assentos/assentos.page').then(m => m.AssentosPage),
+    loadChildren: () => import('./assentos/assentos.module').then(m => m.AssentosPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Assentos' }
   },
   {
     path: 'configuracoes',
-    loadComponent: () => import('./configuracoes/configuracoes.page').then(m => m.ConfiguracoesPage),
+    loadChildren: () => import('./configuracoes/configuracoes.module').then(m => m.ConfiguracoesPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Configurações' }
   },

@@ -1,7 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
 import { Cliente, ClientesService, ClienteEvento } from '../../../services/clientes.service';
 import { VendasService } from '../../../services/vendas/vendas.service';
 
@@ -9,8 +6,7 @@ import { VendasService } from '../../../services/vendas/vendas.service';
   selector: 'app-cliente-modal',
   templateUrl: './cliente-modal.component.html',
   styleUrls: ['./cliente-modal.component.scss'],
-  standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  standalone: false,
 })
 export class ClienteModalComponent implements OnChanges {
   @Input() cliente!: Cliente | null;

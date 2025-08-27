@@ -1,15 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
 import { SeatsService } from '../services/seats.service';
 import { AuthService } from '../services/auth.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-assentos',
   templateUrl: './assentos.page.html',
-  standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule],
+  standalone: false,
 })
 export class AssentosPage {
   private seats = inject(SeatsService);
