@@ -27,9 +27,10 @@ import { FolderPage } from './folder/folder.page';
 import { ListaClientesComponent } from './vendas-lista-clientes/lista-clientes/lista-clientes.component';
 import { ClienteModalComponent } from './vendas-lista-clientes/lista-clientes/cliente-modal/cliente-modal.component';
 import { ClienteCardComponent } from './vendas-lista-clientes/lista-clientes/cliente-card/cliente-card.component';
+import { SuportePage } from './suporte/suporte.page';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, RefPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, AssentosPage, ConfiguracoesPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, RefPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, AssentosPage, ConfiguracoesPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent, SuportePage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],

@@ -13,6 +13,7 @@ import { EmpresaPage } from './empresa/empresa.page';
 import { AssentosPage } from './assentos/assentos.page';
 import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 import { FolderPage } from './folder/folder.page';
+import { SuportePage } from './suporte/suporte.page';
 
 const routes: Routes = [
   {
@@ -83,6 +84,12 @@ const routes: Routes = [
     component: ConfiguracoesPage,
     canActivate: [AuthGuard],
     data: { title: 'Configurações' }
+  },
+  {
+    path: 'suporte',
+    component: SuportePage,
+    canActivate: [AuthGuard],
+    data: { title: 'Suporte' }
   },
   {
     path: 'folder/:id',
