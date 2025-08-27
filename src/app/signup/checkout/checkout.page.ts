@@ -17,10 +17,10 @@ export class CheckoutPage {
   private auth = inject(AuthService);
 
   plans = [
-    { id: 'starter', label: '1 conta', priceId: 'price_starter' },
-    { id: 'team', label: '2 até 3 contas', priceId: 'price_team' },
-    { id: 'medium', label: '4 até 5 contas', priceId: 'price_medium' },
-    { id: 'large', label: '6+ contas', priceId: 'price_large' },
+    { id: 'starter', label: '1 conta', priceId: 'price_1RxcLYGIUmR0keuMTKUOW9Wm' },
+    { id: 'team', label: '2 até 3 contas', priceId: 'price_1RxcLYGIUmR0keuMTKUOW9Wm' },
+    { id: 'medium', label: '4 até 5 contas', priceId: 'price_1RxcLYGIUmR0keuMTKUOW9Wm' },
+    { id: 'large', label: '6+ contas', priceId: 'price_1RxcLYGIUmR0keuMTKUOW9Wm' },
   ];
 
   constructor() {
@@ -32,11 +32,13 @@ export class CheckoutPage {
 
   submit(): void {
     if (this.form.invalid) {
+      console.log("Invalido")
       return;
     }
     const value = this.form.value;
     const tenant_id = this.auth.getTenantId();
     if (!tenant_id) {
+      console.log("Sem Tennant")
       return;
     }
     const price = this.plans.find((p) => p.id === value.plan)!;
