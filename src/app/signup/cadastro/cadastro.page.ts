@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { switchMap } from 'rxjs';
 
-import { TenantService } from '../services/tenant.service';
-import { AuthService } from '../services/auth.service';
+import { TenantService } from '../../services/tenant.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-cadastro',

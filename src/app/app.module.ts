@@ -13,10 +13,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { ComponentsModule } from './components/components.module';
-import { PlanosPage } from './planos/planos.page';
-import { CadastroPage } from './cadastro/cadastro.page';
-import { CheckoutPage } from './checkout/checkout.page';
-import { ConfirmacaoPage } from './confirmacao/confirmacao.page';
 import { VendasDashboardPage } from './vendas-dashboard/vendas-dashboard.page';
 import { VendasLeadsPage } from './vendas-leads/vendas-leads.page';
 import { VendasListaClientesPage } from './vendas-lista-clientes/vendas-lista-clientes.page';
@@ -30,7 +26,7 @@ import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 import { FolderPage } from './folder/folder.page';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, PlanosPage, CadastroPage, CheckoutPage, ConfirmacaoPage, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, RefPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, AssentosPage, ConfiguracoesPage, FolderPage],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, RefPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, AssentosPage, ConfiguracoesPage, FolderPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],

@@ -11,15 +11,16 @@ import { ThemeService } from './services/theme.service';
 export class AppComponent {
   private router = inject(Router);
   private theme = inject(ThemeService);
-  public isLoginPage = false;
+  public isPublicPage = false;
+  private publicRoutes = ['/login', '/planos', '/cadastro', '/checkout', '/confirmacao'];
 
   constructor() {
     this.theme.init();
-    this.isLoginPage = this.router.url === '/login';
+    this.isPublicPage = this.publicRoutes.some((p) => this.router.url.startsWith(p));
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {
-        this.isLoginPage = e.urlAfterRedirects === '/login';
+        this.isPublicPage = this.publicRoutes.some((p) => e.urlAfterRedirects.startsWith(p));
       });
   }
   
