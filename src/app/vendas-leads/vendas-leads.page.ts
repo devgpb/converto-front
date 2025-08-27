@@ -1,18 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { IonicModule, AlertController } from '@ionic/angular';
-import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { AlertController, IonSelect } from '@ionic/angular';
+import { FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ClientesService } from '../services/clientes.service';
 import { AuthService } from '../services/auth.service';
-import { IonSelect } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { SharedDirectivesModule } from 'src/shared/shared-directives.module';
 
 @Component({
   selector: 'app-vendas-leads',
   templateUrl: './vendas-leads.page.html',
   styleUrls: ['./vendas-leads.page.scss'],
-  standalone: true,
-  imports: [IonicModule, ReactiveFormsModule, CommonModule, SharedDirectivesModule],
+  standalone: false,
 })
 export class VendasLeadsPage implements OnInit {
   private fb = inject(FormBuilder);

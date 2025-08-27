@@ -1,14 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { ClientesService, Cliente } from '../../../services/clientes.service';
 
 @Component({
   selector: 'app-cliente-card',
   templateUrl: './cliente-card.component.html',
   styleUrls: ['./cliente-card.component.scss'],
-  standalone: true,
-  imports: [IonicModule, CommonModule]
+  standalone: false,
 })
 export class ClienteCardComponent implements OnInit, OnChanges {
   @Input() cliente!: Cliente;
