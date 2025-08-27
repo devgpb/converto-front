@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { BillingService } from '../services/billing.service';
-import { AuthService } from '../services/auth.service';
+import { BillingService } from '../../services/billing.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-checkout',

@@ -1,5 +1,5 @@
 <ion-app>
-  <ng-container *ngIf="isLoginPage; else main">
+  <ng-container *ngIf="isPublicPage; else main">
     <ion-router-outlet></ion-router-outlet>
   </ng-container>
   <ng-template #main>

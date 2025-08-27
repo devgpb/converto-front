@@ -2,10 +2,6 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './guards/auth.guard';
-import { PlanosPage } from './planos/planos.page';
-import { CadastroPage } from './cadastro/cadastro.page';
-import { CheckoutPage } from './checkout/checkout.page';
-import { ConfirmacaoPage } from './confirmacao/confirmacao.page';
 import { VendasDashboardPage } from './vendas-dashboard/vendas-dashboard.page';
 import { VendasLeadsPage } from './vendas-leads/vendas-leads.page';
 import { VendasListaClientesPage } from './vendas-lista-clientes/vendas-lista-clientes.page';
@@ -27,22 +23,6 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'planos',
-    component: PlanosPage
-  },
-  {
-    path: 'cadastro',
-    component: CadastroPage
-  },
-  {
-    path: 'checkout',
-    component: CheckoutPage
-  },
-  {
-    path: 'confirmacao',
-    component: ConfirmacaoPage
   },
   {
     path: 'vendas/dashboard',
@@ -109,6 +89,10 @@ const routes: Routes = [
     component: FolderPage,
     canActivate: [AuthGuard],
     data: { title: 'Folder' }
+  },
+  {
+    path: '',
+    loadChildren: () => import('./signup/signup.module').then((m) => m.SignupModule)
   }
 ];
 
