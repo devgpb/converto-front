@@ -5,10 +5,10 @@ import { IonicModule } from '@ionic/angular';
 
 import { LoginPageRoutingModule } from './login-routing.module';
 import { LoginPage } from './login.page';
-import { GearBackgroundComponent } from '../components/gear-background/gear-background.component';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, LoginPageRoutingModule],
-  declarations: [LoginPage, GearBackgroundComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, ComponentsModule, LoginPageRoutingModule],
+  declarations: [LoginPage],
 })
 export class LoginPageModule {}

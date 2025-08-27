@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ClientesService, Cliente } from '../../services/clientes.service';
 import { AuthService } from '../../services/auth.service';
@@ -33,11 +33,11 @@ export class ListaClientesComponent implements OnInit {
   clienteSelecionado: Cliente | null = null;
   modalAberto = false;
 
-  constructor(
-    private clientesService: ClientesService,
-    private authService: AuthService,
-    private viewPref: ViewPreferenceService
-  ) {
+  private clientesService = inject(ClientesService);
+  private authService = inject(AuthService);
+  private viewPref = inject(ViewPreferenceService);
+
+  constructor() {
     this.tenantId = this.authService.getTenantId();
   }
 
