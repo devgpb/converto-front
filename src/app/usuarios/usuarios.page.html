@@ -33,7 +33,7 @@
           <ion-col size="4">{{ user.name || user.user_id }}</ion-col>
           <ion-col size="4">{{ user.email || '' }}</ion-col>
           <ion-col size="2">
-            <ion-select [(ngModel)]="user.role" (ionChange)="changeRole(user)" [disabled]="user.principal">
+            <ion-select [(ngModel)]="user.role" (ionChange)="changeRole(user)" [disabled]="user.principal ?? false">
               <ion-select-option value="admin">Admin</ion-select-option>
               <ion-select-option value="member">Member</ion-select-option>
             </ion-select>

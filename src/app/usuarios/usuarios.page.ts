@@ -46,7 +46,7 @@ export class UsuariosPage {
     this.router.navigate(['/usuarios/novo']);
   }
 
-  remove(userId: string): void {
+  remove(userId: any): void {
     const tenantId = this.auth.getTenantId();
     if (tenantId && userId) {
       this.seats.remove(tenantId, userId).subscribe(() => this.load());
