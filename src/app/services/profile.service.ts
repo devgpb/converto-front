@@ -8,6 +8,7 @@ export interface Profile {
   email: string;
   name: string;
   role: string;
+  principal?: boolean;
   tenant?: { id: number; name: string } | null;
   enterprise?: { id: number; name: string } | null;
   seats?: {
