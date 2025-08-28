@@ -3,7 +3,8 @@
     <ion-icon [name]="collapsed ? 'chevron-forward-outline' : 'chevron-back-outline'"></ion-icon>
   </div>
   <div class="menu-sections">
-    <ion-list *ngFor="let section of menuSections">
+    <ng-container *ngFor="let section of menuSections">
+    <ion-list *ngIf="!isAdminSection(section) || isAdmin()">
       <ion-list-header>{{ section.title }}</ion-list-header>
       <ng-container *ngFor="let item of section.items">
         <ng-container *ngIf="item.hasSubmenu; else regularItem">
@@ -32,6 +33,7 @@
       </ng-template>
       </ng-container>
     </ion-list>
+    </ng-container>
   </div>
   <div class="user-actions">
     <ion-item routerLink="/perfil" lines="none" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">

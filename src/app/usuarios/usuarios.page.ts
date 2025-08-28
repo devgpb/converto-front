@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { SeatsService } from '../services/seats.service';
 import { AuthService } from '../services/auth.service';
 
@@ -10,6 +11,8 @@ import { AuthService } from '../services/auth.service';
 export class UsuariosPage {
   private seats = inject(SeatsService);
   private auth = inject(AuthService);
+  private router = inject(Router);
+  public userId: any
 
   usage?: any;
   users: any[] = [];
@@ -21,9 +24,12 @@ export class UsuariosPage {
 
   private load(): void {
     const tenantId = this.auth.getTenantId();
+    this.userId = this.auth.getUserId();
     if (tenantId) {
-      this.seats.getUsage(tenantId).subscribe((u) => (this.usage = u));
-      this.seats.list(tenantId).subscribe((users) => (this.users = users));
+      this.seats.getUsage(tenantId).subscribe((u) => {
+        this.usage = u
+        this.users = u.users
+      });
     }
   }
 
@@ -35,13 +41,7 @@ export class UsuariosPage {
   }
 
   add(): void {
-    const tenantId = this.auth.getTenantId();
-    if (tenantId && this.newUserId) {
-      this.seats.add(tenantId, this.newUserId).subscribe(() => {
-        this.newUserId = '';
-        this.load();
-      });
-    }
+    this.router.navigate(['/usuarios/novo']);
   }
 
   remove(userId: string): void {

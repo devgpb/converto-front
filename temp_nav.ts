@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+﻿import { Component, HostBinding, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 interface MenuItem {
@@ -33,18 +33,18 @@ export class NavMenuComponent {
     {
       title: 'Vendas',
       items: [
-        { icon: 'stats-chart', title: 'Relatório de Vendas', href: '/vendas/dashboard' },
+        { icon: 'stats-chart', title: 'RelatÃ³rio de Vendas', href: '/vendas/dashboard' },
         { icon: 'person-add-outline', title: 'Cadastrar Clientes', href: '/vendas/leads' },
         { icon: 'people', title: 'Lista de Clientes', href: '/vendas/lista/clientes' },
       ],
     },
     {
-      title: 'Administração',
+      title: 'AdministraÃ§Ã£o',
       items: [
-        { icon: 'person-circle', title: 'Usuários', href: '/usuarios' },
+        { icon: 'person-circle', title: 'UsuÃ¡rios', href: '/usuarios' },
         // { icon: 'business', title: 'Setores', href: '/setores' },
         { icon: 'business', title: 'Empresa', href: '/empresa' },
-        { icon: 'person-add', title: 'Novo Usuário', href: '/usuarios/novo' },
+        { icon: 'person-add', title: 'Novo UsuÃ¡rio', href: '/usuarios/novo' },
       ],
     },
   ];
@@ -53,12 +53,12 @@ export class NavMenuComponent {
 
   // private submenuAutItems: SubItem[] = [
   //   { icon: 'document', title: 'Gerar Proposta', route: '/proposta/gerar' },
-  //   { icon: 'document', title: 'Gerar Procuração', route: '/procuracao/gerar' },
+  //   { icon: 'document', title: 'Gerar ProcuraÃ§Ã£o', route: '/procuracao/gerar' },
   // ];
 
   public getSubItems(title: string): SubItem[] {
     switch (title) {
-      // case 'Automações':
+      // case 'AutomaÃ§Ãµes':
       //   return this.submenuAutItems;
       default:
         return [];
@@ -79,15 +79,6 @@ export class NavMenuComponent {
         menu.classList.remove('collapsed');
       }
     }
-  }
-
-  isAdmin(): boolean {
-    return this.auth.isAdmin();
-  }
-
-  isAdminSection(section: MenuSection): boolean {
-    const title = (section?.title || '').toString();
-    return title.startsWith('Administra');
   }
 }
 

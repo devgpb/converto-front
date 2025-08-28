@@ -82,6 +82,57 @@ export class AuthService {
     }
   }
 
+  getUserId(): string | null {
+    const token = this.token$.value;
+    if (!token) {
+      return null;
+    }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.user_id || null;
+    } catch {
+      return null;
+    }
+  }
+
+  private getPayload(): any | null {
+    const token = this.token$.value;
+    if (!token) return null;
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
+      return null;
+    }
+  }
+
+  getRoles(): string[] {
+    const payload = this.getPayload();
+    if (!payload) return [];
+    let roles: string[] = [];
+    if (Array.isArray(payload.roles)) {
+      roles = payload.roles as string[];
+    } else if (typeof payload.role === 'string') {
+      roles = [payload.role];
+    } else if (typeof payload.roles === 'string') {
+      roles = [payload.roles];
+    }
+    return roles.map((r) => (r || '').toString().toLowerCase());
+  }
+
+  hasRole(role: string): boolean {
+    const wanted = (role || '').toLowerCase();
+    return this.getRoles().includes(wanted);
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const set = new Set(this.getRoles());
+    return roles.map((r) => (r || '').toLowerCase()).some((r) => set.has(r));
+  }
+
+  isAdmin(): boolean {
+    return this.hasAnyRole(['administrador', 'admin']);
+  }
+
   logout(): void {
     this.token$.next(null);
     localStorage.removeItem('token');
