@@ -41,7 +41,7 @@ export class NavMenuComponent {
     {
       title: 'Administração',
       items: [
-        { icon: 'person-circle', title: 'Usuários', href: '/ref' },
+        { icon: 'person-circle', title: 'Usuários', href: '/usuarios' },
         // { icon: 'business', title: 'Setores', href: '/setores' },
         { icon: 'business', title: 'Empresa', href: '/empresa' },
         { icon: 'grid', title: 'Assentos', href: '/assentos' },

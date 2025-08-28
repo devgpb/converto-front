@@ -1,0 +1,53 @@
+<ion-content class="ion-padding">
+  <ion-card *ngIf="usage">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="people-circle-outline" slot="start"></ion-icon>
+        Assentos
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Assentos pagos:</strong> {{ usage.paid_seats }}</p>
+      <p><strong>Usuários ativos:</strong> {{ usage.active_users }}</p>
+      <p><strong>Disponíveis:</strong> {{ usage.seats_available }}</p>
+      <ion-button size="small" (click)="sync()">
+        <ion-icon name="sync-outline" slot="start"></ion-icon>
+        Sincronizar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Usuários</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid class="table-view">
+        <ion-row class="table-header">
+          <ion-col size="5">Usuário</ion-col>
+          <ion-col size="5">Email</ion-col>
+          <ion-col size="2">Ações</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let user of users" class="table-row">
+          <ion-col size="5">{{ user.name || user.user_id }}</ion-col>
+          <ion-col size="5">{{ user.email || '' }}</ion-col>
+          <ion-col size="2">
+            <ion-button color="danger" size="small" (click)="remove(user.user_id)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item class="ion-margin-top">
+        <ion-label position="stacked">ID do Usuário</ion-label>
+        <ion-input [(ngModel)]="newUserId"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="add()">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        Adicionar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
