@@ -24,14 +24,21 @@
     <ion-card-content>
       <ion-grid class="table-view">
         <ion-row class="table-header">
-          <ion-col size="5">Usuário</ion-col>
-          <ion-col size="5">Email</ion-col>
+          <ion-col size="4">Usuário</ion-col>
+          <ion-col size="4">Email</ion-col>
+          <ion-col size="2">Cargo</ion-col>
           <ion-col size="2">Ações</ion-col>
         </ion-row>
         <ion-row *ngFor="let user of users" class="table-row">
-          <ion-col size="5">{{ user.name || user.user_id }}</ion-col>
-          <ion-col size="5">{{ user.email || '' }}</ion-col>
-          <ion-col size="2" *ngIf="user.user_id != userId ">
+          <ion-col size="4">{{ user.name || user.user_id }}</ion-col>
+          <ion-col size="4">{{ user.email || '' }}</ion-col>
+          <ion-col size="2">
+            <ion-select [(ngModel)]="user.role" (ionChange)="changeRole(user)" [disabled]="user.principal">
+              <ion-select-option value="admin">Admin</ion-select-option>
+              <ion-select-option value="member">Member</ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col size="2" *ngIf="user.user_id !== userId && !user.principal">
             <ion-button color="danger" size="small" (click)="remove(user.user_id)">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
