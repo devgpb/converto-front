@@ -16,6 +16,10 @@ export class SeatsService {
     return this.http.get<any>(`${this.api}/usage/${tenantId}`);
   }
 
+  list(tenantId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/users/${tenantId}`);
+  }
+
   add(tenantId: string, userId: string): Observable<any> {
     return this.http.post<any>(`${this.api}/add`, { tenant_id: tenantId, user_id: userId });
   }

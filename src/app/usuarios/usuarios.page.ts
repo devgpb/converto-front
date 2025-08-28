@@ -3,42 +3,51 @@ import { SeatsService } from '../services/seats.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-assentos',
-  templateUrl: './assentos.page.html',
+  selector: 'app-usuarios',
+  templateUrl: './usuarios.page.html',
   standalone: false,
 })
-export class AssentosPage {
+export class UsuariosPage {
   private seats = inject(SeatsService);
   private auth = inject(AuthService);
 
   usage?: any;
-  userId = '';
+  users: any[] = [];
+  newUserId = '';
 
   ionViewWillEnter(): void {
+    this.load();
+  }
+
+  private load(): void {
     const tenantId = this.auth.getTenantId();
     if (tenantId) {
       this.seats.getUsage(tenantId).subscribe((u) => (this.usage = u));
+      this.seats.list(tenantId).subscribe((users) => (this.users = users));
     }
   }
 
   sync(): void {
     const tenantId = this.auth.getTenantId();
     if (tenantId) {
-      this.seats.sync(tenantId).subscribe(() => this.ionViewWillEnter());
+      this.seats.sync(tenantId).subscribe(() => this.load());
     }
   }
 
   add(): void {
     const tenantId = this.auth.getTenantId();
-    if (tenantId && this.userId) {
-      this.seats.add(tenantId, this.userId).subscribe(() => this.ionViewWillEnter());
+    if (tenantId && this.newUserId) {
+      this.seats.add(tenantId, this.newUserId).subscribe(() => {
+        this.newUserId = '';
+        this.load();
+      });
     }
   }
 
-  remove(): void {
+  remove(userId: string): void {
     const tenantId = this.auth.getTenantId();
-    if (tenantId && this.userId) {
-      this.seats.remove(tenantId, this.userId).subscribe(() => this.ionViewWillEnter());
+    if (tenantId && userId) {
+      this.seats.remove(tenantId, userId).subscribe(() => this.load());
     }
   }
 }

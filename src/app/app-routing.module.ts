@@ -5,12 +5,11 @@ import { AuthGuard } from './guards/auth.guard';
 import { VendasDashboardPage } from './vendas-dashboard/vendas-dashboard.page';
 import { VendasLeadsPage } from './vendas-leads/vendas-leads.page';
 import { VendasListaClientesPage } from './vendas-lista-clientes/vendas-lista-clientes.page';
-import { RefPage } from './ref/ref.page';
+import { UsuariosPage } from './usuarios/usuarios.page';
 import { SetoresPage } from './setores/setores.page';
 import { UsuariosNovoPage } from './usuarios-novo/usuarios-novo.page';
 import { PerfilPage } from './perfil/perfil.page';
 import { EmpresaPage } from './empresa/empresa.page';
-import { AssentosPage } from './assentos/assentos.page';
 import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 import { FolderPage } from './folder/folder.page';
 import { SuportePage } from './suporte/suporte.page';
@@ -44,8 +43,8 @@ const routes: Routes = [
     data: { title: 'Lista de Clientes' }
   },
   {
-    path: 'ref',
-    component: RefPage,
+    path: 'usuarios',
+    component: UsuariosPage,
     canActivate: [AuthGuard],
     data: { title: 'Usuários' }
   },
@@ -72,12 +71,6 @@ const routes: Routes = [
     component: EmpresaPage,
     canActivate: [AuthGuard],
     data: { title: 'Empresa' }
-  },
-  {
-    path: 'assentos',
-    component: AssentosPage,
-    canActivate: [AuthGuard],
-    data: { title: 'Assentos' }
   },
   {
     path: 'configuracoes',

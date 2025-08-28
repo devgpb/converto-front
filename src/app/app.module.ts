@@ -16,12 +16,11 @@ import { ComponentsModule } from './components/components.module';
 import { VendasDashboardPage } from './vendas-dashboard/vendas-dashboard.page';
 import { VendasLeadsPage } from './vendas-leads/vendas-leads.page';
 import { VendasListaClientesPage } from './vendas-lista-clientes/vendas-lista-clientes.page';
-import { RefPage } from './ref/ref.page';
+import { UsuariosPage } from './usuarios/usuarios.page';
 import { SetoresPage } from './setores/setores.page';
 import { UsuariosNovoPage } from './usuarios-novo/usuarios-novo.page';
 import { PerfilPage } from './perfil/perfil.page';
 import { EmpresaPage } from './empresa/empresa.page';
-import { AssentosPage } from './assentos/assentos.page';
 import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 import { FolderPage } from './folder/folder.page';
 import { ListaClientesComponent } from './vendas-lista-clientes/lista-clientes/lista-clientes.component';
@@ -30,7 +29,7 @@ import { ClienteCardComponent } from './vendas-lista-clientes/lista-clientes/cli
 import { SuportePage } from './suporte/suporte.page';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, RefPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, AssentosPage, ConfiguracoesPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent, SuportePage],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, ConfiguracoesPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent, SuportePage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],
