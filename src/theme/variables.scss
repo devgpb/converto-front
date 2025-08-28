@@ -85,7 +85,15 @@
   ion-card-title {
     color: var(--ion-text-color);
   }
-
+  .alert-radio-label.sc-ion-alert-md{
+    color: white
+  }
+  [aria-checked=true].sc-ion-alert-md .alert-radio-label.sc-ion-alert-md{
+    color: var(--ion-color-primary)
+  }
+  ion-select-option{
+    color: #ffffff !important;
+  }
   /* Placeholder */
   ion-searchbar {
     --placeholder-color: var(--ion-input-placeholder-color);
