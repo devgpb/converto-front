@@ -24,6 +24,7 @@
           <ion-col>Fila</ion-col>
           <ion-col>ID</ion-col>
           <ion-col>Estado</ion-col>
+          <ion-col>Ações</ion-col>
         </ion-row>
         <ion-row *ngFor="let job of jobs">
           <ion-col>{{ translateQueue(job.queue || job.queueName) }}</ion-col>
@@ -33,8 +34,45 @@
               {{ translateState(job) }}
             </ion-badge>
           </ion-col>
+          <ion-col>
+            <ion-button size="small" (click)="viewData(job)" [disabled]="job.state !== 'completed'">
+              Ver Dados
+            </ion-button>
+          </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
   </ion-card>
+  <ion-modal [isOpen]="metadataOpen" (didDismiss)="closeMetadata()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Dados do Trabalho</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeMetadata()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="ion-text-center" *ngIf="metadataLoading">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+        <ion-grid class="metadata-grid" *ngIf="!metadataLoading && metadata.length > 0">
+          <ion-row class="header">
+            <ion-col>Nome</ion-col>
+            <ion-col>Valor</ion-col>
+          </ion-row>
+          <ion-row *ngFor="let item of metadata">
+            <ion-col>{{ item.label }}</ion-col>
+            <ion-col>{{ item.value }}</ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-text color="medium" *ngIf="!metadataLoading && metadata.length === 0">
+          Nenhum dado disponível.
+        </ion-text>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
