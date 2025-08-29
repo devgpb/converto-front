@@ -31,7 +31,7 @@ export class JobsService {
   }
 
   getJob(queue: string, id: string): Observable<any> {
-    return this.http.get(`${this.jobsApi}/${queue}/${id}`);
+    return this.http.get(`${this.jobsApi}/import/${id}`);
   }
 
   cancelJob(queue: string, id: string): Observable<any> {

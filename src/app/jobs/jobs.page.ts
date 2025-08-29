@@ -46,6 +46,7 @@ export class JobsPage implements OnInit {
     this.jobsService.getJob(queue, job.id).subscribe({
       next: (res) => {
         this.metadata = res?.result?.metadata ?? [];
+        console.log(res)
         this.metadataLoading = false;
       },
       error: () => {
