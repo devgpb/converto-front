@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, OnInit, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 interface MenuItem {
@@ -26,7 +26,7 @@ interface SubItem {
   styleUrls: ['./nav-menu.component.scss'],
   standalone: false,
 })
-export class NavMenuComponent {
+export class NavMenuComponent implements OnInit, AfterViewInit {
   private auth = inject(AuthService);
   @HostBinding('class.collapsed') collapsed = false;
   public menuSections: MenuSection[] = [
@@ -78,14 +78,8 @@ export class NavMenuComponent {
 
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
-    const menu = document.querySelector('ion-menu.menu-desktop');
-    if (menu) {
-      if (this.collapsed) {
-        menu.classList.add('collapsed');
-      } else {
-        menu.classList.remove('collapsed');
-      }
-    }
+    localStorage.setItem('navMenuCollapsed', this.collapsed.toString());
+    this.applyCollapsedClass();
   }
 
   isAdmin(): boolean {
@@ -95,6 +89,22 @@ export class NavMenuComponent {
   isAdminSection(section: MenuSection): boolean {
     const title = (section?.title || '').toString();
     return title.startsWith('Administra');
+  }
+
+  ngOnInit(): void {
+    const stored = localStorage.getItem('navMenuCollapsed');
+    this.collapsed = stored === 'true';
+  }
+
+  ngAfterViewInit(): void {
+    this.applyCollapsedClass();
+  }
+
+  private applyCollapsedClass(): void {
+    const menu = document.querySelector('ion-menu.menu-desktop');
+    if (menu) {
+      menu.classList.toggle('collapsed', this.collapsed);
+    }
   }
 }
 
