@@ -11,6 +11,9 @@ export class JobsPage implements OnInit {
   private jobsService = inject(JobsService);
   jobs: any[] = [];
   loading = false;
+  metadataOpen = false;
+  metadataLoading = false;
+  metadata: { label: string; value: any }[] = [];
 
   ngOnInit(): void {
     this.loadJobs();
@@ -33,6 +36,27 @@ export class JobsPage implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  viewData(job: any): void {
+    const queue = job.queue || job.queueName;
+    this.metadataOpen = true;
+    this.metadataLoading = true;
+    this.metadata = [];
+    this.jobsService.getJob(queue, job.id).subscribe({
+      next: (res) => {
+        this.metadata = res?.result?.metadata ?? [];
+        this.metadataLoading = false;
+      },
+      error: () => {
+        this.metadata = [];
+        this.metadataLoading = false;
+      },
+    });
+  }
+
+  closeMetadata(): void {
+    this.metadataOpen = false;
   }
 
   translateQueue(queue: string): string {
