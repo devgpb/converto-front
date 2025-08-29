@@ -10,6 +10,7 @@ import { JobsService } from '../services/jobs.service';
 export class JobsPage implements OnInit {
   private jobsService = inject(JobsService);
   jobs: any[] = [];
+  loading = false;
 
   ngOnInit(): void {
     this.loadJobs();
@@ -20,13 +21,16 @@ export class JobsPage implements OnInit {
   }
 
   private loadJobs(): void {
+    this.loading = true;
     this.jobsService.listUserJobs().subscribe({
       next: (res) => {
         const data = (res as any)?.data ?? res;
         this.jobs = data?.jobs ?? data ?? [];
+        this.loading = false;
       },
       error: () => {
         this.jobs = [];
+        this.loading = false;
       },
     });
   }

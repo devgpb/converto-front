@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ClientesService, Cliente } from '../../services/clientes.service';
+import { ClientesService, Cliente, ClientesResponse } from '../../services/clientes.service';
 import { AuthService } from '../../services/auth.service';
 import { ViewPreferenceService } from '../../services/view-preference.service';
 
@@ -49,7 +49,7 @@ export class ListaClientesComponent implements OnInit {
   private buildParams(extra: any = {}) {
     const base: any = {
       page: this.page,
-      pageSize: this.pageSize,
+      perPage: this.pageSize,
       sortBy: this.sortBy,
     };
 
@@ -76,25 +76,30 @@ export class ListaClientesComponent implements OnInit {
   fetch(): void {
     this.carregandoBusca = true;
     this.clientesService.getClientes(this.buildParams()).subscribe({
-      next: (resp: Cliente[]) => {
-        console.log(resp)
-        this.clientes = resp;
-        this.total = resp.length;
-        this.totalPages = 1;
+      next: (resp: ClientesResponse) => {
+        this.clientes = resp.data;
+        this.total = resp.meta.total;
+        this.totalPages = resp.meta.totalPages;
+        this.page = resp.meta.page;
+        this.pageSize = resp.meta.perPage;
         this.carregandoBusca = false;
       },
       error: () => (this.carregandoBusca = false),
     });
   }
 
-  pesquisaAvancada(): void {
-    this.page = 1;
+  pesquisaAvancada(resetPage = false): void {
+    if (resetPage) {
+      this.page = 1;
+    }
     this.carregandoBusca = true;
     this.clientesService.getClientes(this.buildParams({ fromSearch: true })).subscribe({
-      next: (resp: Cliente[]) => {
-        this.clientes = resp;
-        this.total = resp.length;
-        this.totalPages = 1;
+      next: (resp: ClientesResponse) => {
+        this.clientes = resp.data;
+        this.total = resp.meta.total;
+        this.totalPages = resp.meta.totalPages;
+        this.page = resp.meta.page;
+        this.pageSize = resp.meta.perPage;
         this.carregandoBusca = false;
       },
       error: () => (this.carregandoBusca = false),
