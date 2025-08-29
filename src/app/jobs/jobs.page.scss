@@ -1,0 +1,10 @@
+.jobs-grid {
+  .header {
+    font-weight: bold;
+    border-bottom: 1px solid var(--ion-color-step-150, #d7d8da);
+  }
+  ion-row {
+    align-items: center;
+    padding: 8px 0;
+  }
+}

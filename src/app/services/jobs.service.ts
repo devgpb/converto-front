@@ -10,6 +10,15 @@ export class JobsService {
   private jobsApi = `${this.base}/jobs`;
   private adminApi = `${this.base}/admin/queues`;
 
+  listUserJobs(
+    states: string = 'waiting,active,completed,failed',
+    limit: number = 50
+  ): Observable<any> {
+    return this.http.get(`${this.jobsApi}/user`, {
+      params: { states, limit },
+    });
+  }
+
   postImportClients(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);

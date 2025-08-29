@@ -15,6 +15,7 @@ import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 import { ClientesImportarPage } from './clientes-importar/clientes-importar.page';
 import { FolderPage } from './folder/folder.page';
 import { SuportePage } from './suporte/suporte.page';
+import { JobsPage } from './jobs/jobs.page';
 
 const routes: Routes = [
   {
@@ -25,6 +26,12 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'jobs',
+    component: JobsPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Meus Trabalhos' }
   },
   {
     path: 'vendas/dashboard',
