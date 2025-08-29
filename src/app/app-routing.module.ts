@@ -33,6 +33,12 @@ const routes: Routes = [
     data: { title: 'Relatório de Atendimento' }
   },
   {
+    path: 'empresa',
+    component: EmpresaPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Sua Empresa' }
+  },
+  {
     path: 'vendas/leads',
     component: VendasLeadsPage,
     canActivate: [AuthGuard],
@@ -68,7 +74,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { title: 'Perfil' }
   },
-  
   {
     path: 'clientes/importar',
     component: ClientesImportarPage,

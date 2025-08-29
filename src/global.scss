@@ -42,14 +42,24 @@
     --side-width: 300px;
     --side-min-width: 300px;
     --side-max-width: 300px;
-    transition: all 0.3s ease; /* anima tanto abrir quanto fechar */
-    overflow: hidden;          /* evita scroll bugado */
+    transition: all 0.3s ease;
+    /* anima tanto abrir quanto fechar */
+    overflow: hidden;
+    /* evita scroll bugado */
   }
 
   ion-menu.menu-desktop.collapsed {
     --side-width: 60px;
     --side-min-width: 60px;
     --side-max-width: 60px;
+  }
+
+
+}
+
+@media (max-width: 600px) {
+  ion-split-pane {
+    display: block;
   }
 }
 
@@ -61,4 +71,3 @@ ion-item {
 ion-card {
   border-left: 4px solid var(--ion-color-success);
 }
-
