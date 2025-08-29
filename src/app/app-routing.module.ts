@@ -11,6 +11,8 @@ import { UsuariosNovoPage } from './usuarios-novo/usuarios-novo.page';
 import { PerfilPage } from './perfil/perfil.page';
 import { EmpresaPage } from './empresa/empresa.page';
 import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
+
+import { ClientesImportarPage } from './clientes-importar/clientes-importar.page';
 import { FolderPage } from './folder/folder.page';
 import { SuportePage } from './suporte/suporte.page';
 
@@ -66,11 +68,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { title: 'Perfil' }
   },
+  
   {
-    path: 'empresa',
-    component: EmpresaPage,
+    path: 'clientes/importar',
+    component: ClientesImportarPage,
     canActivate: [AuthGuard],
-    data: { title: 'Empresa' }
+    data: { title: 'Importar Clientes' }
   },
   {
     path: 'configuracoes',

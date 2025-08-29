@@ -1,0 +1,21 @@
+.dropzone {
+  border: 2px dashed var(--ion-color-medium);
+  padding: 2rem;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.dropzone.dragover {
+  border-color: var(--ion-color-primary);
+  background: rgba(var(--ion-color-primary-rgb), 0.05);
+}
+
+.file-list {
+  margin-top: 1rem;
+}
+
+.csv-info {
+  margin-top: 1rem;
+}
+
