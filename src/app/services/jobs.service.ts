@@ -15,7 +15,8 @@ export class JobsService {
     limit: number = 50
   ): Observable<any> {
     return this.http.get(`${this.jobsApi}/user`, {
-      params: { states, limit },
+      params: { states, limit, t: Date.now().toString() },
+      headers: { 'Cache-Control': 'no-cache' },
     });
   }
 
