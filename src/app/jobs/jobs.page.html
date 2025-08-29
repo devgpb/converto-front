@@ -1,0 +1,33 @@
+<ion-content class="ion-padding">
+  <ion-card class="ion-margin-bottom">
+    <ion-card-header>
+      <ion-card-title>Meus Trabalhos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Aqui ficam os trabalhos do sistema como importação e exportação de
+        clientes.
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Trabalhos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid class="jobs-grid">
+        <ion-row class="header">
+          <ion-col>Fila</ion-col>
+          <ion-col>ID</ion-col>
+          <ion-col>Estado</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let job of jobs">
+          <ion-col>{{ job.queue || job.queueName }}</ion-col>
+          <ion-col>{{ job.id }}</ion-col>
+          <ion-col>{{ job.state }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

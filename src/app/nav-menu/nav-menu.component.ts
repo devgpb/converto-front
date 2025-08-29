@@ -31,6 +31,12 @@ export class NavMenuComponent {
   @HostBinding('class.collapsed') collapsed = false;
   public menuSections: MenuSection[] = [
     {
+      title: 'Geral',
+      items: [
+        { icon: 'briefcase', title: 'Meus Trabalhos', href: '/jobs' },
+      ],
+    },
+    {
       title: 'Vendas',
       items: [
         { icon: 'stats-chart', title: 'Relatório de Vendas', href: '/vendas/dashboard' },
