@@ -12,13 +12,59 @@ export class JobsPage implements OnInit {
   jobs: any[] = [];
 
   ngOnInit(): void {
+    this.loadJobs();
+  }
+
+  ionViewWillEnter(): void {
+    this.loadJobs();
+  }
+
+  private loadJobs(): void {
     this.jobsService.listUserJobs().subscribe({
       next: (res) => {
-        this.jobs = (res as any)?.data ?? res ?? [];
+        const data = (res as any)?.data ?? res;
+        this.jobs = data?.jobs ?? data ?? [];
       },
       error: () => {
         this.jobs = [];
       },
     });
+  }
+
+  translateQueue(queue: string): string {
+    const map: Record<string, string> = {
+      'import-clients': 'Importar Clientes',
+      'export-clients': 'Exportar Clientes',
+    };
+    return map[queue] ?? queue;
+  }
+
+  translateState(job: any): string {
+    const map: Record<string, string> = {
+      waiting: 'Aguardando',
+      active: 'Em execução',
+      completed: 'Concluído',
+      failed: 'Erro',
+    };
+    let text = map[job.state] ?? job.state;
+    if (job.state === 'failed' && job.failedReason) {
+      text += `: ${job.failedReason}`;
+    }
+    return text;
+  }
+
+  statusColor(state: string): string {
+    switch (state) {
+      case 'completed':
+        return 'success';
+      case 'failed':
+        return 'danger';
+      case 'active':
+        return 'warning';
+      case 'waiting':
+        return 'medium';
+      default:
+        return 'primary';
+    }
   }
 }

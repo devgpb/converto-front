@@ -23,9 +23,13 @@
           <ion-col>Estado</ion-col>
         </ion-row>
         <ion-row *ngFor="let job of jobs">
-          <ion-col>{{ job.queue || job.queueName }}</ion-col>
+          <ion-col>{{ translateQueue(job.queue || job.queueName) }}</ion-col>
           <ion-col>{{ job.id }}</ion-col>
-          <ion-col>{{ job.state }}</ion-col>
+          <ion-col>
+            <ion-badge class="state-badge" [color]="statusColor(job.state)">
+              {{ translateState(job) }}
+            </ion-badge>
+          </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
