@@ -21,7 +21,7 @@ export interface Cliente {
 
 export interface ClientesResponse {
   data: Cliente[];
-  meta: { total: number; totalPages: number };
+  meta: { total: number; page: number; perPage: number; totalPages: number };
 }
 
 export interface ClienteEvento {
@@ -49,8 +49,8 @@ export class ClientesService {
     return this.http.get<{ cidades: string[]; status: string[] }>(`${this.api}/filtros`);
   }
 
-  getClientes(params: any): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(this.api, { params });
+  getClientes(params: any): Observable<ClientesResponse> {
+    return this.http.get<ClientesResponse>(this.api, { params });
   }
 
   getEventosDoCliente(idCliente: number, params: any = {}): Observable<ClienteEvento[]> {

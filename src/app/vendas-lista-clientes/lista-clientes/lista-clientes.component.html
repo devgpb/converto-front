@@ -76,7 +76,7 @@
           </ion-col>
 
           <ion-col size="12" class="ion-text-right">
-            <ion-button color="primary" (click)="pesquisaAvancada()" [disabled]="carregandoBusca">
+            <ion-button color="primary" (click)="pesquisaAvancada(true)" [disabled]="carregandoBusca">
               <ion-spinner slot="start" *ngIf="carregandoBusca" name="crescent"></ion-spinner>
               Buscar na base
             </ion-button>

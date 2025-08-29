@@ -16,7 +16,10 @@
       <ion-card-title>Trabalhos</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-grid class="jobs-grid">
+      <div class="ion-text-center" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <ion-grid class="jobs-grid" *ngIf="!loading">
         <ion-row class="header">
           <ion-col>Fila</ion-col>
           <ion-col>ID</ion-col>
