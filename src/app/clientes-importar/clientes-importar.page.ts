@@ -54,7 +54,7 @@ export class ClientesImportarPage {
         this.alertController
           .create({
             header: 'Importação iniciada',
-            message: 'Job criado com sucesso.',
+            message: 'Seu Trabalho de importação foi iniciado, por favor, acompanhe em "Meus Trabalhos".',
             buttons: ['OK'],
           })
           .then((a) => a.present());
