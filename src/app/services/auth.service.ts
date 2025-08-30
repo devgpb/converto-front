@@ -19,7 +19,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<{ token: string }> {
     return this.http
-      .post<{ token: string }>(`${environment.apiUrl}/auth/login`, {
+      .post<{ token: string }>(`${environment.apiUrl}/login`, {
         email,
         password,
       })
@@ -38,7 +38,7 @@ export class AuthService {
     name: string;
   }): Observable<{ token: string }> {
     return this.http
-      .post<{ token: string }>(`${environment.apiUrl}/auth/register`, data)
+      .post<{ token: string }>(`${environment.apiUrl}/register`, data)
       .pipe(
         tap((res) => {
           this.token$.next(res.token);
