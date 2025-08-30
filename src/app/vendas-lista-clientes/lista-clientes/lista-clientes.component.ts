@@ -137,12 +137,25 @@ export class ListaClientesComponent implements OnInit {
   abrirWhatsapp(cliente: Cliente, event: Event): void {
     event.preventDefault();
     event.stopPropagation();
+
     const celularRaw = cliente?.celular || '';
     const celularLimpo = celularRaw.replace(/\D/g, '');
     const celularComDDI = celularLimpo.startsWith('55') ? celularLimpo : `55${celularLimpo}`;
-    const url = `https://web.whatsapp.com/send?phone=${celularComDDI}&type=phone_number&app_absent=0`;
+
+    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+
+    let url: string;
+    if (isMobile) {
+      // No celular abre no app
+      url = `https://wa.me/${celularComDDI}?app_absent=0`;
+    } else {
+      // No PC abre direto no WhatsApp Web
+      url = `https://web.whatsapp.com/send?phone=${celularComDDI}&type=phone_number&app_absent=0`;
+    }
+
     window.open(url, '_blank');
   }
+
 
   isUltimoContatoHoje(cliente: Cliente): boolean {
     if (!cliente.ultimoContato) return false;
