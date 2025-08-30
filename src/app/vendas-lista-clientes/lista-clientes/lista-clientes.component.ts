@@ -140,7 +140,7 @@ export class ListaClientesComponent implements OnInit {
     const celularRaw = cliente?.celular || '';
     const celularLimpo = celularRaw.replace(/\D/g, '');
     const celularComDDI = celularLimpo.startsWith('55') ? celularLimpo : `55${celularLimpo}`;
-    const url = `https://wa.me/${celularComDDI}`;
+    const url = `https://wa.me/${celularComDDI}?app_absent=0`;
     window.open(url, '_blank');
   }
 
