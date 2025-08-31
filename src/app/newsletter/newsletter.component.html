@@ -1,0 +1,19 @@
+<ion-modal [isOpen]="isOpen" [backdropDismiss]="false">
+  <ng-container *ngIf="current">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ current.title }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ng-container *ngComponentOutlet="current.component"></ng-container>
+    </ion-content>
+
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button expand="block" (click)="continue()">Continuar</ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-container>
+</ion-modal>
