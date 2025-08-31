@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import { ThemeService } from '../services/theme.service';
   standalone: false,
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
 
   form: FormGroup;
   private fb = inject(FormBuilder);
@@ -25,6 +25,13 @@ export class LoginPage {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
+  }
+
+  ngOnInit(): void {
+    // Se já estiver autenticado, redireciona para o dashboard
+    if (this.auth.isAuthenticated()) {
+      this.router.navigate(['/vendas/dashboard']);
+    }
   }
 
   get themeIcon(): string {
