@@ -50,7 +50,6 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
       items: [
         { icon: 'person-circle', title: 'Usuários', href: '/usuarios' },
         // { icon: 'business', title: 'Setores', href: '/setores' },
-        { icon: 'business', title: 'Empresa', href: '/empresa' },
         { icon: 'cloud-upload', title: 'Importar Clientes', href: '/clientes/importar' },
         { icon: 'person-add', title: 'Novo Usuário', href: '/usuarios/novo' },
       ],

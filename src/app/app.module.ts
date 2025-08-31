@@ -20,7 +20,6 @@ import { UsuariosPage } from './usuarios/usuarios.page';
 import { SetoresPage } from './setores/setores.page';
 import { UsuariosNovoPage } from './usuarios-novo/usuarios-novo.page';
 import { PerfilPage } from './perfil/perfil.page';
-import { EmpresaPage } from './empresa/empresa.page';
 import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 import { ClientesImportarPage } from './clientes-importar/clientes-importar.page';
 import { FolderPage } from './folder/folder.page';
@@ -32,7 +31,7 @@ import { JobsPage } from './jobs/jobs.page';
 import { MensagensPadraoPage } from './mensagens-padrao/mensagens-padrao.page';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, EmpresaPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],

@@ -1,7 +1,29 @@
 <ion-content class="ion-padding">
   <h1>Configurações</h1>
+
   <ion-item lines="none">
     <ion-label>Modo noturno</ion-label>
     <ion-toggle [checked]="theme.isDarkMode()" (ionChange)="toggleDark($event)"></ion-toggle>
   </ion-item>
+
+  <ion-card class="ion-margin-top">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="business-outline" slot="start"></ion-icon>
+        Empresa
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <ion-item>
+          <ion-label position="stacked">Nome</ion-label>
+          <ion-input formControlName="name"></ion-input>
+        </ion-item>
+        <ion-button type="submit" expand="block" class="ion-margin-top">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Salvar
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

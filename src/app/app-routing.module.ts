@@ -9,7 +9,6 @@ import { UsuariosPage } from './usuarios/usuarios.page';
 import { SetoresPage } from './setores/setores.page';
 import { UsuariosNovoPage } from './usuarios-novo/usuarios-novo.page';
 import { PerfilPage } from './perfil/perfil.page';
-import { EmpresaPage } from './empresa/empresa.page';
 import { ConfiguracoesPage } from './configuracoes/configuracoes.page';
 
 import { ClientesImportarPage } from './clientes-importar/clientes-importar.page';
@@ -39,12 +38,6 @@ const routes: Routes = [
     component: VendasDashboardPage,
     canActivate: [AuthGuard],
     data: { title: 'Relatório de Atendimento' }
-  },
-  {
-    path: 'empresa',
-    component: EmpresaPage,
-    canActivate: [AuthGuard],
-    data: { title: 'Sua Empresa' }
   },
   {
     path: 'vendas/leads',
