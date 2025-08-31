@@ -1,0 +1,15 @@
+.whatsapp-field {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 16px;
+  line-height: 1.4;
+  background: #fff;
+  white-space: pre-wrap;
+}
+
+ion-item .whatsapp-field {
+  margin-top: 8px;
+  min-height: 80px;
+}

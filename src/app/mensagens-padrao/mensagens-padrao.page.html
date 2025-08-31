@@ -1,0 +1,48 @@
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ editando ? 'Editar Mensagem' : 'Nova Mensagem Padrão' }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <ion-item>
+          <ion-label position="stacked">Nome</ion-label>
+          <ion-input formControlName="nome"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Mensagem</ion-label>
+          <textarea formControlName="mensagem" class="whatsapp-field"></textarea>
+        </ion-item>
+        <ion-button expand="block" type="submit" [disabled]="form.invalid">
+          {{ editando ? 'Atualizar' : 'Cadastrar' }}
+        </ion-button>
+        <ion-button *ngIf="editando" expand="block" fill="clear" color="medium" (click)="cancelar()">
+          Cancelar
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Mensagens Salvas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let msg of mensagens">
+          <ion-label>
+            <h2>{{ msg.nome }}</h2>
+            <p class="whatsapp-field">{{ msg.mensagem }}</p>
+          </ion-label>
+          <ion-button fill="clear" color="medium" (click)="editar(msg)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="remover(msg)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+

@@ -16,6 +16,7 @@ import { ClientesImportarPage } from './clientes-importar/clientes-importar.page
 import { FolderPage } from './folder/folder.page';
 import { SuportePage } from './suporte/suporte.page';
 import { JobsPage } from './jobs/jobs.page';
+import { MensagensPadraoPage } from './mensagens-padrao/mensagens-padrao.page';
 
 const routes: Routes = [
   {
@@ -56,6 +57,12 @@ const routes: Routes = [
     component: VendasListaClientesPage,
     canActivate: [AuthGuard],
     data: { title: 'Lista de Clientes' }
+  },
+  {
+    path: 'vendas/mensagens-padrao',
+    component: MensagensPadraoPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Mensagens Padrão' }
   },
   {
     path: 'usuarios',

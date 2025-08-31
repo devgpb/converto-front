@@ -36,6 +36,7 @@ export class NavMenuComponent {
         { icon: 'stats-chart', title: 'RelatÃ³rio de Vendas', href: '/vendas/dashboard' },
         { icon: 'person-add-outline', title: 'Cadastrar Clientes', href: '/vendas/leads' },
         { icon: 'people', title: 'Lista de Clientes', href: '/vendas/lista/clientes' },
+        { icon: 'chatbubbles', title: 'Mensagens PadrÃ£o', href: '/vendas/mensagens-padrao' },
       ],
     },
     {
