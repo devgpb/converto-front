@@ -11,6 +11,7 @@ interface NewsItem {
   selector: 'app-newsletter',
   templateUrl: './newsletter.component.html',
   styleUrls: ['./newsletter.component.scss'],
+  standalone: false,
 })
 export class NewsletterComponent implements OnInit {
   queue: NewsItem[] = [
