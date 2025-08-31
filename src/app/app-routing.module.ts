@@ -107,7 +107,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./signup/signup.module').then((m) => m.SignupModule)
+    loadChildren: () => import('./registro/signup.module').then((m) => m.SignupModule)
   }
 ];
 

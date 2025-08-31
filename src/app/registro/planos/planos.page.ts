@@ -27,3 +27,4 @@ export class PlanosPage {
     this.router.navigate(['/cadastro']);
   }
 }
+

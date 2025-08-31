@@ -22,3 +22,4 @@ import { ConfirmacaoPage } from './confirmacao/confirmacao.page';
   ],
 })
 export class SignupModule {}
+

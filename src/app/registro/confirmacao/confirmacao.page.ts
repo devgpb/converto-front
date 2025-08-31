@@ -33,3 +33,4 @@ export class ConfirmacaoPage implements OnInit {
     this.router.navigate(['/vendas/dashboard']);
   }
 }
+
