@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { WelcomeComponent } from './news/welcome/welcome.component';
+import { AuthService } from '../services/auth.service';
 
 interface NewsItem {
   name: string;
@@ -14,6 +15,7 @@ interface NewsItem {
   standalone: false,
 })
 export class NewsletterComponent implements OnInit {
+  private auth = inject(AuthService);
   queue: NewsItem[] = [
     { name: 'welcome', title: 'Bem-vindo', component: WelcomeComponent },
   ];
@@ -22,7 +24,12 @@ export class NewsletterComponent implements OnInit {
   isOpen = false;
 
   ngOnInit(): void {
-    this.next();
+    // Somente exibe após autenticação válida
+    if (this.auth.isAuthenticated()) {
+      this.next();
+    } else {
+      this.isOpen = false;
+    }
   }
 
   continue(): void {

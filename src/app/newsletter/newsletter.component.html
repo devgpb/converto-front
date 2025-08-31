@@ -1,4 +1,4 @@
-<ion-modal [isOpen]="isOpen" [backdropDismiss]="false">
+<ion-modal *ngIf="isOpen" [isOpen]="isOpen" [backdropDismiss]="false">
   <ng-container *ngIf="current">
     <ion-header>
       <ion-toolbar>
