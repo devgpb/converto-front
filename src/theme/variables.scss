@@ -130,6 +130,10 @@
   --wa-bubble-text: #eaeaea;
   --wa-input-bg: #1f2c34;
   --wa-input-border: #2a3942;
+
+  ion-datetime::part(calendar-day) {
+    color: black;
+  }
 }
 
 /* ====== Estilo padrão para tabelas ====== */

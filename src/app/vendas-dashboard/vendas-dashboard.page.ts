@@ -321,6 +321,8 @@ export class VendasDashboardPage implements OnInit {
     this.rangeError = this.validateRange(start, end);
   }
 
+  // Pesquisa apenas ao clicar no botão Aplicar
+
 
   private validateRange(start: Date | null, end: Date | null): string | null {
     if (!start || !end) return 'Selecione as duas datas';

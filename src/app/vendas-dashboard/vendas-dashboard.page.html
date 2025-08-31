@@ -25,7 +25,7 @@
           <p>Acompanhe o desempenho do atendimento ao cliente</p>
         </div>
         <div class="filters">
-          <ion-item class="range-picker">
+          <ion-item class="range-picker" style="display:none">
             <ion-input
               type="date"
               [value]="range.start"
@@ -33,7 +33,7 @@
               placeholder="Início">
             </ion-input>
           </ion-item>
-          <ion-item class="range-picker">
+          <ion-item class="range-picker" style="display:none">
 
             <ion-input
               type="date"
@@ -42,6 +42,14 @@
               placeholder="Fim">
             </ion-input>
           </ion-item>
+          <app-date-field
+            label="Período"
+            mode="range"
+            [start]="range.start"
+            [end]="range.end"
+            (startChange)="onRangeChange('start', $event || '')"
+            (endChange)="onRangeChange('end', $event || '')"
+          ></app-date-field>
           <ion-button fill="outline" [disabled]="!rangeValid" (click)="applyRange()">Aplicar</ion-button>
           <ion-text color="danger" *ngIf="rangeError">{{ rangeError }}</ion-text>
         </div>

@@ -1,0 +1,66 @@
+<ion-item button [id]="triggerId" class="date-field">
+  <ion-label>{{ label }}</ion-label>
+  <ion-note slot="end">{{ formattedValue() }}</ion-note>
+</ion-item>
+
+<ion-modal [trigger]="triggerId" keepContentsMounted="true" (willPresent)="onWillPresent()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ label }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      @if (mode === 'single') {
+        <ion-datetime
+          [locale]="locale"
+          [presentation]="presentation"
+          [value]="value"
+          [min]="min"
+          [max]="max"
+          [preferWheel]="false"
+          [showDefaultButtons]="false"
+          (ionChange)="onDatetimeChange($event)"
+        ></ion-datetime>
+      } @else {
+        <div class="range-grid">
+          <div>
+            <h3>Início</h3>
+            <ion-datetime
+              [locale]="locale"
+              presentation="date"
+              [value]="pendingStart ? pendingStart + 'T00:00:00' : null"
+              [min]="min"
+              [max]="max"
+              [preferWheel]="false"
+              [showDefaultButtons]="false"
+              (ionChange)="onStartChange($event)"
+            ></ion-datetime>
+          </div>
+          <div>
+            <h3>Fim</h3>
+            <ion-datetime
+              [locale]="locale"
+              presentation="date"
+              [value]="pendingEnd ? pendingEnd + 'T00:00:00' : null"
+              [min]="min"
+              [max]="max"
+              [preferWheel]="false"
+              [showDefaultButtons]="false"
+              (ionChange)="onEndChange($event)"
+            ></ion-datetime>
+          </div>
+        </div>
+      }
+    </ion-content>
+
+    <ion-footer>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button color="primary-contrast" (click)="closeModal()">Confirmar datas</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
