@@ -1,16 +1,72 @@
-.whatsapp-field {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 16px;
-  line-height: 1.4;
-  background: #fff;
-  white-space: pre-wrap;
-  color: black
+/* WhatsApp-like styles */
+.wa-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-ion-item .whatsapp-field {
+.wa-item {
+  --background: transparent;
+}
+
+.wa-textarea {
+  width: 100%;
+  display: block;
+  resize: none;
+  height: 96px; /* tamanho fixo, não variável */
+  padding: 10px 12px;
+  font-size: 16px;
+  line-height: 1.4;
+  border-radius: 12px;
+  border: 1px solid var(--wa-input-border);
+  background: var(--wa-bubble-out);
+  color: var(--wa-bubble-text);
+  outline: none;
+}
+
+.wa-textarea:focus {
+  border-color: var(--wa-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--wa-accent), transparent 75%);
+}
+
+.wa-msg-card {
+  margin-bottom: 12px;
+}
+
+.wa-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wa-actions ion-button {
+  --color: var(--wa-accent);
+}
+
+.wa-edit-actions {
+  display: flex;
+  gap: 8px;
   margin-top: 8px;
-  min-height: 80px;
+}
+
+/* Bubble para visualização do texto salvo */
+.wa-bubble {
+  display: inline-block;
+  max-width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--wa-bubble-out);
+  color: var(--wa-bubble-text);
+  white-space: pre-wrap;
+}
+
+.wa-empty {
+  margin-top: 4px;
+  color: var(--ion-color-medium);
+}
+
+/* Garantir contraste correto no tema escuro */
+:host-context(.dark) .wa-textarea,
+:host-context(.dark) .wa-bubble {
+  color: var(--wa-bubble-text) !important;
 }

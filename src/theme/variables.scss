@@ -57,7 +57,18 @@
 
   ion-input {
     --padding-start: 10px;
+    margin-top: 6px;
+    border: 1px solid #f4f4f4;
+
   }
+
+
+  /* WhatsApp-like variables */
+  --wa-accent: #25d366;
+  --wa-bubble-out: #dcf8c6; /* sent bubble (light) */
+  --wa-bubble-text: #111111;
+  --wa-input-bg: #ffffff;
+  --wa-input-border: #d1d7db;
 }
 
 /* ====== DARK MODE (ativado pelo ThemeService) ====== */
@@ -112,6 +123,13 @@
   textarea{
     color:#000000
   }
+
+  /* WhatsApp-like variables (dark) */
+  --wa-accent: #25d366;
+  --wa-bubble-out: #005c4b; /* sent bubble (dark) */
+  --wa-bubble-text: #eaeaea;
+  --wa-input-bg: #1f2c34;
+  --wa-input-border: #2a3942;
 }
 
 /* ====== Estilo padrão para tabelas ====== */
