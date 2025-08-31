@@ -26,7 +26,7 @@ export interface MensagemResponse {
 @Injectable({ providedIn: 'root' })
 export class MensagensPadraoService {
   private http = inject(HttpClient);
-  private api = `${environment.apiUrl}/apo/mensagens-padrao`;
+  private api = `${environment.apiUrl}/mensagens-padrao`;
 
   listar(q = '', page = 1, limit = 50): Observable<ListaMensagensResponse> {
     return this.http.get<ListaMensagensResponse>(this.api, {

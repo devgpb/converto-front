@@ -5,6 +5,7 @@ import { MensagensPadraoService, MensagemPadrao } from '../services/mensagens-pa
 @Component({
   selector: 'app-mensagens-padrao',
   templateUrl: './mensagens-padrao.page.html',
+  standalone: false,
   styleUrls: ['./mensagens-padrao.page.scss'],
 })
 export class MensagensPadraoPage implements OnInit {
