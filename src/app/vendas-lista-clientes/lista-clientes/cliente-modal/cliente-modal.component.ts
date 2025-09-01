@@ -25,7 +25,8 @@ export class ClienteModalComponent implements OnChanges {
   // eventos
   eventos: ClienteEvento[] = [];
   evTitulo = '';
-  evData = '';
+  evDate = '';
+  evTime: string | null = null;
   isSavingEvento = false;
   isLoadingEventos = false;
   tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Maceio';
@@ -135,21 +136,23 @@ export class ClienteModalComponent implements OnChanges {
   }
 
   marcarEvento() {
-    if (!this.evData) {
+    if (!this.evDate) {
       return;
     }
+    const data = `${this.evDate}T${this.evTime || '00:00'}`;
     this.isSavingEvento = true;
     this.clientesService.criarEvento({
       id_usuario: this.idUsuario,
       id_cliente: this.formData.id_cliente,
-      data: this.evData,
+      data,
       evento: this.evTitulo || null,
       tz: this.tz
     }).subscribe({
       next: novo => {
         this.eventos.unshift(novo);
         this.evTitulo = '';
-        this.evData = '';
+        this.evDate = '';
+        this.evTime = null;
         this.isSavingEvento = false;
       },
       error: () => {
