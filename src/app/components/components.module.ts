@@ -8,11 +8,12 @@ import { TelefoneBrDirective } from '../../shared/directives/telefone-br.directi
 import { CpfBrDirective } from '../../shared/directives/cpf-br.directive';
 import { CepBrDirective } from '../../shared/directives/cep-br.directive';
 import { DateFieldComponent } from './date-field/date-field.component';
+import { CardIlustratedComponent } from './card-ilustrated/card-ilustrated.component';
 
 @NgModule({
-  declarations: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent],
+  declarations: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent, CardIlustratedComponent],
   imports: [CommonModule, IonicModule],
-  exports: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent],
+  exports: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent, CardIlustratedComponent],
 })
 export class ComponentsModule {}
 

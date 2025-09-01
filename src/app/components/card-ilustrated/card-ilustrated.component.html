@@ -1,0 +1,16 @@
+<ion-card class="ci-card" [class.ci-rounded]="rounded" [class.ci-square]="!rounded" [class.ci-thin]="thin">
+  <div class="ci-order" *ngIf="order !== null && order !== undefined">#{{ order }}</div>
+
+  <div class="ci-top">
+    <div class="ci-icon" [ngClass]="iconVariant">
+      <ion-icon [name]="icon" aria-hidden="true"></ion-icon>
+    </div>
+  </div>
+
+  <div class="ci-content">
+    <h3 class="ci-title" *ngIf="title">{{ title }}</h3>
+    <p class="ci-text" *ngIf="text">{{ text }}</p>
+    <ng-content></ng-content>
+  </div>
+</ion-card>
+

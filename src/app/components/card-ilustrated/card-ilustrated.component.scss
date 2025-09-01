@@ -1,0 +1,114 @@
+:host {
+  display: block;
+
+  /* Cores e tokens do componente (ajustáveis por tema) */
+  --ci-bg: var(--ion-item-background);
+  --ci-text: var(--ion-text-color);
+  --ci-border: color-mix(in srgb, var(--ion-text-color) 12%, transparent);
+  --ci-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+  --ci-icon-color: var(--ion-color-primary);
+  --ci-icon-bg: color-mix(in srgb, var(--ion-color-primary) 14%, transparent);
+
+  --ci-order-bg: color-mix(in srgb, var(--ion-color-primary) 12%, transparent);
+  --ci-order-color: var(--ion-color-primary);
+}
+
+/* Modo escuro: suaviza borda/sombra e preserva contraste */
+:host-context(.dark) {
+  --ci-border: color-mix(in srgb, var(--ion-text-color) 10%, transparent);
+  --ci-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  --ci-icon-bg: color-mix(in srgb, var(--ion-color-primary) 18%, transparent);
+  --ci-order-bg: color-mix(in srgb, var(--ion-color-primary) 18%, transparent);
+}
+
+.ci-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--ci-bg);
+  color: var(--ci-text);
+  padding: 18px 16px 20px;
+  box-shadow: var(--ci-shadow);
+  transition: transform 120ms ease, box-shadow 200ms ease;
+  border: 0 solid transparent;
+
+  &.ci-thin {
+    border-width: 1px;
+    border-color: var(--ci-border);
+  }
+
+  &.ci-rounded {
+    border-radius: 16px;
+  }
+
+  &.ci-square {
+    border-radius: 8px;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.ci-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.ci-icon {
+  display: grid;
+  place-items: center;
+
+  &.pure ion-icon {
+    font-size: 36px;
+    color: var(--ci-icon-color);
+  }
+
+  &.badge {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    background: var(--ci-icon-bg);
+    outline: 1px solid var(--ci-icon-color);
+    display: grid;
+    place-items: center;
+  }
+
+  &.badge ion-icon {
+    font-size: 28px;
+    color: var(--ci-icon-color);
+  }
+}
+
+.ci-content {
+  text-align: center;
+}
+
+.ci-title {
+  font-size: 1.05rem;
+  font-weight: 650;
+  margin: 2px 0 6px;
+  color: var(--ci-text);
+}
+
+.ci-text {
+  margin: 0;
+  color: color-mix(in srgb, var(--ci-text) 82%, transparent);
+}
+
+.ci-order {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--ci-order-color);
+  background: var(--ci-order-bg);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
