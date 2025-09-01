@@ -96,8 +96,25 @@
             <ion-input placeholder="Título do evento" [(ngModel)]="evTitulo"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-datetime presentation="date-time" [(ngModel)]="evData"></ion-datetime>
+            <ion-label position="stacked">Data</ion-label>
+            <ion-datetime
+              presentation="date"
+              [preferWheel]="true"
+              [(ngModel)]="evDate"
+            ></ion-datetime>
           </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Hora (opcional)</ion-label>
+            <ion-datetime
+              presentation="time"
+              [preferWheel]="true"
+              [(ngModel)]="evTime"
+            ></ion-datetime>
+          </ion-item>
+          <ion-text color="medium" class="event-hint">
+            * Se não informar hora, será considerado 00:00 no seu fuso
+            (America/Fortaleza).
+          </ion-text>
           <ion-button expand="block" (click)="marcarEvento()" [disabled]="isSavingEvento">
             <ion-icon slot="start" name="calendar-outline"></ion-icon>
             Marcar

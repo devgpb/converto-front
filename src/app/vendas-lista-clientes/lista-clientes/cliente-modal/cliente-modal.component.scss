@@ -13,3 +13,16 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.event-hint {
+  display: block;
+  font-size: 0.8rem;
+  margin: 4px 16px;
+}
+
+@media (max-width: 600px) {
+  .cliente-modal {
+    --width: 95%;
+    --height: 90%;
+  }
+}
