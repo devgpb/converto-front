@@ -25,7 +25,7 @@ export interface ClientesResponse {
 }
 
 export interface ClienteEvento {
-  idEvento: number;
+  id_evento: number;
   idCliente: number;
   data: string;
   dataLocal?: string;
@@ -58,7 +58,8 @@ export class ClientesService {
   }
 
   criarEvento(payload: {
-    idCliente: number;
+    id_usuario: any;
+    id_cliente: number;
     idUsuario?: number;
     data: string;
     evento?: string | null;

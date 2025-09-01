@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Cliente, ClientesService, ClienteEvento } from '../../../services/clientes.service';
 import { VendasService } from '../../../services/vendas/vendas.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-cliente-modal',
@@ -13,11 +14,13 @@ export class ClienteModalComponent implements OnChanges {
   @Input() isOpen = false;
   @Output() closeModal = new EventEmitter<void>();
   @Output() saved = new EventEmitter<void>();
+  private auth = inject(AuthService);
 
   formData!: Cliente;
   cidades: string[] = [];
   statuses: string[] = [];
   campanhas: string[] = [];
+  idUsuario: any;
 
   // eventos
   eventos: ClienteEvento[] = [];
@@ -30,7 +33,13 @@ export class ClienteModalComponent implements OnChanges {
   errors: Record<string, string> = {};
   isLoading = false;
 
-  constructor(private clientesService: ClientesService, private vendasService: VendasService) {}
+  constructor(
+    private clientesService: ClientesService,
+    private vendasService: VendasService,
+  ) {
+    this.idUsuario = this.auth.getUserId()
+    console.log(this.idUsuario, this.auth.getUserId())
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['cliente'] && this.cliente) {
@@ -131,7 +140,8 @@ export class ClienteModalComponent implements OnChanges {
     }
     this.isSavingEvento = true;
     this.clientesService.criarEvento({
-      idCliente: this.formData.id_cliente,
+      id_usuario: this.idUsuario,
+      id_cliente: this.formData.id_cliente,
       data: this.evData,
       evento: this.evTitulo || null,
       tz: this.tz
@@ -150,7 +160,7 @@ export class ClienteModalComponent implements OnChanges {
 
   confirmarEventoLocal(ev: ClienteEvento) {
     ev.confirmado = true;
-    this.vendasService.confirmarEvento(ev.idEvento).subscribe({
+    this.vendasService.confirmarEvento(ev.id_evento).subscribe({
       error: () => {
         ev.confirmado = null;
       }
@@ -158,9 +168,9 @@ export class ClienteModalComponent implements OnChanges {
   }
 
   cancelarEventoLocal(ev: ClienteEvento) {
-    this.vendasService.cancelarEvento(ev.idEvento).subscribe({
+    this.vendasService.cancelarEvento(ev.id_evento).subscribe({
       next: () => {
-        this.eventos = this.eventos.filter(e => e.idEvento !== ev.idEvento);
+        this.carregarEventosCliente();
       },
       error: () => {}
     });

@@ -1,7 +1,7 @@
 <ion-card class="cliente-card" (click)="onEdit()">
   <ion-card-content>
     <div class="card-header">
-      <ion-badge color="medium">ID: {{ cliente.id_cliente }}</ion-badge>
+      <!-- <ion-badge color="medium">ID: {{ cliente.id_cliente }}</ion-badge> -->
       <ion-badge color="primary">{{ cliente.status || 'Sem status' }}</ion-badge>
       <ion-badge [color]="diasColor">{{ dias }} {{ dias === 1 ? 'dia' : 'dias' }}</ion-badge>
     </div>
