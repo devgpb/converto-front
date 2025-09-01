@@ -95,22 +95,28 @@
           <ion-item>
             <ion-input placeholder="Título do evento" [(ngModel)]="evTitulo"></ion-input>
           </ion-item>
-          <ion-item>
-            <ion-label position="stacked">Data</ion-label>
-            <ion-datetime
-              presentation="date"
-              [preferWheel]="true"
-              [(ngModel)]="evDate"
-            ></ion-datetime>
-          </ion-item>
-          <ion-item>
-            <ion-label position="stacked">Hora (opcional)</ion-label>
-            <ion-datetime
-              presentation="time"
-              [preferWheel]="true"
-              [(ngModel)]="evTime"
-            ></ion-datetime>
-          </ion-item>
+          <div class="datetime-container">
+            <ion-item lines="none" class="datetime-item">
+              <ion-label position="stacked" class="ion-text-center">Data</ion-label>
+              <ion-datetime
+                class="centered-datetime"
+                presentation="date"
+                [preferWheel]="false"
+                locale="pt-BR"
+                [(ngModel)]="evDate"
+              ></ion-datetime>
+            </ion-item>
+            <ion-item lines="none" class="datetime-item">
+              <ion-label position="stacked" class="ion-text-center">Hora (opcional)</ion-label>
+              <ion-datetime
+                class="centered-datetime"
+                presentation="time"
+                [preferWheel]="true"
+                locale="pt-BR"
+                [(ngModel)]="evTime"
+              ></ion-datetime>
+            </ion-item>
+          </div>
           <ion-text color="medium" class="event-hint">
             * Se não informar hora, será considerado 00:00 no seu fuso
             (America/Fortaleza).

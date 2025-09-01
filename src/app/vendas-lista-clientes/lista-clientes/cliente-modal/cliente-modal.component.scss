@@ -20,6 +20,36 @@
   margin: 4px 16px;
 }
 
+/* Centralização dos seletores de data/hora */
+.datetime-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.datetime-item {
+  width: 100%;
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+}
+
+ion-datetime.centered-datetime {
+  display: block;
+  margin: 8px auto 12px auto;
+  max-width: 360px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Ajustes para modo escuro (aplicados quando o app estiver em .dark) */
+:host-context(.dark) ion-datetime.centered-datetime {
+  --background: #1e1e1e;
+  --title-color: #ffffff;
+  --wheel-highlight-background: rgba(255, 255, 255, 0.06);
+  --wheel-border-color: rgba(255, 255, 255, 0.12);
+}
+
 @media (max-width: 600px) {
   .cliente-modal {
     --width: 95%;

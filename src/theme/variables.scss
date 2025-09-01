@@ -131,8 +131,18 @@
   --wa-input-bg: #1f2c34;
   --wa-input-border: #2a3942;
 
+  /* Ajustes gerais para Date/Time no modo escuro */
+  ion-datetime {
+    --background: #1e1e1e;
+    --title-color: #ffffff;
+  }
+  /* Tornar os dias do calendário legíveis no escuro */
   ion-datetime::part(calendar-day) {
-    color: black;
+    color: var(--ion-text-color);
+  }
+  /* Destaque sutil para o dia atual (se suportado) */
+  ion-datetime::part(calendar-day today) {
+    color: var(--ion-color-primary);
   }
 }
 
