@@ -1,5 +1,11 @@
 .date-field {
   border-radius: 12px;
+  --background: var(--ion-item-background);
+  --color: var(--ion-text-color);
+}
+
+.date-field ion-note {
+  color: var(--ion-text-color);
 }
 
 .range-grid {
@@ -20,6 +26,14 @@ ion-datetime {
   --background: var(--ion-color-light, #f8f9fa);
   --title-color: var(--ion-color-primary);
   --wheel-highlight-background: rgba(var(--ion-color-primary-rgb), 0.08);
+  --button-color: var(--ion-color-primary);
+}
+
+/* Dark mode alinhado ao modal e tokens globais */
+:host-context(.dark) ion-datetime {
+  --background: var(--ion-item-background);
+  --title-color: var(--ion-text-color);
+  --wheel-highlight-background: rgba(255, 255, 255, 0.06);
   --button-color: var(--ion-color-primary);
 }
 

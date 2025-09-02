@@ -1,11 +1,71 @@
 <div class="welcome">
-  <app-card-ilustrated
-    [order]="1"
-    icon="happy-outline"
-    iconVariant="badge"
-    [rounded]="true"
-    [thin]="true"
-    title="Bem-vindo ao Converto"
-    text="Configure sua primeira newsletter e comece a engajar seu público."
-  ></app-card-ilustrated>
+  <h2 class="welcome-title">Bem-vindo ao Converto</h2>
+  <p class="welcome-sub">Um overview rápido para você começar agora.</p>
+
+  <div class="welcome-grid">
+    <!-- 1) Importação de clientes -->
+    <app-card-ilustrated
+      [order]="1"
+      icon="cloud-upload-outline"
+      iconVariant="badge"
+      [rounded]="true"
+      [thin]="true"
+      title="Importe seus clientes"
+      text="Suba um arquivo e comece com sua base organizada."
+    >
+      <!-- <ion-button color="primary" size="small" routerLink="/clientes/importar" class="cta">Importar agora</ion-button> -->
+    </app-card-ilustrated>
+
+    <!-- 2) Mensagens automáticas (padrão) -->
+    <app-card-ilustrated
+      [order]="2"
+      icon="chatbubbles-outline"
+      iconVariant="badge"
+      [rounded]="true"
+      [thin]="true"
+      title="Mensagens automáticas"
+      text="Cadastre mensagens padrão e agilize seus atendimentos."
+    >
+      <!-- <ion-button color="tertiary" size="small" routerLink="/vendas/mensagens-padrao" class="cta">Cadastrar mensagens</ion-button> -->
+    </app-card-ilustrated>
+
+    <!-- 3) Extensão do Converto -->
+    <app-card-ilustrated
+      [order]="3"
+      icon="browsers-outline"
+      iconVariant="badge"
+      [rounded]="true"
+      [thin]="true"
+      title="Use a extensão Converto"
+      text="Integre com seu navegador e feche mais clientes!"
+    >
+      <!-- <ion-button color="success" size="small" routerLink="/suporte" class="cta">Como instalar</ion-button> -->
+    </app-card-ilustrated>
+
+    <!-- 4) Dashboard -->
+    <app-card-ilustrated
+      [order]="4"
+      icon="stats-chart-outline"
+      iconVariant="badge"
+      [rounded]="true"
+      [thin]="true"
+      title="Veja seu Dashboard"
+      text="Acompanhe seus números e contatos mais recentes."
+    >
+      <!-- <ion-button color="medium" size="small" routerLink="/vendas/dashboard" class="cta">Abrir dashboard</ion-button> -->
+    </app-card-ilustrated>
+
+    <!-- 5) Perfil -->
+    <app-card-ilustrated
+      [order]="5"
+      icon="person-circle-outline"
+      iconVariant="badge"
+      [rounded]="true"
+      [thin]="true"
+      title="Complete seu perfil"
+      text="Personalize suas informações e configure preferências."
+    >
+      <!-- <ion-button color="warning" size="small" routerLink="/perfil" class="cta">Atualizar perfil</ion-button> -->
+    </app-card-ilustrated>
+  </div>
 </div>

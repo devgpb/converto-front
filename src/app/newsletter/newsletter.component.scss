@@ -1,4 +1,21 @@
 ion-modal {
-  --width: 90%;
-  --max-width: 500px;
+  /* Base (mobile-first): quase tela cheia */
+  --width: 94%;
+  --max-width: 620px;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  ion-modal {
+    --width: 92%;
+    --max-width: 860px;
+  }
+}
+
+/* Desktop largo */
+@media (min-width: 1200px) {
+  ion-modal {
+    --width: 90%;
+    --max-width: 1024px;
+  }
 }

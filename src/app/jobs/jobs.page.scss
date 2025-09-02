@@ -22,3 +22,23 @@
     padding: 8px 0;
   }
 }
+
+/* Responsivo para tabelas em grids (mobile: rolagem horizontal) */
+@media (max-width: 767px) {
+  .jobs-grid,
+  .metadata-grid {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .jobs-grid .header,
+  .jobs-grid ion-row {
+    min-width: 680px; /* garante rolagem quando necessário */
+  }
+
+  .metadata-grid .header,
+  .metadata-grid ion-row {
+    min-width: 520px; /* garante rolagem quando necessário */
+  }
+}

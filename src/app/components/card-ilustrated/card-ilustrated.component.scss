@@ -27,10 +27,11 @@
   overflow: hidden;
   background: var(--ci-bg);
   color: var(--ci-text);
-  padding: 18px 16px 20px;
+  padding: 22px 18px 22px;
   box-shadow: var(--ci-shadow);
   transition: transform 120ms ease, box-shadow 200ms ease;
   border: 0 solid transparent;
+  min-height: 180px;
 
   &.ci-thin {
     border-width: 1px;
@@ -64,13 +65,13 @@
   place-items: center;
 
   &.pure ion-icon {
-    font-size: 36px;
+    font-size: 42px;
     color: var(--ci-icon-color);
   }
 
   &.badge {
-    width: 56px;
-    height: 56px;
+    width: 62px;
+    height: 62px;
     border-radius: 999px;
     background: var(--ci-icon-bg);
     outline: 1px solid var(--ci-icon-color);
@@ -79,7 +80,7 @@
   }
 
   &.badge ion-icon {
-    font-size: 28px;
+    font-size: 32px;
     color: var(--ci-icon-color);
   }
 }
@@ -89,7 +90,7 @@
 }
 
 .ci-title {
-  font-size: 1.05rem;
+  font-size: 1.18rem;
   font-weight: 650;
   margin: 2px 0 6px;
   color: var(--ci-text);
@@ -98,13 +99,14 @@
 .ci-text {
   margin: 0;
   color: color-mix(in srgb, var(--ci-text) 82%, transparent);
+  font-size: 0.98rem;
 }
 
 .ci-order {
   position: absolute;
   left: 12px;
-  bottom: 12px;
-  font-size: 0.75rem;
+  top: 10px;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.3px;
   color: var(--ci-order-color);

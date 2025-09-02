@@ -1,5 +1,35 @@
 .welcome {
-  display: grid;
-  place-items: center;
   padding: 12px;
+}
+
+.welcome-title {
+  margin: 0 0 4px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.welcome-sub {
+  margin: 0 0 16px 0;
+  text-align: center;
+  color: var(--ion-color-medium);
+}
+
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Desktop/tablet: cards em linha (lado a lado) */
+@media (min-width: 768px) {
+  .welcome-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* Botão de ação dentro do card */
+.cta {
+  margin-top: 12px;
 }

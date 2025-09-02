@@ -133,21 +133,23 @@
 
   /* Ajustes gerais para Date/Time no modo escuro */
   ion-datetime {
-    --background: #1e1e1e;
-    --title-color: #ffffff;
+    --background: #1e1e1e !important;
+    --title-color: #ffffff !important;
   }
   /* Tornar os dias do calendário legíveis no escuro */
   ion-datetime::part(calendar-day) {
-    color: var(--ion-text-color);
+    color: var(--ion-text-color) !important;
   }
   /* Destaque sutil para o dia atual (se suportado) */
   ion-datetime::part(calendar-day today) {
-    color: var(--ion-color-primary);
+    color: var(--ion-color-primary) !important;
   }
+
 }
 
 /* ====== Estilo padrão para tabelas ====== */
 .table-view {
+  display: block;
   overflow-x: auto;
   border: 1px solid rgba(var(--ion-color-success-rgb), 0.3);
   border-radius: 8px;
@@ -177,5 +179,20 @@
   ion-col {
     display: flex;
     align-items: center;
+  }
+}
+
+/* Responsividade: tabela rolável em telas pequenas */
+@media (max-width: 767px) {
+  .table-view {
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-view .table-header,
+  .table-view .table-row {
+    min-width: 900px; /* garante rolagem horizontal quando necessário */
+  }
+  .table-view ion-col {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
