@@ -1,0 +1,13 @@
+<ion-content class="ion-padding" fullscreen="true">
+  <div class="content-wrapper">
+    <h2>Esqueci minha senha</h2>
+    <p>Informe seu e-mail para enviarmos o link de redefinição.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+      <ion-input type="email" formControlName="email" placeholder="Seu e-mail"></ion-input>
+      <ion-button expand="full" type="submit" [disabled]="loading">Enviar</ion-button>
+      <ion-button expand="full" fill="clear" routerLink="/login">Voltar ao login</ion-button>
+    </form>
+  </div>
+</ion-content>
+

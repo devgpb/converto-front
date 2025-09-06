@@ -13,8 +13,9 @@
           <ion-label position="stacked">Mensagem</ion-label>
           <textarea formControlName="mensagem" class="wa-textarea" placeholder="Digite como no WhatsApp..."></textarea>
         </ion-item>
-        <ion-button expand="block" type="submit" [disabled]="novoForm.invalid">
-          Cadastrar
+        <ion-button expand="block" type="submit" [disabled]="novoForm.invalid || salvandoNovo">
+          <ion-spinner slot="start" *ngIf="salvandoNovo" name="crescent"></ion-spinner>
+          {{ salvandoNovo ? 'Salvando...' : 'Cadastrar' }}
         </ion-button>
       </form>
     </ion-card-content>
@@ -26,17 +27,33 @@
     </ion-card-header>
     <ion-card-content>
       <ion-searchbar debounce="300" [value]="busca" (ionInput)="onBuscar($event)" placeholder="Pesquisar por nome ou conteúdo"></ion-searchbar>
-      <div *ngIf="mensagensFiltradas.length === 0" class="wa-empty">Nenhuma mensagem encontrada</div>
+
+      <div *ngIf="carregandoLista" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <div>Carregando mensagens...</div>
+      </div>
+
+      <div *ngIf="!carregandoLista && mensagensFiltradas.length === 0" class="wa-empty">Nenhuma mensagem encontrada</div>
       <ng-container *ngFor="let msg of mensagensFiltradas">
         <ion-card class="wa-msg-card">
           <ion-card-header class="wa-card-header">
             <ion-card-title>{{ msg.nome }}</ion-card-title>
             <div class="wa-actions">
-              <ion-button *ngIf="editandoId !== msg.idMensagem" fill="clear" color="medium" (click)="iniciarEdicao(msg)">
-                <ion-icon slot="icon-only" name="create"></ion-icon>
+              <ion-button *ngIf="editandoId !== msg.idMensagem"
+                          fill="clear"
+                          color="medium"
+                          (click)="iniciarEdicao(msg)"
+                          [disabled]="atualizandoId === msg.idMensagem || removendoId === msg.idMensagem || carregandoLista">
+                <ion-icon *ngIf="atualizandoId !== msg.idMensagem" slot="icon-only" name="create"></ion-icon>
+                <ion-spinner *ngIf="atualizandoId === msg.idMensagem" name="dots"></ion-spinner>
               </ion-button>
-              <ion-button *ngIf="editandoId !== msg.idMensagem" fill="clear" color="danger" (click)="remover(msg)">
-                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              <ion-button *ngIf="editandoId !== msg.idMensagem"
+                          fill="clear"
+                          color="danger"
+                          (click)="remover(msg)"
+                          [disabled]="removendoId === msg.idMensagem || atualizandoId === msg.idMensagem || carregandoLista">
+                <ion-icon *ngIf="removendoId !== msg.idMensagem" slot="icon-only" name="trash"></ion-icon>
+                <ion-spinner *ngIf="removendoId === msg.idMensagem" name="dots"></ion-spinner>
               </ion-button>
             </div>
           </ion-card-header>
@@ -57,8 +74,9 @@
                 <textarea formControlName="mensagem" class="wa-textarea" placeholder="Digite como no WhatsApp..."></textarea>
               </ion-item>
               <div class="wa-edit-actions">
-                <ion-button color="primary" (click)="salvarEdicao(msg)" [disabled]="editForm.invalid">
-                  Salvar
+                <ion-button color="primary" (click)="salvarEdicao(msg)" [disabled]="editForm.invalid || atualizandoId === msg.idMensagem">
+                  <ion-spinner slot="start" *ngIf="atualizandoId === msg.idMensagem" name="crescent"></ion-spinner>
+                  {{ atualizandoId === msg.idMensagem ? 'Salvando...' : 'Salvar' }}
                 </ion-button>
                 <ion-button fill="clear" color="medium" (click)="cancelarEdicao()">
                   Cancelar

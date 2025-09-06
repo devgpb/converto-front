@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MensagensPadraoService, MensagemPadrao } from '../services/mensagens-padrao.service';
-import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-mensagens-padrao',
@@ -15,8 +14,13 @@ export class MensagensPadraoPage implements OnInit {
   busca: string = '';
   editandoId: number | null = null;
   editForm: FormGroup | null = null;
+  // estados locais de carregamento (não bloqueiam toda a UI)
+  carregandoLista = false;
+  salvandoNovo = false;
+  atualizandoId: number | null = null;
+  removendoId: number | null = null;
 
-  constructor(private fb: FormBuilder, private service: MensagensPadraoService, private loadingCtrl: LoadingController) {
+  constructor(private fb: FormBuilder, private service: MensagensPadraoService) {
     this.novoForm = this.fb.group({
       nome: ['', Validators.required],
       mensagem: ['', Validators.required],
@@ -27,32 +31,32 @@ export class MensagensPadraoPage implements OnInit {
     this.carregar();
   }
 
-  async carregar() {
-    const loading = await this.loadingCtrl.create({ message: 'Carregando mensagens...' });
-    await loading.present();
+  carregar() {
+    this.carregandoLista = true;
     this.service.listar().subscribe({
       next: (res) => {
         this.mensagens = res.dados || [];
       },
       error: () => {
-        // poderia exibir um toast aqui, mas mantendo simples
+        // poderia exibir um toast aqui
       },
-      complete: () => loading.dismiss()
+      complete: () => {
+        this.carregandoLista = false;
+      }
     });
   }
 
-  async salvarNovo() {
+  salvarNovo() {
     if (this.novoForm.invalid) return;
     const valor = this.novoForm.value;
-    const loading = await this.loadingCtrl.create({ message: 'Salvando...' });
-    await loading.present();
+    this.salvandoNovo = true;
     this.service.criar(valor).subscribe({
       next: () => {
         this.novoForm.reset();
       },
       error: () => {},
       complete: () => {
-        loading.dismiss();
+        this.salvandoNovo = false;
         this.carregar();
       }
     });
@@ -66,32 +70,30 @@ export class MensagensPadraoPage implements OnInit {
     });
   }
 
-  async salvarEdicao(msg: MensagemPadrao) {
+  salvarEdicao(msg: MensagemPadrao) {
     if (!this.editForm || this.editForm.invalid || !msg.idMensagem) return;
     const valor = this.editForm.value as Partial<MensagemPadrao>;
-    const loading = await this.loadingCtrl.create({ message: 'Atualizando...' });
-    await loading.present();
+    this.atualizandoId = msg.idMensagem;
     this.service.atualizar(msg.idMensagem, valor).subscribe({
       next: () => {
         this.cancelarEdicao();
       },
       error: () => {},
       complete: () => {
-        loading.dismiss();
+        this.atualizandoId = null;
         this.carregar();
       }
     });
   }
 
-  async remover(msg: MensagemPadrao) {
+  remover(msg: MensagemPadrao) {
     if (!confirm('Remover mensagem?')) return;
-    const loading = await this.loadingCtrl.create({ message: 'Removendo...' });
-    await loading.present();
+    this.removendoId = msg.idMensagem ?? null;
     this.service.remover(msg.idMensagem!).subscribe({
       next: () => {},
       error: () => {},
       complete: () => {
-        loading.dismiss();
+        this.removendoId = null;
         this.carregar();
       }
     });

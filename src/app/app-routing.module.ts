@@ -16,6 +16,8 @@ import { FolderPage } from './folder/folder.page';
 import { SuportePage } from './suporte/suporte.page';
 import { JobsPage } from './jobs/jobs.page';
 import { MensagensPadraoPage } from './mensagens-padrao/mensagens-padrao.page';
+import { EsqueciSenhaPage } from './esqueci-senha/esqueci-senha.page';
+import { RedefinirSenhaPage } from './redefinir-senha/redefinir-senha.page';
 
 const routes: Routes = [
   {
@@ -26,6 +28,14 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'esqueci-senha',
+    component: EsqueciSenhaPage
+  },
+  {
+    path: 'redefinir-senha',
+    component: RedefinirSenhaPage
   },
   {
     path: 'jobs',

@@ -14,7 +14,7 @@ export class AppComponent {
   private theme = inject(ThemeService);
   private auth = inject(AuthService);
   public isPublicPage = false;
-  private publicRoutes = ['/login', '/planos', '/cadastro', '/checkout', '/confirmacao'];
+  private publicRoutes = ['/login', '/planos', '/cadastro', '/checkout', '/confirmacao', '/esqueci-senha', '/redefinir-senha'];
 
   constructor() {
     this.theme.init();
