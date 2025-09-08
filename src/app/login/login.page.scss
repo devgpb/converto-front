@@ -1,51 +1,83 @@
-/* Add your styles here */
+/* Layout base */
 ion-content {
   --background: transparent;
   position: relative;
+  min-height: 100vh;
+  /* Remove paddings only on this page */
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
 }
 
-.content-wrapper {
-  position: relative;
-  z-index: 1;
+.login-layout {
+  display: flex;
+  min-height: 100vh;
 }
 
+/* Lado esquerdo: 60% com imagem */
+.login-image {
+  flex: 0 0 60%;
+  background: var(--login-wallpaper) center center / cover no-repeat;
+  min-height: 100vh;
+}
+
+/* Lado direito: formulário */
+.login-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.logo-wrap img {
+  max-width: 150px;
+  height: auto;
+}
+
+/* Formulário */
 .form {
-  margin: 0 auto;
-  width: 40vw;
-
-  @media (max-width: 768px) {
-    width: 80%;
-  }
+  width: 100%;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  ion-list{
-    width: 100%;
-  }
   ion-list {
+    width: 100%;
     --background: transparent !important;
     background: transparent !important;
   }
 
   ion-item {
-    --background: transparent;    /* tira fundo */
-    --inner-padding-start: 0;     /* remove padding interno */
+    --background: transparent;
+    --inner-padding-start: 0;
     --inner-padding-end: 0;
-    --padding-start: 0;           /* remove padding externo */
+    --padding-start: 0;
     --padding-end: 0;
     border: none;
     background: #fff;
     box-shadow: none;
   }
-  ion-button{
+
+  ion-button {
     margin-top: 20px;
   }
 }
 
+/* Inputs */
 ion-input.custom-input {
-  --color: #000;               /* cor do texto no modo normal */
-  --placeholder-color: #666;   /* placeholder */
+  --color: #000;
+  --placeholder-color: #666;
   border: 1px solid #ccc;
   border-radius: 6px;
   margin-bottom: 12px;
@@ -60,14 +92,14 @@ ion-input.custom-input::part(native) {
 
 /* LIGHT (default) */
 ion-input.custom-input {
-  --color: #000;  /* texto */
+  --color: #000;
   --background: #fff;
   border: 1px solid #ccc;
 }
 
 /* DARK MODE */
 body.dark ion-input.custom-input {
-  --color: #fff;  /* texto branco */
+  --color: #fff;
   --background: #222;
   border: 1px solid #444;
 }
@@ -75,4 +107,48 @@ body.dark ion-input.custom-input {
 /* Placeholder no dark mode */
 body.dark {
   --ion-input-placeholder-color: #aaa;
+}
+
+
+
+/* Responsividade: imagem ocupa 100% do background */
+@media (max-width: 768px) {
+  .login-layout {
+    position: relative;
+  }
+
+  .login-image {
+    display: none; /* usaremos o background do ion-content no mobile */
+  }
+
+  .login-form {
+    position: relative;
+    z-index: 1;
+    background: transparent; /* evita película cobrindo toda a tela */
+    backdrop-filter: none;
+  }
+
+  body.dark .login-form {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .form {
+    max-width: 90%;
+  }
+
+  /* Usa o background do ion-content para garantir cobertura total */
+  ion-content {
+    --background: var(--login-wallpaper) center center / cover no-repeat !important;
+  }
+
+  /* Aplica cartão só ao redor do formulário, não na tela toda */
+  .form {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(2px);
+    padding: 16px;
+    border-radius: 12px;
+  }
+  body.dark .form {
+    background: rgba(0, 0, 0, 0.55);
+  }
 }

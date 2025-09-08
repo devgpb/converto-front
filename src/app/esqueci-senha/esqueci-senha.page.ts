@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -13,6 +13,8 @@ export class EsqueciSenhaPage {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private toastCtrl = inject(ToastController);
+  private loadingCtrl = inject(LoadingController);
+  private alertCtrl = inject(AlertController);
 
   loading = false;
   form = this.fb.group({
@@ -22,24 +24,33 @@ export class EsqueciSenhaPage {
   async submit() {
     if (this.form.invalid || this.loading) return;
     this.loading = true;
+    const loadingEl = await this.loadingCtrl.create({
+      message: 'Enviando…',
+      spinner: 'crescent',
+      backdropDismiss: false,
+      cssClass: 'forgot-loading'
+    });
+    await loadingEl.present();
     const email = this.form.value.email as string;
     try {
       await this.auth.forgotPassword(email).toPromise();
-      const toast = await this.toastCtrl.create({
-        message: 'Se o email existir, enviaremos as instruções.',
-        duration: 3000,
-        color: 'success'
+      // Mensagem mais chamativa
+      const alert = await this.alertCtrl.create({
+        header: 'Verifique seu e-mail',
+        message: `Enviamos as instruções para recuperar sua senha para ${email}.\nConfira sua caixa de entrada e o spam.`,
+        buttons: [{ text: 'OK', role: 'confirm' }],
       });
-      toast.present();
+      await alert.present();
       this.form.reset();
     } catch (err: any) {
-      const toast = await this.toastCtrl.create({
-        message: err?.error?.error || 'Não foi possível enviar. Tente mais tarde.',
-        duration: 3000,
-        color: 'danger'
+      const alert = await this.alertCtrl.create({
+        header: 'Falha ao enviar',
+        message: err?.error?.error || 'Não foi possível enviar. Tente novamente mais tarde.',
+        buttons: [{ text: 'Fechar', role: 'cancel' }],
       });
-      toast.present();
+      await alert.present();
     } finally {
+      await loadingEl.dismiss();
       this.loading = false;
     }
   }

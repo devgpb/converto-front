@@ -36,6 +36,15 @@
 @import "@ionic/angular/css/palettes/dark.class.css";
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
+/* Wallpaper do login controlado por tema */
+body {
+  --login-wallpaper: url('/assets/img/wallpaper-default.png');
+}
+
+body.dark {
+  --login-wallpaper: url('/assets/img/wallpaper-default-dark.png');
+}
+
 /* Largura do menu quando o split-pane está visível (desktop) */
 @media (min-width: 1024px) {
   ion-menu.menu-desktop {

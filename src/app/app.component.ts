@@ -18,7 +18,9 @@ export class AppComponent {
 
   constructor() {
     this.theme.init();
-    this.isPublicPage = this.publicRoutes.some((p) => this.router.url.startsWith(p));
+    // Define layout corretamente já no primeiro paint, antes dos eventos do Router
+    const path = typeof window !== 'undefined' ? window.location.pathname : this.router.url;
+    this.isPublicPage = this.publicRoutes.some((p) => (path || '').startsWith(p));
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {

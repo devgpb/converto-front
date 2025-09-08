@@ -5,8 +5,11 @@
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="form">
       <ion-input type="email" formControlName="email" placeholder="Seu e-mail"></ion-input>
-      <ion-button expand="full" type="submit" [disabled]="loading">Enviar</ion-button>
-      <ion-button expand="full" fill="clear" routerLink="/login">Voltar ao login</ion-button>
+      <ion-button expand="block" type="submit" [disabled]="loading">
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        <span>{{ loading ? 'Enviando…' : 'Enviar' }}</span>
+      </ion-button>
+      <ion-button expand="block" fill="clear" routerLink="/login">Voltar ao login</ion-button>
     </form>
   </div>
 </ion-content>

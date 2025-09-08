@@ -26,7 +26,10 @@ export class RedefinirSenhaPage {
   });
 
   ngOnInit() {
-    this.token = this.route.snapshot.queryParamMap.get('token');
+    // Usa subscription para garantir captura do token em inicialização e navegações
+    this.route.queryParamMap.subscribe((params) => {
+      this.token = params.get('token');
+    });
   }
 
   get passwordsMatch(): boolean {

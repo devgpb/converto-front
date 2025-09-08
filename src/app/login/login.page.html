@@ -1,28 +1,33 @@
-<ion-content class="ion-padding" fullscreen="true">
-  <app-gear-background [gearCount]="6"></app-gear-background>
-  <div class="content-wrapper">
-    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 32px;">
-      <img src="assets/img/logo.png" alt="Logo" style="max-width: 150px; height: auto;">
+<ion-content fullscreen="true">
+  <div class="login-layout">
+    <!-- Lado esquerdo (60%) com imagem de fundo -->
+    <div class="login-image" aria-hidden="true"></div>
+
+    <!-- Lado direito (40%) com o formulário -->
+    <div class="login-form">
+      <div class="logo-wrap">
+        <img src="assets/img/logo.png" alt="Logo">
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+        <ion-input
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          class="custom-input"
+        ></ion-input>
+
+        <ion-input
+          type="password"
+          formControlName="password"
+          placeholder="Senha"
+          class="custom-input"
+        ></ion-input>
+
+        <ion-button expand="full" type="submit">Entrar</ion-button>
+        <ion-button expand="full" fill="clear" routerLink="/esqueci-senha">Esqueci minha senha</ion-button>
+      </form>
     </div>
-
-    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-      <ion-input
-        type="email"
-        formControlName="email"
-        placeholder="Email"
-        class="custom-input"
-      ></ion-input>
-
-      <ion-input
-        type="password"
-        formControlName="password"
-        placeholder="Senha"
-        class="custom-input"
-      ></ion-input>
-
-      <ion-button expand="full" type="submit">Entrar</ion-button>
-      <ion-button expand="full" fill="clear" routerLink="/esqueci-senha">Esqueci minha senha</ion-button>
-    </form>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
