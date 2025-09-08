@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,10 +20,40 @@ export class RedefinirSenhaPage {
   loading = false;
   token: string | null = null;
 
+  // Validador de senha forte
+  private strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = String(control.value || '');
+    if (!value) return { required: true };
+    const hasMinLength = value.length >= 8;
+    const hasUpper = /[A-Z]/.test(value);
+    const hasLower = /[a-z]/.test(value);
+    const hasNumber = /\d/.test(value);
+    const hasSpecial = /[^A-Za-z0-9]/.test(value);
+    const ok = hasMinLength && hasUpper && hasLower && hasNumber && hasSpecial;
+    return ok ? null : { weakPassword: true };
+  }
+
   form = this.fb.group({
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, this.strongPasswordValidator.bind(this)]],
     confirm: ['', [Validators.required]]
   });
+
+  // Indicadores para UI
+  get pwd() { return String(this.form.value.password || ''); }
+  get rMin() { return this.pwd.length >= 8; }
+  get rUp() { return /[A-Z]/.test(this.pwd); }
+  get rLow() { return /[a-z]/.test(this.pwd); }
+  get rNum() { return /\d/.test(this.pwd); }
+  get rSpec() { return /[^A-Za-z0-9]/.test(this.pwd); }
+  get strength(): number {
+    let s = 0;
+    if (this.rMin) s++;
+    if (this.rUp) s++;
+    if (this.rLow) s++;
+    if (this.rNum) s++;
+    if (this.rSpec) s++;
+    return s; // 0-5
+  }
 
   ngOnInit() {
     // Usa subscription para garantir captura do token em inicialização e navegações

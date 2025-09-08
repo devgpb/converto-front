@@ -4,12 +4,33 @@
     <p>Defina uma nova senha para sua conta.</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-      <ion-input type="password" formControlName="password" placeholder="Nova senha"></ion-input>
-      <ion-input type="password" formControlName="confirm" placeholder="Confirmar senha"></ion-input>
+      <ion-item>
+        <ion-label position="stacked">Nova senha</ion-label>
+        <ion-input type="password" formControlName="password" placeholder="••••••••"></ion-input>
+      </ion-item>
+
+      <!-- Indicadores de força -->
+      <div class="pwd-rules">
+        <small [class.ok]="rMin">• Mínimo de 8 caracteres</small>
+        <small [class.ok]="rUp">• Letra maiúscula (A-Z)</small>
+        <small [class.ok]="rLow">• Letra minúscula (a-z)</small>
+        <small [class.ok]="rNum">• Número (0-9)</small>
+        <small [class.ok]="rSpec">• Símbolo (!@#$…)</small>
+      </div>
+
+      <ion-item>
+        <ion-label position="stacked">Confirmar senha</ion-label>
+        <ion-input type="password" formControlName="confirm" placeholder="Repita a senha"></ion-input>
+      </ion-item>
 
       <ion-text color="danger" *ngIf="form.touched && !passwordsMatch">Senhas não conferem.</ion-text>
 
-      <ion-button expand="full" type="submit" [disabled]="loading || !passwordsMatch">Salvar nova senha</ion-button>
+      <!-- Barra simples de força: 0 a 5 -->
+      <div class="strength">
+        <div class="bar" [style.width.%]="(strength/5)*100" [attr.data-score]="strength"></div>
+      </div>
+
+      <ion-button expand="full" type="submit" [disabled]="loading || !passwordsMatch || form.invalid">Salvar nova senha</ion-button>
       <ion-button expand="full" fill="clear" routerLink="/login">Voltar ao login</ion-button>
     </form>
   </div>

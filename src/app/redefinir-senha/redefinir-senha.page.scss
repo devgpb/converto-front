@@ -8,3 +8,27 @@
   gap: 12px;
 }
 
+.pwd-rules {
+  display: grid;
+  gap: 4px;
+  small {
+    color: var(--ion-color-medium);
+  }
+  .ok {
+    color: var(--ion-color-success);
+  }
+}
+
+.strength {
+  height: 6px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.strength .bar {
+  height: 100%;
+  width: 0%;
+  transition: width 160ms ease;
+  background: linear-gradient(90deg, #ff5252, #ffd54f, #66bb6a);
+}
+
