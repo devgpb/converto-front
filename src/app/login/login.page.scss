@@ -44,20 +44,35 @@ ion-content {
 }
 
 ion-input.custom-input {
-  --color: #000;               /* texto preto */
-  --placeholder-color: #666;   /* placeholder cinza */
-
-  border: 1px solid #ccc;      /* borda externa */
+  --color: #000;               /* cor do texto no modo normal */
+  --placeholder-color: #666;   /* placeholder */
+  border: 1px solid #ccc;
   border-radius: 6px;
   margin-bottom: 12px;
-
-  /* opcional: sombra leve */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 ion-input.custom-input::part(native) {
-  background: #fff;            /* fundo branco */
-  padding-left: 12px;          /* desloca texto para direita */
+  background: #fff;
+  padding-left: 12px;
   padding-right: 12px;
 }
 
+/* LIGHT (default) */
+ion-input.custom-input {
+  --color: #000;  /* texto */
+  --background: #fff;
+  border: 1px solid #ccc;
+}
+
+/* DARK MODE */
+body.dark ion-input.custom-input {
+  --color: #fff;  /* texto branco */
+  --background: #222;
+  border: 1px solid #444;
+}
+
+/* Placeholder no dark mode */
+body.dark {
+  --ion-input-placeholder-color: #aaa;
+}

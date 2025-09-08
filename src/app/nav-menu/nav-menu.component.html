@@ -36,21 +36,87 @@
     </ng-container>
   </div>
   <div class="user-actions">
-    <ion-item routerLink="/perfil" lines="none" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ion-icon slot="start" name="person-circle"></ion-icon>
-      <ion-label>Perfil</ion-label>
-    </ion-item>
-    <ion-item routerLink="/configuracoes" lines="none" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ion-icon slot="start" name="settings"></ion-icon>
-      <ion-label>Configurações</ion-label>
-    </ion-item>
-    <ion-item routerLink="/suporte" lines="none" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ion-icon slot="start" name="help-circle"></ion-icon>
-      <ion-label>Suporte</ion-label>
-    </ion-item>
-    <ion-item lines="none" (click)="logout()">
-      <ion-icon slot="start" name="log-out"></ion-icon>
-      <ion-label>Sair</ion-label>
-    </ion-item>
+    <!-- Expandido: linha com perfil (ícone + nome), e ícones de config e suporte -->
+    <div class="user-actions-row" *ngIf="!collapsed; else collapsedActions">
+      <button class="profile-trigger" (click)="toggleProfileOverlay()" aria-label="Abrir menu de perfil">
+        <ion-icon name="person-circle"></ion-icon>
+        <span class="user-name">{{ profile?.name || 'Usuário' }}</span>
+      </button>
+      <div class="spacer"></div>
+      <ion-button fill="clear" size="small" (click)="goToConfig()" aria-label="Configurações">
+        <ion-icon name="settings" style="font-size: 28px;"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="goToSuporte()" aria-label="Suporte">
+        <ion-icon style="font-size: 28px;" name="help-circle"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Colapsado: apenas ícone de perfil -->
+    <ng-template #collapsedActions>
+      <div class="user-actions-collapsed">
+        <button id="profile-collapsed-trigger" class="profile-icon" aria-label="Abrir menu de perfil">
+          <ion-icon name="person-circle"></ion-icon>
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- Overlay expandido: opções perfil/sair -->
+    <div class="profile-overlay-backdrop" *ngIf="showProfileOverlay && !collapsed" (click)="closeOverlays()">
+      <div class="profile-overlay-card" (click)="$event.stopPropagation()">
+        <div class="overlay-header">
+          <ion-icon name="person-circle"></ion-icon>
+          <div class="details">
+            <div class="name">{{ profile?.name || 'Usuário' }}</div>
+            <div class="email" *ngIf="profile?.email">{{ profile?.email }}</div>
+          </div>
+        </div>
+        <ion-item button detail="false" (click)="goToPerfil()">
+          <ion-icon slot="start" name="person-outline"></ion-icon>
+          <ion-label>Ver perfil</ion-label>
+        </ion-item>
+        <ion-item button detail="false" (click)="logout()">
+          <ion-icon slot="start" name="log-out"></ion-icon>
+          <ion-label>Sair</ion-label>
+        </ion-item>
+      </div>
+    </div>
+
+    <!-- Popover para barra colapsada (segue o trigger do botão) -->
+    <ion-popover
+       #collapsedProfilePopover
+      trigger="profile-collapsed-trigger"
+      triggerAction="click"
+      side="top"
+      alignment="start"
+      showBackdrop="true"
+      arrow="true"
+    >
+      <ng-template>
+        <ion-content class="popover-content">
+          <div class="collapsed-header">
+            <ion-icon name="person-circle"></ion-icon>
+            <div class="name">{{ profile?.name || 'Usuário' }}</div>
+          </div>
+          <ion-list>
+            <ion-item button detail="false" (click)="goToPerfil(); collapsedProfilePopover.dismiss()">
+              <ion-icon slot="start" name="person-outline"></ion-icon>
+              <ion-label>Ver perfil</ion-label>
+            </ion-item>
+            <ion-item button detail="false" (click)="goToConfig(); collapsedProfilePopover.dismiss()">
+              <ion-icon slot="start" name="settings"></ion-icon>
+              <ion-label>Configurações</ion-label>
+            </ion-item>
+            <ion-item button detail="false" (click)="goToSuporte(); collapsedProfilePopover.dismiss()">
+              <ion-icon slot="start" name="help-circle"></ion-icon>
+              <ion-label>Suporte</ion-label>
+            </ion-item>
+            <ion-item button detail="false" (click)="logout(); collapsedProfilePopover.dismiss()">
+              <ion-icon slot="start" name="log-out"></ion-icon>
+              <ion-label>Sair</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
   </div>
 </div>

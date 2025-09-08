@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, HostBinding, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ProfileService, Profile } from '../services/profile.service';
 
 interface MenuItem {
   icon: string;
@@ -28,7 +30,11 @@ interface SubItem {
 })
 export class NavMenuComponent implements OnInit, AfterViewInit {
   private auth = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private router = inject(Router);
   @HostBinding('class.collapsed') collapsed = false;
+  profile?: Profile;
+  showProfileOverlay = false; // overlay para menu de perfil quando expandido
   public menuSections: MenuSection[] = [
     {
       title: 'Geral',
@@ -76,10 +82,37 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
     this.auth.logout();
   }
 
+  goToPerfil(): void {
+    this.router.navigate(['/perfil']);
+    this.closeOverlays();
+  }
+
+  goToConfig(): void {
+    this.router.navigate(['/configuracoes']);
+    this.closeOverlays();
+  }
+
+  goToSuporte(): void {
+    this.router.navigate(['/suporte']);
+    this.closeOverlays();
+  }
+
+  toggleProfileOverlay(): void {
+    // No modo colapsado o popover é controlado pelo trigger no template
+    if (!this.collapsed) {
+      this.showProfileOverlay = !this.showProfileOverlay;
+    }
+  }
+
+  closeOverlays(): void {
+    this.showProfileOverlay = false;
+  }
+
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
     localStorage.setItem('navMenuCollapsed', this.collapsed.toString());
     this.applyCollapsedClass();
+    this.closeOverlays();
   }
 
   isAdmin(): boolean {
@@ -94,6 +127,8 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const stored = localStorage.getItem('navMenuCollapsed');
     this.collapsed = stored === 'true';
+    // Carrega perfil para exibir nome do usuário
+    this.profileService.getProfile().subscribe((p) => (this.profile = p));
   }
 
   ngAfterViewInit(): void {
