@@ -10,12 +10,26 @@ export class JobsService {
   private jobsApi = `${this.base}/jobs`;
   private adminApi = `${this.base}/admin/queues`;
 
-  listUserJobs(
-    states: string = 'waiting,active,completed,failed',
-    limit: number = 50
-  ): Observable<any> {
+  listUserJobs(params: {
+    states?: string;
+    page?: number;
+    perPage?: number;
+    search?: string;
+  } = {}): Observable<any> {
+    const {
+      states = 'waiting,active,completed,failed',
+      page = 1,
+      perPage = 10,
+      search = '',
+    } = params;
     return this.http.get(`${this.jobsApi}/user`, {
-      params: { states, limit, t: Date.now().toString() },
+      params: {
+        states,
+        page,
+        perPage,
+        search,
+        t: Date.now().toString(),
+      } as any,
       headers: { 'Cache-Control': 'no-cache' },
     });
   }
@@ -31,7 +45,7 @@ export class JobsService {
   }
 
   getJob(queue: string, id: string): Observable<any> {
-    return this.http.get(`${this.jobsApi}/import/${id}`);
+    return this.http.get(`${this.jobsApi}/${queue}/${id}`);
   }
 
   cancelJob(queue: string, id: string): Observable<any> {

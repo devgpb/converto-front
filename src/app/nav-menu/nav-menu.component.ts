@@ -48,7 +48,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
         { icon: 'stats-chart', title: 'Relatório de Vendas', href: '/vendas/dashboard' },
         { icon: 'people', title: 'Lista de Clientes', href: '/vendas/lista/clientes' },
         { icon: 'person-add-outline', title: 'Cadastrar Clientes', href: '/vendas/leads' },
-        { icon: 'cloud-upload', title: 'Importar Clientes', href: '/clientes/importar' },
+        { icon: 'cloud-upload', title: 'Importar/Exportar Clientes', href: '/clientes/importar' },
         { icon: 'chatbubbles', title: 'Mensagens Padrão', href: '/vendas/mensagens-padrao' },
       ],
     },

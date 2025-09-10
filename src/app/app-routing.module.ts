@@ -95,7 +95,7 @@ const routes: Routes = [
     path: 'clientes/importar',
     component: ClientesImportarPage,
     canActivate: [AuthGuard],
-    data: { title: 'Importar Clientes' }
+    data: { title: 'Importar/Exportar Clientes' }
   },
   {
     path: 'configuracoes',

@@ -1,19 +1,57 @@
 <ion-content class="ion-padding">
+  <!-- Header -->
+  <div class="header ion-margin-bottom">
+    <div class="title">
+      <ion-icon name="construct-outline" color="primary"></ion-icon>
+      <h1>Trabalhos</h1>
+    </div>
+    <ion-note>
+      <ng-container *ngIf="total > 0">
+        Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }} trabalhos
+      </ng-container>
+      <ng-container *ngIf="total === 0">0 de 0 trabalhos</ng-container>
+    </ion-note>
+  </div>
+
+  <!-- Filtros -->
   <ion-card class="ion-margin-bottom">
-    <ion-card-header>
-      <ion-card-title>Meus Trabalhos</ion-card-title>
-    </ion-card-header>
     <ion-card-content>
-      <p>
-        Aqui ficam os trabalhos do sistema como importação e exportação de
-        clientes.
-      </p>
+      <ion-grid>
+        <ion-row class="ion-align-items-end">
+          <ion-col size="12" size-md="6">
+            <ion-searchbar [(ngModel)]="searchTerm" placeholder="Pesquisar por ID, fila, estado..."></ion-searchbar>
+          </ion-col>
+
+          <ion-col size="6" size-md="3">
+            <ion-item lines="none">
+              <ion-label>Por página</ion-label>
+              <ion-select [ngModel]="pageSize" (ngModelChange)="changePageSize($event)">
+                <ion-select-option [value]="10">10</ion-select-option>
+                <ion-select-option [value]="20">20</ion-select-option>
+                <ion-select-option [value]="50">50</ion-select-option>
+                <ion-select-option [value]="100">100</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" class="ion-text-right">
+            <ion-button color="primary" (click)="pesquisaAvancada(true)" [disabled]="loading">
+              <ion-spinner slot="start" *ngIf="loading" name="crescent"></ion-spinner>
+              Buscar
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="12" class="ion-text-right" *ngIf="searchTerm">
+            <ion-button fill="clear" (click)="clearFilters()">Limpar filtros</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Trabalhos</ion-card-title>
+      <ion-card-title>Resultados</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <div class="ion-text-center" *ngIf="loading">
@@ -24,6 +62,7 @@
           <ion-col>Fila</ion-col>
           <ion-col>ID</ion-col>
           <ion-col>Estado</ion-col>
+          <ion-col>Data</ion-col>
           <ion-col>Ações</ion-col>
         </ion-row>
         <ion-row *ngFor="let job of jobs">
@@ -35,14 +74,46 @@
             </ion-badge>
           </ion-col>
           <ion-col>
-            <ion-button size="small" (click)="viewData(job)" [disabled]="job.state !== 'completed'">
-              Ver Dados
-            </ion-button>
+            {{ (job.requestedAt || job.timestamp) | date:'dd/MM/yyyy HH:mm' }}
+          </ion-col>
+          <ion-col>
+            <ng-container *ngIf="isExport(job) && job.state === 'completed'; else defaultActions">
+              <ion-button size="small"
+                          [href]="getExportLink(job) || undefined"
+                          target="_blank"
+                          [disabled]="!getExportLink(job) || isExpired(job)">
+                Baixar CSV
+              </ion-button>
+              <ion-text color="medium" *ngIf="getExportExpiry(job) as expires" style="margin-left: 8px;">
+                <ng-container *ngIf="!isExpired(job); else expiredTpl">
+                  expira em {{ expires | date:'short' }}
+                </ng-container>
+                <ng-template #expiredTpl>
+                  link expirado
+                </ng-template>
+              </ion-text>
+            </ng-container>
+            <ng-template #defaultActions>
+              <ion-button size="small" (click)="viewData(job)" [disabled]="job.state !== 'completed'">
+                Ver Dados
+              </ion-button>
+            </ng-template>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
   </ion-card>
+
+  <!-- Paginação -->
+  <div class="pagination ion-margin-top">
+    <ion-note>Página {{ page }} de {{ totalPages }}</ion-note>
+    <ion-buttons>
+      <ion-button (click)="goToPage(1)" [disabled]="page === 1">« Primeiro</ion-button>
+      <ion-button (click)="goToPage(page - 1)" [disabled]="page === 1">‹ Anterior</ion-button>
+      <ion-button (click)="goToPage(page + 1)" [disabled]="page === totalPages || totalPages === 0">Próximo ›</ion-button>
+      <ion-button (click)="goToPage(totalPages)" [disabled]="page === totalPages || totalPages === 0">Último »</ion-button>
+    </ion-buttons>
+  </div>
   <ion-modal [isOpen]="metadataOpen" (didDismiss)="closeMetadata()">
     <ng-template>
       <ion-header>

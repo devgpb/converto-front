@@ -71,5 +71,42 @@ export class ClientesImportarPage {
       },
     });
   }
+
+  async exportar() {
+    const alert = await this.alertController.create({
+      header: 'Exportar clientes',
+      message: 'A exportação cria um trabalho em segundo plano que gera um arquivo CSV com seus clientes. O link ficará disponível em "Meus Trabalhos" quando concluir. Deseja iniciar a exportação agora?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Exportar',
+          role: 'confirm',
+          handler: () => {
+            this.jobs.postExportClients({ /* exportScope padrão: user */ }).subscribe({
+              next: () => {
+                this.alertController
+                  .create({
+                    header: 'Exportação iniciada',
+                    message: 'Seu trabalho de exportação foi iniciado. Acompanhe em "Meus Trabalhos".',
+                    buttons: ['OK'],
+                  })
+                  .then((a) => a.present());
+              },
+              error: () => {
+                this.alertController
+                  .create({
+                    header: 'Erro',
+                    message: 'Não foi possível criar o job de exportação.',
+                    buttons: ['OK'],
+                  })
+                  .then((a) => a.present());
+              },
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
 }
 
