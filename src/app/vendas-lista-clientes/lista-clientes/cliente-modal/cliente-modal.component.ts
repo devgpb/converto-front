@@ -178,5 +178,18 @@ export class ClienteModalComponent implements OnChanges {
       error: () => {}
     });
   }
+
+  truncateId(id: string): string {
+    if (!id) {
+      return '';
+    }
+    return id.length > 10 ? `${id.slice(0, 10)}...` : id;
+  }
+
+  copyId(id: string): void {
+    if (id) {
+      navigator.clipboard.writeText(id);
+    }
+  }
 }
 
