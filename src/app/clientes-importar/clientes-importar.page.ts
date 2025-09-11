@@ -1,6 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { JobsService } from '../services/jobs.service';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
+import { SeatsService } from '../services/seats.service';
+import { Usuario } from '../services/usuarios.service';
 
 @Component({
   selector: 'app-clientes-importar',
@@ -8,12 +11,40 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./clientes-importar.page.scss'],
   standalone: false,
 })
-export class ClientesImportarPage {
+export class ClientesImportarPage implements OnInit {
   private jobs = inject(JobsService);
   private alertController = inject(AlertController);
+  private auth = inject(AuthService);
+  private seats = inject(SeatsService);
 
   file: File | null = null;
   dragOver = false;
+  assignEnabled = true;
+  isAdmin = false;
+  currentUserId: string | null = null;
+  selectedUserId: string | null = null;
+  usuarios: Usuario[] = [];
+
+  ngOnInit() {
+    this.isAdmin = this.auth.isAdmin();
+    this.currentUserId = this.auth.getUserId();
+    this.selectedUserId = this.currentUserId;
+    if (this.isAdmin) {
+      const tenantId = this.auth.getTenantId();
+      if (tenantId) {
+        this.seats.getUsage(tenantId).subscribe({
+          next: (usage: any) => {
+            const all = (usage?.users || []).filter((u: any) => !!u);
+            // Evita duplicar o próprio usuário na lista (já existe a opção "Meus Clientes")
+            this.usuarios = all.filter((u: any) => this.getUserId(u) !== this.currentUserId);
+          },
+          error: () => {
+            this.usuarios = [];
+          },
+        });
+      }
+    }
+  }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -49,7 +80,8 @@ export class ClientesImportarPage {
 
   importar() {
     if (!this.file) return;
-    this.jobs.postImportClients(this.file).subscribe({
+    const assignUserId = this.assignEnabled ? (this.isAdmin ? this.selectedUserId : this.currentUserId) : null;
+    this.jobs.postImportClients(this.file, assignUserId || undefined).subscribe({
       next: () => {
         this.alertController
           .create({
@@ -70,6 +102,10 @@ export class ClientesImportarPage {
           .then((a) => a.present());
       },
     });
+  }
+
+  getUserId(u: any): string | null {
+    return (u?.id_usuario || u?.user_id || u?.id || null) ? String(u.id_usuario || u.user_id || u.id) : null;
   }
 
   async exportar() {
@@ -108,5 +144,43 @@ export class ClientesImportarPage {
     });
     await alert.present();
   }
+
+  baixarExemploCSV() {
+    const headers = [
+      'nome',
+      'celular',
+      'status',
+      'cidade',
+      'indicacao',
+      'campanha',
+      'observacao'
+    ];
+
+    const exemplo = [
+      'Fulano de Tal',
+      '11988887777',
+      'Novo',
+      'Sao Paulo',
+      'Instagram',
+      'Promocao Inverno',
+      'Cliente ficticio para exemplo'
+    ];
+
+    const quote = (v: any) => '"' + String(v).replace(/"/g, '""') + '"';
+    const sep = ';';
+
+    const csvBody = [headers.join(sep), exemplo.map(quote).join(sep)].join('\n');
+    const csvWithBom = '\ufeff' + csvBody; // BOM para Excel/Windows
+
+    const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'modelo_importacao_clientes.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+
 }
 

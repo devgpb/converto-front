@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 export interface Usuario {
   id?: number;
   user_id?: number;
+  id_usuario?: string;
   email: string;
   name: string;
   role: string;
@@ -24,5 +25,9 @@ export class UsuariosService {
 
   changeRole(id: number | string, role: string): Observable<{ id: number; role: string }> {
     return this.http.patch<{ id: number; role: string }>(`${this.api}/${id}/role`, { role });
+  }
+
+  listAll(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(this.api);
   }
 }

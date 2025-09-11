@@ -34,9 +34,12 @@ export class JobsService {
     });
   }
 
-  postImportClients(file: File): Observable<any> {
+  postImportClients(file: File, assignUserId?: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
+    if (assignUserId) {
+      formData.append('assignUserId', assignUserId);
+    }
     return this.http.post(`${this.jobsApi}/import-clients`, formData);
   }
 
