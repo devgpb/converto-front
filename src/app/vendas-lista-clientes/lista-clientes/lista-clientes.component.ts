@@ -221,6 +221,20 @@ export class ListaClientesComponent implements OnInit {
     return cliente.id_cliente;
   }
 
+  truncateId(id: string): string {
+    if (!id) {
+      return '';
+    }
+    return id.length > 10 ? `${id.slice(0, 10)}...` : id;
+  }
+
+  copyId(id: string, event?: Event): void {
+    event?.stopPropagation();
+    if (id) {
+      navigator.clipboard.writeText(id);
+    }
+  }
+
   get startIndex(): number {
     return this.total === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
   }
