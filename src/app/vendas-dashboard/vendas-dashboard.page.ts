@@ -81,7 +81,9 @@ export class VendasDashboardPage implements OnInit {
 
   constructor(private api: VendasService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  ionViewWillEnter(): void {
     this.fetch();
   }
 

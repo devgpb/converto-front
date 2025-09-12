@@ -18,6 +18,7 @@ import { JobsPage } from './jobs/jobs.page';
 import { MensagensPadraoPage } from './mensagens-padrao/mensagens-padrao.page';
 import { EsqueciSenhaPage } from './esqueci-senha/esqueci-senha.page';
 import { RedefinirSenhaPage } from './redefinir-senha/redefinir-senha.page';
+import { TutoriaisPage } from './tutoriais/tutoriais.page';
 
 const routes: Routes = [
   {
@@ -96,6 +97,12 @@ const routes: Routes = [
     component: ClientesImportarPage,
     canActivate: [AuthGuard],
     data: { title: 'Importar/Exportar Clientes' }
+  },
+  {
+    path: 'tutoriais',
+    component: TutoriaisPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Tutoriais' }
   },
   {
     path: 'configuracoes',

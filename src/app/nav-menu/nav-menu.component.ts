@@ -40,6 +40,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
       title: 'Geral',
       items: [
         { icon: 'briefcase', title: 'Meus Trabalhos', href: '/jobs' },
+        { icon: 'play-circle', title: 'Tutoriais', href: '/tutoriais' },
       ],
     },
     {
