@@ -132,9 +132,9 @@
       <ion-col size="1">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span id="cliente-id-{{ i }}" style="cursor: pointer;" (click)="$event.stopPropagation()">
-            {{ truncateId(cliente.id_cliente?.toString() || '') }}
+            {{ truncateId(cliente.id_cliente.toString()) }}
           </span>
-          <ion-button fill="clear" size="small" (click)="copyId(cliente.id_cliente?.toString() || '', $event)">
+          <ion-button fill="clear" size="small" (click)="copyId(cliente.id_cliente.toString(), $event)">
             <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
           </ion-button>
         </div>

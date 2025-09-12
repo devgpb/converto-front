@@ -53,6 +53,8 @@
   border-radius: 8px;
   cursor: pointer;
   color: inherit;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .profile-trigger ion-icon {
@@ -69,7 +71,8 @@
 
 .user-name {
   font-weight: 500;
-  max-width: 160px;
+  flex: 1;
+  min-width: 0; /* permite ellipsis com flex */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

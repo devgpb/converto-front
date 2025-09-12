@@ -21,5 +21,13 @@ export class BillingService {
   getStatus(tenantId: string): Observable<any> {
     return this.http.get<any>(`${this.api}/status/${tenantId}`);
   }
+
+  cancel(data: { tenant_id: string; motivo?: string; descricao?: string }): Observable<any> {
+    return this.http.post<any>(`${this.api}/cancel`, data);
+  }
+
+  resume(data: { tenant_id: string }): Observable<any> {
+    return this.http.post<any>(`${this.api}/resume`, data);
+  }
 }
 

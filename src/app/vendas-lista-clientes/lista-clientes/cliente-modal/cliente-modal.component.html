@@ -5,12 +5,14 @@
         <ion-title>
           <div style="display: flex; align-items: center; gap: 4px;">
             Cliente #
-            <span id="modal-cliente-id" style="cursor: pointer;">
-              {{ truncateId(formData?.id_cliente?.toString() || '') }}
-            </span>
-            <ion-button fill="clear" size="small" (click)="copyId(formData?.id_cliente?.toString() || '')">
-              <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
-            </ion-button>
+            <ng-container *ngIf="formData as data">
+              <span id="modal-cliente-id" style="cursor: pointer;">
+                {{ truncateId(data.id_cliente.toString()) }}
+              </span>
+              <ion-button fill="clear" size="small" (click)="copyId(data.id_cliente.toString())">
+                <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+              </ion-button>
+            </ng-container>
           </div>
         </ion-title>
         <ion-buttons slot="end">
@@ -19,9 +21,9 @@
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <ion-popover trigger="modal-cliente-id" triggerAction="click">
+      <ion-popover *ngIf="formData" trigger="modal-cliente-id" triggerAction="click">
         <ng-template>
-          <ion-content class="ion-padding">{{ formData?.id_cliente }}</ion-content>
+          <ion-content class="ion-padding">{{ formData.id_cliente }}</ion-content>
         </ng-template>
       </ion-popover>
     </ion-header>

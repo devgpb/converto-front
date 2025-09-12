@@ -9,8 +9,8 @@ export interface Profile {
   name: string;
   role: string;
   principal?: boolean;
-  tenant?: { id: number; name: string } | null;
-  enterprise?: { id: number; name: string } | null;
+  tenant?: { id: string; name: string } | null;
+  enterprise?: { id: string; name: string } | null;
   seats?: {
     paid: number;
     active_users: number;

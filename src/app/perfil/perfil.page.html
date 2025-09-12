@@ -18,7 +18,7 @@
                 <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
                 <ion-label>
                   <p class="label-small">Nome</p>
-                  <h2>{{ profile?.name }}</h2>
+                  <h2>{{ profile.name }}</h2>
                 </ion-label>
               </ion-item>
             </ion-col>
@@ -28,7 +28,7 @@
                 <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
                 <ion-label>
                   <p class="label-small">Email</p>
-                  <h2>{{ profile?.email }}</h2>
+                  <h2>{{ profile.email }}</h2>
                 </ion-label>
               </ion-item>
             </ion-col>
@@ -38,7 +38,7 @@
                 <ion-icon name="briefcase-outline" slot="start" color="primary"></ion-icon>
                 <ion-label>
                   <p class="label-small">Função</p>
-                  <h2>{{ profile?.role }}</h2>
+                  <h2>{{ profile.role }}</h2>
                 </ion-label>
               </ion-item>
             </ion-col>
@@ -53,12 +53,12 @@
               </ion-item>
             </ion-col> -->
 
-            <ion-col size="12" size-md="6" *ngIf="profile?.enterprise">
+            <ion-col size="12" size-md="6" *ngIf="profile?.enterprise as enterprise">
               <ion-item lines="none">
                 <ion-icon name="home-outline" slot="start" color="primary"></ion-icon>
                 <ion-label>
                   <p class="label-small">Empresa</p>
-                  <h2>{{ profile?.enterprise?.name }}</h2>
+                  <h2>{{ enterprise.name }}</h2>
                 </ion-label>
               </ion-item>
             </ion-col>
@@ -68,7 +68,7 @@
     </ion-card>
 
     <!-- Card: Estatísticas de Assentos -->
-    <ion-card *ngIf="profile?.seats">
+    <ion-card *ngIf="profile?.seats as seats">
       <ion-card-header>
         <ion-card-title>Estatísticas de Assentos</ion-card-title>
         <ion-card-subtitle>Informações sobre sua assinatura e uso</ion-card-subtitle>
@@ -78,35 +78,79 @@
           <ion-row>
             <ion-col size="6" size-md="2.4" class="stat-box secondary">
               <ion-icon name="card-outline"></ion-icon>
-              <h2>{{ profile?.seats?.paid }}</h2>
+              <h2>{{ seats.paid }}</h2>
               <p>Pagos</p>
             </ion-col>
 
             <ion-col size="6" size-md="2.4" class="stat-box accent">
               <ion-icon name="people-outline"></ion-icon>
-              <h2>{{ profile?.seats?.active_users }}</h2>
+              <h2>{{ seats.active_users }}</h2>
               <p>Usuários ativos</p>
             </ion-col>
 
             <ion-col size="6" size-md="2.4" class="stat-box primary">
               <ion-icon name="list-outline"></ion-icon>
-              <h2>{{ profile?.seats?.total_users }}</h2>
+              <h2>{{ seats.total_users }}</h2>
               <p>Total</p>
             </ion-col>
 
             <ion-col size="6" size-md="2.4" class="stat-box">
               <ion-icon name="person-add-outline"></ion-icon>
-              <h2>{{ profile?.seats?.available }}</h2>
+              <h2>{{ seats.available }}</h2>
               <p>Disponíveis</p>
             </ion-col>
 
             <ion-col size="12" size-md="2.4" class="stat-box">
               <ion-icon name="information-circle-outline"></ion-icon>
-              <ion-badge color="medium">{{ profile?.seats?.subscription_status }}</ion-badge>
+              <ion-badge color="medium">{{ seats.subscription_status }}</ion-badge>
               <p>Status</p>
             </ion-col>
           </ion-row>
         </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Card: Cancelar Assinatura (Admin/Moderator) -->
+    <ion-card *ngIf="isAdminOrModerator">
+      <ion-card-header>
+        <ion-card-title>Assinatura</ion-card-title>
+        <ion-card-subtitle>Gerencie a renovação da sua assinatura</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="ion-margin-bottom">
+          Ao cancelar a renovação, você manterá o acesso até o fim do período já pago.
+        </p>
+
+        <ion-button *ngIf="canCancel" fill="outline" color="danger" (click)="showCancelForm = !showCancelForm">
+          <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+          {{ showCancelForm ? 'Fechar' : 'Cancelar renovação' }}
+        </ion-button>
+
+        <ion-button *ngIf="canResume" fill="outline" color="success" class="ion-margin-start" (click)="resumeSubscription()" [disabled]="resuming">
+          <ion-spinner *ngIf="resuming" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!resuming" slot="start" name="refresh"></ion-icon>
+          Reativar renovação
+        </ion-button>
+
+        <div *ngIf="showCancelForm && canCancel" class="ion-margin-top">
+          <ion-item>
+            <ion-label position="stacked">Motivo</ion-label>
+            <ion-select placeholder="Selecione um motivo" [formControl]="cancelForm.controls.motivo">
+              <ion-select-option *ngFor="let m of motivosPossiveis" [value]="m">{{ m }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Descrição (opcional)</ion-label>
+            <ion-textarea autoGrow="true" [formControl]="cancelForm.controls.descricao" placeholder="Conte rapidamente por que está cancelando"></ion-textarea>
+          </ion-item>
+
+          <ion-button color="danger" expand="block" class="ion-margin-top" (click)="cancelSubscription()" [disabled]="cancelling">
+            <ion-spinner *ngIf="cancelling" name="crescent" slot="start"></ion-spinner>
+            <ion-icon *ngIf="!cancelling" slot="start" name="trash-outline"></ion-icon>
+            Confirmar cancelamento da renovação
+          </ion-button>
+        </div>
       </ion-card-content>
     </ion-card>
 
