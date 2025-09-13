@@ -8,14 +8,14 @@
     <div class="selected-card">
       <div class="selected-header">
         <div class="title">
-          <ion-icon [name]="selected?.icon"></ion-icon>
-          <span>{{ selected?.title }}</span>
+          <ion-icon [name]="selected.icon"></ion-icon>
+          <span>{{ selected.title }}</span>
         </div>
         <ion-button fill="clear" size="small" (click)="closeSelected()">
           <ion-icon name="close"></ion-icon>
         </ion-button>
       </div>
-      <p class="desc">{{ selected?.description }}</p>
+      <p class="desc">{{ selected.description }}</p>
       <div class="video-wrapper">
         <iframe
           *ngIf="selected"
@@ -50,4 +50,3 @@
     </ion-row>
   </ion-grid>
 </ion-content>
-
