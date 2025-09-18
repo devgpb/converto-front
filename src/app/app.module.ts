@@ -25,6 +25,7 @@ import { ClientesImportarPage } from './clientes-importar/clientes-importar.page
 import { FolderPage } from './folder/folder.page';
 import { ListaClientesComponent } from './vendas-lista-clientes/lista-clientes/lista-clientes.component';
 import { ClienteModalComponent } from './vendas-lista-clientes/lista-clientes/cliente-modal/cliente-modal.component';
+import { ClienteLigacoesListComponent } from './vendas-lista-clientes/lista-clientes/cliente-modal/cliente-ligacoes-list/cliente-ligacoes-list.component';
 import { ClienteCardComponent } from './vendas-lista-clientes/lista-clientes/cliente-card/cliente-card.component';
 import { SuportePage } from './suporte/suporte.page';
 import { JobsPage } from './jobs/jobs.page';
@@ -34,9 +35,11 @@ import { WelcomeComponent } from './newsletter/news/welcome/welcome.component';
 import { EsqueciSenhaPage } from './esqueci-senha/esqueci-senha.page';
 import { RedefinirSenhaPage } from './redefinir-senha/redefinir-senha.page';
 import { TutoriaisPage } from './tutoriais/tutoriais.page';
+import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
+import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],

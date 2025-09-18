@@ -4,18 +4,37 @@
       <ion-card-title>Novo Usuário</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <form (ngSubmit)="create()">
+      <form (ngSubmit)="create()" autocomplete="off">
         <ion-item>
           <ion-label position="floating">Nome</ion-label>
-          <ion-input name="name" [(ngModel)]="name" required></ion-input>
+          <ion-input name="name" [(ngModel)]="name" required autocapitalize="words" autocorrect="off" spellcheck="false"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Email</ion-label>
-          <ion-input type="email" name="email" [(ngModel)]="email" required></ion-input>
+          <ion-input
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            inputmode="email"
+          ></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Senha</ion-label>
-          <ion-input type="password" name="password" [(ngModel)]="password" required></ion-input>
+          <ion-input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            autocomplete="new-password"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+          ></ion-input>
         </ion-item>
         <ion-button expand="block" type="submit">Criar</ion-button>
       </form>

@@ -48,7 +48,7 @@ type ChartOptionsDonut = {
   responsive: ApexResponsive[];
 };
 
-type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | null;
+type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | 'ligacoes' | null;
 
 @Component({
   selector: 'app-vendas-dashboard',
@@ -64,6 +64,7 @@ export class VendasDashboardPage implements OnInit {
   statusChart = signal<ChartOptionsBar | null>(null);
   campanhaChart = signal<ChartOptionsDonut | null>(null);
   contatosChart = signal<ChartOptionsLine | null>(null);
+  ligacoesChart = signal<ChartOptionsLine | null>(null);
   range = { start: null as string | null, end: null as string | null };
   rangeError: string | null = null;
   get rangeValid() {
@@ -141,6 +142,9 @@ export class VendasDashboardPage implements OnInit {
       case 'eventos':
         req$ = this.api.getEventosMarcadosList(periodo, page, perPage);
         break;
+      case 'ligacoes':
+        req$ = this.api.getLigacoesEfetuadasList(periodo, page, perPage);
+        break;
     }
 
     req$?.subscribe({
@@ -177,6 +181,7 @@ export class VendasDashboardPage implements OnInit {
         this.buildStatusChart(res);
         this.buildCampanhaChart(res);
         this.buildContatosChart(res);
+        this.buildLigacoesChart(res);
         this.loading.set(false);
       },
       error: () => {
@@ -288,6 +293,8 @@ export class VendasDashboardPage implements OnInit {
       ? 'Clientes fechados'
       : k === 'eventos'
       ? 'Eventos marcados'
+      : k === 'ligacoes'
+      ? 'Ligações efetuadas'
       : '';
   }
 
@@ -321,6 +328,35 @@ export class VendasDashboardPage implements OnInit {
     const start = this.range.start ? new Date(this.range.start) : null;
     const end = this.range.end ? new Date(this.range.end) : null;
     this.rangeError = this.validateRange(start, end);
+  }
+
+  private buildLigacoesChart(d: IDashboardVendas) {
+    const items = (d.ligacoesPorDia ?? []).slice().sort((a, b) => a.date.localeCompare(b.date));
+    const labels = items.map((i) =>
+      new Date(i.date + 'T00:00:00').toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+      })
+    );
+    const values = items.map((i) => Number(i.count || 0));
+
+    this.ligacoesChart.set({
+      series: [{ name: 'Ligações/dia', data: values }],
+      chart: { type: 'area', height: 360, toolbar: { show: false } },
+      xaxis: { categories: labels, labels: { rotate: 0 } },
+      dataLabels: { enabled: false },
+      stroke: { curve: 'smooth', width: 3 },
+      tooltip: { y: { formatter: (val: number) => `${val} ligação${val === 1 ? '' : 'es'}` } },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 0.2,
+          opacityFrom: 0.5,
+          opacityTo: 0.1,
+          stops: [0, 90, 100],
+        },
+      },
+    });
   }
 
   // Pesquisa apenas ao clicar no botão Aplicar

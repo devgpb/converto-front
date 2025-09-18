@@ -33,6 +33,8 @@ export class ClienteModalComponent implements OnChanges {
 
   errors: Record<string, string> = {};
   isLoading = false;
+  // view state
+  view: 'form' | 'historico' = 'form';
 
   constructor(
     private clientesService: ClientesService,
@@ -52,6 +54,11 @@ export class ClienteModalComponent implements OnChanges {
       }
       this.campanhas = this.clientesService.listaDeCampanhas;
       this.carregarEventosCliente();
+      this.view = 'form';
+    }
+    if (changes['isOpen'] && !this.isOpen) {
+      // reset view when modal closes
+      this.view = 'form';
     }
   }
 
@@ -70,6 +77,14 @@ export class ClienteModalComponent implements OnChanges {
 
   close(): void {
     this.closeModal.emit();
+  }
+
+  openHistorico(): void {
+    this.view = 'historico';
+  }
+
+  voltarParaForm(): void {
+    this.view = 'form';
   }
 
   save(): void {

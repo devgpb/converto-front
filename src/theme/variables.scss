@@ -58,7 +58,12 @@
   ion-input {
     --padding-start: 10px;
     margin-top: 6px;
-    border: 1px solid #f4f4f4;
+    // border: 1px solid #464646;
+    width: 100%;
+
+  }
+
+  ion-textarea{
 
   }
 

@@ -2,6 +2,11 @@
   <ng-template>
     <ion-header>
       <ion-toolbar color="primary">
+        <ion-buttons slot="start" *ngIf="view === 'historico'">
+          <ion-button (click)="voltarParaForm()">
+            <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
         <ion-title>
           <div style="display: flex; align-items: center; gap: 4px;">
             Cliente #
@@ -16,6 +21,10 @@
           </div>
         </ion-title>
         <ion-buttons slot="end">
+          <ion-button *ngIf="view === 'form'" (click)="openHistorico()">
+            <ion-icon slot="start" name="call"></ion-icon>
+            Histórico
+          </ion-button>
           <ion-button (click)="close()">
             <ion-icon slot="icon-only" name="close"></ion-icon>
           </ion-button>
@@ -29,6 +38,10 @@
     </ion-header>
 
     <ion-content class="ion-padding" *ngIf="formData">
+      <ng-container *ngIf="view === 'historico'; else formView">
+        <app-cliente-ligacoes-list [idCliente]="formData.id_cliente" [pageSize]="10"></app-cliente-ligacoes-list>
+      </ng-container>
+      <ng-template #formView>
       <!-- Informações fixas -->
       <ion-card class="info-card">
         <ion-card-content>
@@ -177,9 +190,10 @@
           {{ getBadgeText(calcularDias(formData.created_at)) }}
         </ion-badge>
       </div>
+      </ng-template>
     </ion-content>
 
-    <ion-footer class="ion-padding">
+    <ion-footer class="ion-padding" *ngIf="view === 'form'">
       <ion-button expand="block" (click)="save()" [disabled]="isLoading">
         <ion-spinner slot="start" *ngIf="isLoading" name="crescent"></ion-spinner>
         Salvar

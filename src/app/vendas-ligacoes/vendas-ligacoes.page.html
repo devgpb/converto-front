@@ -1,0 +1,142 @@
+﻿<ion-header>
+
+  <ion-toolbar>
+    <form [formGroup]="filtrosForm" class="filtros" (ngSubmit)="buscar(1)">
+      <ion-grid class="filtros-grid">
+        <ion-row>
+          <ion-col size="12">
+            <ion-item class="search-item">
+              <ion-label position="floating">Buscar (nome, celular...)</ion-label>
+              <ion-input formControlName="search"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" size-md="4">
+            <ion-item>
+              <ion-label position="stacked">Vendedor</ion-label>
+              <ion-select formControlName="id_usuario" placeholder="Selecione"  interface="popover">
+                <ion-select-option value="">Todos</ion-select-option>
+                <ion-select-option *ngIf="currentUserId" [value]="currentUserId">Meus Clientes</ion-select-option>
+                <ion-select-option *ngFor="let u of usuarios" [value]="getUserId(u)">{{ u.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-item>
+              <ion-label position="stacked">Cidade</ion-label>
+              <ion-select formControlName="cidade" interface="popover">
+                <ion-select-option value="todas">Todas</ion-select-option>
+                <ion-select-option *ngFor="let c of cidades" [value]="c">{{ c }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-item>
+              <ion-label position="stacked">Status</ion-label>
+              <ion-select formControlName="status" interface="popover">
+                <ion-select-option value="todos">Todos</ion-select-option>
+                <ion-select-option *ngFor="let s of statusList" [value]="s">{{ s }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6" size-md="2">
+            <ion-item>
+              <ion-label position="stacked">Ordenar</ion-label>
+              <ion-select formControlName="sortBy" interface="popover">
+                <ion-select-option value="">Recentes</ion-select-option>
+                <ion-select-option value="antigo">Mais antigos</ion-select-option>
+                <ion-select-option value="nome">Nome (A-Z)</ion-select-option>
+                <ion-select-option value="id">ID</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row class="row-bottom">
+  <ion-col size="6" size-md="2">
+    <ion-item>
+      <ion-label position="stacked">Por página</ion-label>
+      <ion-select formControlName="perPage" interface="popover">
+        <ion-select-option [value]="10">10</ion-select-option>
+        <ion-select-option [value]="20">20</ion-select-option>
+        <ion-select-option [value]="50">50</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-col>
+  <ion-col size="6" size-md="2">
+    <ion-item class="limit-item">
+      <ion-label position="stacked">Limite total</ion-label>
+      <ion-input type="number" formControlName="limiteTotal" min="1"></ion-input>
+    </ion-item>
+  </ion-col>
+  <ion-col size="12" size-md="5" class="toggle-col">
+    <div class="toggles-group">
+      <ion-item lines="none"  >
+        <ion-label>Ocultar já ligados hoje</ion-label>
+        <ion-toggle formControlName="ocultarLigadosHoje"></ion-toggle>
+      </ion-item>
+    </div>
+  </ion-col>
+  <ion-col size="12" size-md="3" class="btn-col">
+    <ion-button type="submit" color="primary" expand="block" [disabled]="loading">
+      <ion-icon slot="start" name="search"></ion-icon>
+      Buscar
+    </ion-button>
+  </ion-col>
+</ion-row>
+      </ion-grid>
+    </form>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="cards" *ngIf="!loading">
+    <ion-card *ngFor="let c of clientes" [class.fade-out]="removing[c.id_cliente]">
+      <ion-card-header>
+        <ion-card-title>{{ c.nome }}</ion-card-title>
+        <ion-card-subtitle>
+          <span *ngIf="c.cidade">{{ c.cidade }}</span>
+          <span *ngIf="c.status"> - {{ c.status }}</span>
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="linha">
+          <span><ion-icon name="call"></ion-icon> {{ c.celular || 'Sem telefone' }}</span>
+          <ion-button size="small" fill="outline" (click)="whatsapp(c.celular)" [disabled]="!c.celular">
+            WhatsApp
+          </ion-button>
+        </div>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Observação</ion-label>
+          <ion-textarea autoGrow="true" [value]="observacoes[c.id_cliente]" (ionInput)="observacoes[c.id_cliente] = $any($event.target).value"></ion-textarea>
+        </ion-item>
+
+        <div class="acoes">
+          <ion-button color="success" (click)="salvarLigacao(c, true)">Atendeu</ion-button>
+          <ion-button color="medium" (click)="salvarLigacao(c, false)">Não Atendeu</ion-button>
+          <ion-button color="tertiary" fill="clear" (click)="pular(c)">Pular</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="paginacao" *ngIf="meta.totalPages > 1 && !loading">
+    <ion-button size="small" (click)="paginaAnterior()" [disabled]="meta.page <= 1">Anterior</ion-button>
+    <span>PÃ¡gina {{ meta.page }} de {{ meta.totalPages }}</span>
+    <ion-button size="small" (click)="proximaPagina()" [disabled]="meta.page >= meta.totalPages">Próxima</ion-button>
+  </div>
+</ion-content>
+
+
+
+
+
+
+
+
+

@@ -58,6 +58,9 @@
           <ion-button size="small" fill="outline" [color]="selectedPeriod()==='semana' ? 'primary' : undefined" (click)="setPeriod('semana')">Esta Semana</ion-button>
           <ion-button size="small" fill="outline" [color]="selectedPeriod()==='mes' ? 'primary' : undefined" (click)="setPeriod('mes')">Este Mês</ion-button>
         </div>
+        <div class="filters">
+          <ion-text color="medium" *ngIf="d?.periodo as p">Período aplicado: {{ formatDate(p.inicio) }} — {{ formatDate(p.fim) }}</ion-text>
+        </div>
       </div>
 
       <ion-grid class="kpi-grid">
@@ -126,6 +129,18 @@
               </ion-card-content>
             </ion-card>
           </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card class="kpi-card" (click)="openModal('ligacoes')">
+              <ion-card-header>
+                <ion-card-subtitle>Ligações Efetuadas</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-icon name="call-outline"></ion-icon>
+                <div class="kpi-value">{{ d.ligacoesEfetuadas || 0 }}</div>
+                <div class="kpi-desc">No período selecionado</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
         </ion-row>
       </ion-grid>
 
@@ -153,7 +168,7 @@
             </ion-card>
           </ion-col>
 
-          <ion-col size="12">
+          <ion-col size="6" size-lg="6">
             <ion-card>
               <ion-card-header>
                 <ion-card-subtitle>Contatos por dia (último contato)</ion-card-subtitle>
@@ -163,6 +178,18 @@
               </ion-card-content>
             </ion-card>
           </ion-col>
+
+           <ion-col size="12" size-lg="6">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-subtitle>Ligações por dia</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content *ngIf="ligacoesChart() as lg">
+                <apx-chart [series]="lg.series" [chart]="lg.chart" [xaxis]="lg.xaxis" [dataLabels]="lg.dataLabels" [stroke]="lg.stroke" [tooltip]="lg.tooltip" [fill]="lg.fill"></apx-chart>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          
         </ion-row>
       </ion-grid>
     }
@@ -200,6 +227,21 @@
                       <p>{{ short(c['observacao']) }}</p>
                     </ion-label>
                     <ion-badge slot="end" [class]="statusPillClass(c['status'])">{{ c['status'] || 'Sem status' }}</ion-badge>
+                  </ion-item>
+                }
+              </ion-list>
+            } @else if (modalKind()==='ligacoes') {
+              <ion-list>
+                @for (l of modalItems(); track (l['idLigacao'] || (l['data'] || '') + (l['cliente']?.nome || ''))) {
+                  <ion-item lines="full">
+                    <ion-label class="ion-text-wrap">
+                      <h3>Cliente: {{ l['cliente']?.nome || '-' }} | Data: {{ formatDate(l['data'] || l['dataHora']) }}</h3>
+                      @if (l['observacao']) {
+                        <p>Observação: {{ short(l['observacao']) }}</p>
+                      }
+                      <p class="ion-text-xs">Vendedor: {{ l['usuario']?.nomeCompleto || l['usuario']?.name || '-' }}</p>
+                    </ion-label>
+                    <ion-badge slot="end" [color]="l['atendida'] ? 'success' : 'medium'">{{ l['atendida'] ? 'Atendido' : 'Não atendeu' }}</ion-badge>
                   </ion-item>
                 }
               </ion-list>

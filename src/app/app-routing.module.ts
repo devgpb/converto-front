@@ -19,6 +19,8 @@ import { MensagensPadraoPage } from './mensagens-padrao/mensagens-padrao.page';
 import { EsqueciSenhaPage } from './esqueci-senha/esqueci-senha.page';
 import { RedefinirSenhaPage } from './redefinir-senha/redefinir-senha.page';
 import { TutoriaisPage } from './tutoriais/tutoriais.page';
+import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
+import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
 
 const routes: Routes = [
   {
@@ -97,6 +99,18 @@ const routes: Routes = [
     component: ClientesImportarPage,
     canActivate: [AuthGuard],
     data: { title: 'Importar/Exportar Clientes' }
+  },
+  {
+    path: 'relatorios/vendedor',
+    component: RelatorioVendedorPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Relatório de Vendedor' }
+  },
+  {
+    path: 'vendas/ligacoes',
+    component: VendasLigacoesPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Lista de Ligações' }
   },
   {
     path: 'tutoriais',

@@ -1,0 +1,34 @@
+<div class="ligacoes-wrapper">
+  <ion-list *ngIf="!loading && items.length">
+    <ion-item *ngFor="let l of items">
+      <ion-icon slot="start" [name]="l.atendida ? 'call' : 'call'" [color]="l.atendida ? 'success' : 'medium'"></ion-icon>
+      <ion-label>
+        <h2>{{ l.dataHoraLocal }}</h2>
+        <p>
+          {{ l.atendida ? 'Atendida' : 'Não atendida' }}
+          <ng-container *ngIf="l.usuario && l.usuario.name">
+            • {{ l.usuario.name }}
+          </ng-container>
+        </p>
+        <p *ngIf="l.observacao">{{ l.observacao }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-text color="medium" *ngIf="!loading && !items.length && !error">
+    Nenhuma ligação registrada para este cliente.
+  </ion-text>
+
+  <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+
+  <div class="paginacao" *ngIf="meta && meta.totalPages > 1">
+    <ion-button size="small" (click)="prevPage()" [disabled]="meta.page <= 1">Anterior</ion-button>
+    <span>Página {{ meta.page }} de {{ meta.totalPages }}</span>
+    <ion-button size="small" (click)="nextPage()" [disabled]="meta.page >= meta.totalPages">Próxima</ion-button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+</div>
+

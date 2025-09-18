@@ -7,4 +7,7 @@ export interface IDashboardVendas {
   statusDistribution?: { status: string | null; count: number }[];
   campanhaDistribution?: { campanha: string | null; count: number }[];
   contatosPorDia?: { date: string; count: number }[];
+  ligacoesEfetuadas?: number;
+  ligacoesPorDia?: { date: string; count: number }[];
+  periodo?: { inicio: string; fim: string; tz: string; preset?: string };
 }

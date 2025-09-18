@@ -30,6 +30,15 @@ export type EventoItem = {
   cliente: { nome: string | null } | null;
 };
 
+export type LigacaoItem = {
+  idLigacao: string;
+  dataHora: string;
+  atendida: boolean;
+  observacao?: string | null;
+  usuario?: { name: string | null } | null;
+  cliente?: { nome: string | null } | null;
+};
+
 export type EventoUsuarioDTO = {
   idEvento: number;
   idUsuario?: number;
@@ -74,6 +83,12 @@ export class VendasService {
   getEventosMarcadosList(periodo: PeriodoPayload, page: number, perPage: number) {
     return this.http.post<PaginatedResponse<EventoItem>>(
       `${this.base}/eventos-marcados`, { periodo, page, perPage }
+    );
+  }
+
+  getLigacoesEfetuadasList(periodo: PeriodoPayload, page: number, perPage: number) {
+    return this.http.post<PaginatedResponse<LigacaoItem>>(
+      `${this.base}/ligacoes-efetuadas`, { periodo, page, perPage }
     );
   }
 

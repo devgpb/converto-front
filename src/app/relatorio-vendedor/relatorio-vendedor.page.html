@@ -1,0 +1,160 @@
+<ion-content>
+  <div class="ion-padding">
+    <div class="header">
+      <div class="filters">
+        <ion-item>
+          <ion-label position="stacked">Vendedor</ion-label>
+          <ion-select [value]="form.value.id_usuario" (ionChange)="form.patchValue({ id_usuario: $event.detail.value })" [disabled]="!isAdmin" interface="popover">
+            <ion-select-option [value]="currentUserId">Meus Clientes</ion-select-option>
+            <ion-select-option *ngFor="let u of usuarios" [value]="getUserId(u)">{{ u.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+         <ion-button (click)="buscar()" [disabled]="loading">
+          <ion-spinner slot="start" *ngIf="loading"></ion-spinner>
+          Consultar
+        </ion-button>
+
+        <ion-segment [value]="form.value.periodo" (ionChange)="form.patchValue({ periodo: $event.detail.value });">
+          <ion-segment-button value="hoje" (click)="setPreset('hoje')">Hoje</ion-segment-button>
+          <ion-segment-button value="semana" (click)="setPreset('semana')">Semana</ion-segment-button>
+          <ion-segment-button value="mes" (click)="setPreset('mes')">Mês</ion-segment-button>
+          <ion-segment-button value="custom">Período</ion-segment-button>
+        </ion-segment>
+
+        <app-date-field
+          *ngIf="periodoCustom()"
+          label="Período"
+          mode="range"
+          [start]="form.value.start"
+          [end]="form.value.end"
+          (startChange)="form.patchValue({ start: $event || '' })"
+          (endChange)="form.patchValue({ end: $event || '' })"
+        ></app-date-field>
+
+
+      </div>
+    </div>
+
+    <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+
+    <ng-container *ngIf="data(); let d">
+      <!-- Linha destacada: Clientes sob responsabilidade -->
+      <div class="kpi-banner">
+        Total de clientes sob responsabilidade: <b>{{ d.clientes?.totalResponsavel || 0 }}</b>
+      </div>
+
+      <ion-grid class="kpi-grid">
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card class="kpi-card">
+              <ion-card-header><ion-card-subtitle>Ligações</ion-card-subtitle></ion-card-header>
+              <ion-card-content><div class="kpi-value">{{ d.ligacoes?.total || 0 }}</div></ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card class="kpi-card">
+              <ion-card-header><ion-card-subtitle>Novos (período)</ion-card-subtitle></ion-card-header>
+              <ion-card-content><div class="kpi-value">{{ d.clientes.novosPeriodo }}</div></ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card class="kpi-card">
+              <ion-card-header><ion-card-subtitle>Atendidos (período)</ion-card-subtitle></ion-card-header>
+              <ion-card-content><div class="kpi-value">{{ d.clientes.atendidosPeriodo }}</div></ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-card class="kpi-card">
+              <ion-card-header><ion-card-subtitle>Vendas fechadas</ion-card-subtitle></ion-card-header>
+              <ion-card-content>
+                <div class="kpi-value">{{ d.clientes.vendasFechadasPeriodo }}</div>
+                <div class="kpi-desc" *ngIf="d.clientes.tempoMedioFechamentoDias != null">~ {{ d.clientes.tempoMedioFechamentoDias }} dias</div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Ligações por dia</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <apx-chart
+                  [series]="[{ name: 'Ligações', data: ligSeries.y }]"
+                  [chart]="{ type: 'line', height: 260, toolbar: { show: false } }"
+                  [xaxis]="{ categories: ligSeries.x }"
+                ></apx-chart>
+                <div class="kpi-inline">
+                  <div>Total: <b>{{ d.ligacoes.total }}</b></div>
+                  <div>Atendidas: <b>{{ d.ligacoes.atendidas }}</b></div>
+                  <div>Taxa: <b>{{ d.ligacoes.taxaAtendimento }}%</b></div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Atendimentos por dia</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <apx-chart
+                  [series]="[{ name: 'Atendimentos', data: atdSeries.y }]"
+                  [chart]="{ type: 'line', height: 260, toolbar: { show: false } }"
+                  [xaxis]="{ categories: atdSeries.x }"
+                ></apx-chart>
+                <div class="kpi-inline">
+                  <div>Orçamentos: <b>{{ d.clientes.orcamentosEnviadosPeriodo }}</b></div>
+                  <div>Conversão: <b>{{ d.clientes.taxaConversaoPeriodo }}%</b></div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-card>
+              <ion-card-header><ion-card-title>Status (período)</ion-card-title></ion-card-header>
+              <ion-card-content>
+                <div *ngFor="let s of d.clientes.statusDistribution" class="row">
+                  <div class="label">{{ s.status || 'Sem status' }}</div>
+                  <div class="value">{{ s.count }}</div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-card>
+              <ion-card-header><ion-card-title>Top clientes por ligações</ion-card-title></ion-card-header>
+              <ion-card-content>
+                <div *ngFor="let c of d.ligacoes.topClientes" class="row">
+                  <div class="label">{{ c.nome || c.id_cliente }}</div>
+                  <div class="value">{{ c.count }}</div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-card>
+        <ion-card-header><ion-card-title>Eventos</ion-card-title></ion-card-header>
+        <ion-card-content class="kpi-inline">
+          <div>Total: <b>{{ d.eventos.total }}</b></div>
+          <div>Confirmados: <b>{{ d.eventos.confirmados }}</b></div>
+          <div>Pendentes: <b>{{ d.eventos.pendentes }}</b></div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </div>
+
+  <ion-toast *ngIf="error" [isOpen]="!!error" [message]="error" color="danger" duration="2500" (didDismiss)="error = null"></ion-toast>
+</ion-content>

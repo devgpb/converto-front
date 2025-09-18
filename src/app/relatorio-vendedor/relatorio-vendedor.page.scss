@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filters {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.range {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.kpi-grid ion-card { text-align: center; }
+.kpi-value { font-size: 1.5rem; font-weight: 700; }
+.kpi-desc { font-size: 0.8rem; color: var(--ion-color-medium); }
+.kpi-inline { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+/* Destaque simples e centralizado para o dado separado */
+.kpi-banner {
+  text-align: center;
+  font-weight: 600;
+  padding: 8px 12px;
+  // background: var(--ion-color-light);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.row:last-child { border-bottom: none; }
+.row .label { color: var(--ion-color-medium); }
+
+@media (min-width: 768px) {
+  .header { flex-direction: row; justify-content: space-between; align-items: center; }
+}

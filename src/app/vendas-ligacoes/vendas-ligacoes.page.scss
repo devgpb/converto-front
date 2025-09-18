@@ -1,0 +1,88 @@
+.filtros {
+  padding: 8px 12px;
+}
+
+.filtros-grid .search-item {
+  --inner-padding-top: 10px;
+  --padding-top: 6px;
+}
+
+.row-bottom {
+  align-items: end;
+}
+
+.toggle-col ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.btn-col ion-button {
+  height: 44px;
+  --border-radius: 10px;
+  font-weight: 600;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+}
+
+.cards {
+  padding: 12px;
+}
+
+.linha {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.acoes {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.paginacao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+ion-label, .label-stacked{
+  margin-bottom: 8px;
+}
+.limit-item {
+  height: 71px;
+}
+
+.row-bottom ion-input::part(native) {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.toggles-group {
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+
+
+.toggles-group ion-item {
+  --background: transparent;
+  color: var(--ion-text-color);
+  --inner-padding-end: 0;
+  --padding-start: 0;
+}

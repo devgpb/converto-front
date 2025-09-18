@@ -48,6 +48,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
       items: [
         { icon: 'stats-chart', title: 'Relatório de Vendas', href: '/vendas/dashboard' },
         { icon: 'people', title: 'Lista de Clientes', href: '/vendas/lista/clientes' },
+        { icon: 'call', title: 'Lista de Ligações', href: '/vendas/ligacoes' },
         { icon: 'person-add-outline', title: 'Cadastrar Clientes', href: '/vendas/leads' },
         { icon: 'cloud-upload', title: 'Importar/Exportar Clientes', href: '/clientes/importar' },
         { icon: 'chatbubbles', title: 'Mensagens Padrão', href: '/vendas/mensagens-padrao' },
@@ -59,6 +60,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
         { icon: 'people-circle', title: 'Usuários', href: '/usuarios' },
         // { icon: 'business', title: 'Setores', href: '/setores' },
         { icon: 'person-add', title: 'Novo Usuário', href: '/usuarios/novo' },
+        { icon: 'analytics', title: 'Relatório de Vendedor', href: '/relatorios/vendedor' },
       ],
     },
   ];
