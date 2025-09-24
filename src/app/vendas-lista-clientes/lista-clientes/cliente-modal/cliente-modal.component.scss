@@ -1,10 +1,49 @@
 .cliente-modal {
-  --width: 600px;
-  --height: 80%; /* ou 600px */
+  --width: 900px;
+  --height: 90%;
 }
 
 .info-card ion-item {
   --padding-start: 0;
+}
+
+.name-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.client-name {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-item ion-icon {
+  font-size: 1.1rem;
+}
+
+.info-text p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+}
+
+.info-text h3 {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 .dias {
@@ -55,4 +94,29 @@ ion-datetime.centered-datetime {
     --width: 95%;
     --height: 90%;
   }
+}
+
+/* Desktop enhancements */
+@media (min-width: 768px) {
+  .info-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .datetime-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .datetime-item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .cliente-modal {
+    --width: 70vw;
+  }
+}
+
+/* Grid for form fields on desktop; mobile remains stacked via IonCol size */
+.form-grid {
+  width: 100%;
 }

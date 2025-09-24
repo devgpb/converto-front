@@ -17,6 +17,7 @@ export interface Cliente {
   updated_at?: string;
   responsavel?: { name: string };
   ultimoContato?: string;
+  fechado?: string | null;
 }
 
 export interface ClientesResponse {

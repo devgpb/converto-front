@@ -84,6 +84,12 @@ export class ClienteModalComponent implements OnChanges {
 
   openHistorico(): void {
     this.view = 'historico';
+    // Define a data padrão para hoje (YYYY-MM-DD)
+    const hoje = new Date();
+    const yyyy = hoje.getFullYear();
+    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoje.getDate()).padStart(2, '0');
+    this.ligacaoDate = `${yyyy}-${mm}-${dd}`;
   }
 
   voltarParaForm(): void {
@@ -156,12 +162,15 @@ export class ClienteModalComponent implements OnChanges {
   // ===== ligações (histórico) =====
   @ViewChild(ClienteLigacoesListComponent) ligacoesList?: ClienteLigacoesListComponent;
   observacaoLigacao: string = '';
+  ligacaoDate: string = '';
   savingLigacao = false;
 
   adicionarLigacao(atendida: boolean) {
     if (!this.formData?.id_cliente) return;
     const payload = {
       id_cliente: this.formData.id_cliente,
+      data_hora: this.ligacaoDate || undefined,
+      tz: this.tz,
       atendida,
       observacao: this.observacaoLigacao || null,
     } as any;
@@ -176,6 +185,46 @@ export class ClienteModalComponent implements OnChanges {
       error: () => {
         this.savingLigacao = false;
       }
+    });
+  }
+
+  // ===== fechar / reabrir cliente =====
+  fecharCliente() {
+    if (!this.formData?.id_cliente) return;
+    const nowIso = new Date().toISOString();
+    const payload: Partial<Cliente> & { fechado?: string | null } = {
+      id_cliente: this.formData.id_cliente,
+      fechado: nowIso,
+    } as any;
+    this.isLoading = true;
+    this.clientesService.postCliente(payload).subscribe({
+      next: () => {
+        (this.formData as any).fechado = nowIso;
+        this.isLoading = false;
+        this.saved.emit();
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+  }
+
+  reabrirCliente() {
+    if (!this.formData?.id_cliente) return;
+    const payload: Partial<Cliente> & { fechado?: string | null } = {
+      id_cliente: this.formData.id_cliente,
+      fechado: null,
+    } as any;
+    this.isLoading = true;
+    this.clientesService.postCliente(payload).subscribe({
+      next: () => {
+        (this.formData as any).fechado = null;
+        this.isLoading = false;
+        this.saved.emit();
+      },
+      error: () => {
+        this.isLoading = false;
+      },
     });
   }
 
