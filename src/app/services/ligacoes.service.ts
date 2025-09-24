@@ -69,4 +69,8 @@ export class LigacoesService {
       { params: httpParams }
     );
   }
+
+  deletarLigacao(id_ligacao: string): Observable<{ success: boolean }> {
+    return this.http.delete<{ success: boolean }>(`${this.api}/${id_ligacao}`);
+  }
 }

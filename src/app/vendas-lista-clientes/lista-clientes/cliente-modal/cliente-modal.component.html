@@ -39,7 +39,25 @@
 
     <ion-content class="ion-padding" *ngIf="formData">
       <ng-container *ngIf="view === 'historico'; else formView">
-        <app-cliente-ligacoes-list [idCliente]="formData.id_cliente" [pageSize]="10"></app-cliente-ligacoes-list>
+        <!-- Adicionar ligação -->
+        <ion-card class="ion-margin-bottom">
+          <ion-card-header>
+            <ion-card-title>Registrar ligação</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item lines="none">
+              <ion-label position="stacked">Observação</ion-label>
+              <ion-textarea autoGrow="true" [(ngModel)]="observacaoLigacao"></ion-textarea>
+            </ion-item>
+            <div class="acoes" style="display:flex; gap:8px; margin-top:8px;">
+              <ion-button color="success" (click)="adicionarLigacao(true)" [disabled]="savingLigacao">Atendeu</ion-button>
+              <ion-button color="medium" (click)="adicionarLigacao(false)" [disabled]="savingLigacao">Não Atendeu</ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Lista de ligações -->
+        <app-cliente-ligacoes-list #ligacoesList [idCliente]="formData.id_cliente" [pageSize]="10"></app-cliente-ligacoes-list>
       </ng-container>
       <ng-template #formView>
       <!-- Informações fixas -->

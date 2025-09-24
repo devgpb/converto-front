@@ -7,11 +7,14 @@
         <p>
           {{ l.atendida ? 'Atendida' : 'Não atendida' }}
           <ng-container *ngIf="l.usuario && l.usuario.name">
-            • {{ l.usuario.name }}
+            · {{ l.usuario.name }}
           </ng-container>
         </p>
         <p *ngIf="l.observacao">{{ l.observacao }}</p>
       </ion-label>
+      <ion-button slot="end" color="danger" size="small" (click)="delete(l)" [disabled]="deleting[l.id_ligacao]">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
 
@@ -31,4 +34,3 @@
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 </div>
-

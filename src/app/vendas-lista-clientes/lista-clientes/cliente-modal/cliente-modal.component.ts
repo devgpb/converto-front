@@ -1,7 +1,9 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, ViewChild, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Cliente, ClientesService, ClienteEvento } from '../../../services/clientes.service';
 import { VendasService } from '../../../services/vendas/vendas.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { LigacoesService } from 'src/app/services/ligacoes.service';
+import { ClienteLigacoesListComponent } from './cliente-ligacoes-list/cliente-ligacoes-list.component';
 
 @Component({
   selector: 'app-cliente-modal',
@@ -39,6 +41,7 @@ export class ClienteModalComponent implements OnChanges {
   constructor(
     private clientesService: ClientesService,
     private vendasService: VendasService,
+    private ligacoesService: LigacoesService,
   ) {
     this.idUsuario = this.auth.getUserId()
     console.log(this.idUsuario, this.auth.getUserId())
@@ -146,6 +149,32 @@ export class ClienteModalComponent implements OnChanges {
       },
       error: () => {
         this.isLoadingEventos = false;
+      }
+    });
+  }
+
+  // ===== ligações (histórico) =====
+  @ViewChild(ClienteLigacoesListComponent) ligacoesList?: ClienteLigacoesListComponent;
+  observacaoLigacao: string = '';
+  savingLigacao = false;
+
+  adicionarLigacao(atendida: boolean) {
+    if (!this.formData?.id_cliente) return;
+    const payload = {
+      id_cliente: this.formData.id_cliente,
+      atendida,
+      observacao: this.observacaoLigacao || null,
+    } as any;
+    this.savingLigacao = true;
+    this.ligacoesService.salvarLigacao(payload).subscribe({
+      next: () => {
+        this.observacaoLigacao = '';
+        // recarregar lista
+        this.ligacoesList?.fetch(1);
+        this.savingLigacao = false;
+      },
+      error: () => {
+        this.savingLigacao = false;
       }
     });
   }

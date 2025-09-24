@@ -19,6 +19,7 @@ export class ClienteLigacoesListComponent implements OnChanges {
   error: string | null = null;
   items: LigacaoRegistro[] = [];
   meta: PaginacaoMeta = { total: 0, page: 1, perPage: this.pageSize, totalPages: 0 } as any;
+  deleting: Record<string, boolean> = {};
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idCliente'] && this.idCliente) {
@@ -58,5 +59,24 @@ export class ClienteLigacoesListComponent implements OnChanges {
   nextPage() {
     if (this.meta.page < this.meta.totalPages) this.fetch(this.meta.page + 1);
   }
-}
 
+  delete(item: LigacaoRegistro) {
+    if (!item?.id_ligacao) return;
+    this.deleting[item.id_ligacao] = true;
+    this.api.deletarLigacao(item.id_ligacao).subscribe({
+      next: () => {
+        // Recarrega a página atual
+        const page = this.meta.page || 1;
+        this.fetch(page);
+      },
+      error: () => {
+        // Mesmo em erro, recarrega para manter consistência
+        const page = this.meta.page || 1;
+        this.fetch(page);
+      },
+      complete: () => {
+        delete this.deleting[item.id_ligacao];
+      }
+    });
+  }
+}
