@@ -179,5 +179,25 @@
         </form>
       </ion-card-content>
     </ion-card>
+
+    <!-- Card: Dados Pessoais -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Dados Pessoais</ion-card-title>
+        <ion-card-subtitle>Atualize seu CPF</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <ion-item>
+            <ion-label position="stacked">CPF (opcional)</ion-label>
+            <ion-input formControlName="cpf" cpfBr></ion-input>
+          </ion-item>
+          <ion-button expand="block" type="submit" class="ion-margin-top">
+            <ion-icon slot="start" name="save-outline"></ion-icon>
+            Salvar Dados
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

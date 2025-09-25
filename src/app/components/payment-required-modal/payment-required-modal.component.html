@@ -1,0 +1,41 @@
+<ion-header translucent>
+  <ion-toolbar color="primary">
+    <ion-title>Assinatura necessária</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="modal-content">
+    <ion-icon name="alert-circle-outline" class="modal-icon"></ion-icon>
+    <h2>Precisamos regularizar sua assinatura</h2>
+
+    <p *ngIf="isAdmin">
+      Sua assinatura foi bloqueada por falta de pagamento. Regularize o pagamento para liberar novamente o acesso a todas as funcionalidades.
+    </p>
+
+    <ng-container *ngIf="!isAdmin">
+      <p>
+        A assinatura da sua empresa está interrompida e algumas telas podem ficar indisponíveis até que o pagamento seja atualizado.
+      </p>
+      <p *ngIf="shouldShowAdminName">
+        Entre em contato com <strong>{{ adminName }}</strong> para concluir a renovação da assinatura.
+      </p>
+      <p *ngIf="!shouldShowAdminName">
+        Peça para regularizar o pagamento da assinatura e assim voltar a usar o Converto sem interrupções.
+      </p>
+    </ng-container>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" (click)="goToBilling()" *ngIf="isAdmin">
+        Renovar assinatura
+      </ion-button>
+      <ion-button fill="outline" color="medium" (click)="close()">
+        Entendi
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

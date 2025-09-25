@@ -19,6 +19,13 @@
           <ion-label position="stacked">Nome</ion-label>
           <ion-input formControlName="name"></ion-input>
         </ion-item>
+        <ion-item>
+          <ion-label position="stacked">CNPJ (opcional)</ion-label>
+          <ion-input formControlName="cnpj" [readonly]="!isPrincipal"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="!isPrincipal" lines="none">
+          <ion-text color="medium">Apenas a conta principal pode alterar o CNPJ.</ion-text>
+        </ion-item>
         <ion-button type="submit" expand="block" class="ion-margin-top">
           <ion-icon name="save-outline" slot="start"></ion-icon>
           Salvar

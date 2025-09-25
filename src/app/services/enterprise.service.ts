@@ -7,6 +7,7 @@ export interface Enterprise {
   id: string;
   tenant_id: string;
   name: string;
+  cnpj?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -24,8 +25,7 @@ export class EnterpriseService {
     return this.http.get<Enterprise>(`${this.api}/${id}`);
   }
 
-  update(id: string, data: Partial<Pick<Enterprise, 'name'>>): Observable<Enterprise> {
+  update(id: string, data: Partial<Pick<Enterprise, 'name' | 'cnpj'>>): Observable<Enterprise> {
     return this.http.put<Enterprise>(`${this.api}/${id}`, data);
   }
 }
-

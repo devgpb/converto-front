@@ -37,9 +37,10 @@ import { RedefinirSenhaPage } from './redefinir-senha/redefinir-senha.page';
 import { TutoriaisPage } from './tutoriais/tutoriais.page';
 import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
 import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
+import { PaymentRequiredModalComponent } from './components/payment-required-modal/payment-required-modal.component';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage, PaymentRequiredModalComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],

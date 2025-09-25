@@ -9,8 +9,9 @@ export interface Profile {
   name: string;
   role: string;
   principal?: boolean;
-  tenant?: { id: string; name: string } | null;
-  enterprise?: { id: string; name: string } | null;
+  cpf?: string | null;
+  tenant?: { id: number; name: string } | null;
+  enterprise?: { id: number; name: string } | null;
   seats?: {
     paid: number;
     active_users: number;
@@ -35,5 +36,8 @@ export class ProfileService {
       newPassword,
     });
   }
-}
 
+  updateProfile(data: { cpf?: string | null }): Observable<Partial<Profile>> {
+    return this.http.put<Partial<Profile>>(this.api, data);
+  }
+}
