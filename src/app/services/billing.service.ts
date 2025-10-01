@@ -22,6 +22,10 @@ export class BillingService {
     return this.http.get<any>(`${this.api}/status/${tenantId}`);
   }
 
+  sync(data: { tenant_id: string }): Observable<any> {
+    return this.http.post<any>(`${this.api}/sync`, data);
+  }
+
   cancel(data: { tenant_id: string; motivo?: string; descricao?: string }): Observable<any> {
     return this.http.post<any>(`${this.api}/cancel`, data);
   }
@@ -30,4 +34,3 @@ export class BillingService {
     return this.http.post<any>(`${this.api}/resume`, data);
   }
 }
-

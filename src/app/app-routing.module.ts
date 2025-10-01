@@ -21,6 +21,7 @@ import { RedefinirSenhaPage } from './redefinir-senha/redefinir-senha.page';
 import { TutoriaisPage } from './tutoriais/tutoriais.page';
 import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
 import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
+import { KanbanClientesPage } from './kanban-clientes/kanban-clientes.page';
 
 const routes: Routes = [
   {
@@ -63,6 +64,12 @@ const routes: Routes = [
     component: VendasListaClientesPage,
     canActivate: [AuthGuard],
     data: { title: 'Lista de Clientes' }
+  },
+  {
+    path: 'vendas/kanban',
+    component: KanbanClientesPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Kanban de Clientes' }
   },
   {
     path: 'vendas/mensagens-padrao',

@@ -1,0 +1,114 @@
+<ion-content class="kanban-content">
+  <div class="kanban-toolbar">
+    <ion-searchbar
+      [formControl]="searchControl"
+      placeholder="Buscar clientes"
+      showCancelButton="never"
+      debounce="0"
+    ></ion-searchbar>
+
+    <ion-item lines="none" class="toolbar-toggle">
+      <ion-label>Meus clientes</ion-label>
+      <ion-toggle [formControl]="meusClientesControl"></ion-toggle>
+    </ion-item>
+
+    <ion-button fill="outline" size="small" (click)="refreshBoard()">
+      Atualizar
+    </ion-button>
+  </div>
+
+  <div class="kanban-body" *ngIf="!boardLoading; else loadingBoard">
+    <div *ngIf="globalError" class="kanban-error">
+      <ion-text color="danger">{{ globalError }}</ion-text>
+      <ion-button size="small" fill="outline" (click)="refreshBoard()">Tentar novamente</ion-button>
+    </div>
+
+    <div class="kanban-board" *ngIf="!globalError">
+      <div class="kanban-column" *ngFor="let column of columns; trackBy: trackByColumn">
+        <div class="column-header">
+          <div>
+            <h2>{{ column.title }}</h2>
+            <p>{{ column.clientes.length }} / {{ column.total || 0 }}</p>
+          </div>
+          <ion-button
+            *ngIf="!column.loading && !column.fullyLoaded"
+            fill="clear"
+            size="small"
+            (click)="loadMore(column)"
+          >
+            Carregar mais
+          </ion-button>
+        </div>
+
+        <div
+          class="column-body"
+          cdkDropList
+          [id]="column.id"
+          [cdkDropListData]="column.clientes"
+          [cdkDropListConnectedTo]="dropListIds"
+          (cdkDropListDropped)="drop($event, column)"
+          (scroll)="onColumnScroll(column, $event)"
+        >
+          <div class="column-placeholder" *ngIf="!column.loading && column.clientes.length === 0 && !column.error">
+            <ion-text color="medium">Nenhum cliente neste status</ion-text>
+          </div>
+
+          <div class="column-placeholder" *ngIf="column.error">
+            <ion-text color="danger">{{ column.error }}</ion-text>
+            <ion-button size="small" fill="outline" (click)="loadMore(column)">Tentar novamente</ion-button>
+          </div>
+
+          <div
+            class="kanban-card"
+            *ngFor="let cliente of column.clientes; trackBy: trackByCliente"
+            cdkDrag
+            (cdkDragStarted)="onDragStart($event)"
+            (cdkDragEnded)="onDragEnd($event)"
+            (click)="openCliente(cliente)"
+          >
+            <div class="card-header">
+              <h3>{{ cliente.nome }}</h3>
+              <ion-badge *ngIf="cliente.campanha" color="tertiary">{{ cliente.campanha }}</ion-badge>
+            </div>
+            <div class="card-body">
+              <div class="card-row" *ngIf="cliente.celular">
+                <ion-icon name="call-outline"></ion-icon>
+                <span>{{ cliente.celular }}</span>
+              </div>
+              <div class="card-row" *ngIf="cliente.cidade">
+                <ion-icon name="location-outline"></ion-icon>
+                <span>{{ cliente.cidade }}</span>
+              </div>
+              <div class="card-row" *ngIf="cliente.responsavel?.name">
+                <ion-icon name="person-outline"></ion-icon>
+                <span>{{ cliente.responsavel?.name }}</span>
+              </div>
+              <div class="card-row" *ngIf="cliente.updated_at">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>Atualizado em {{ cliente.updated_at | date: 'short' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-footer" *ngIf="column.loading && column.clientes.length">
+            <ion-spinner name="crescent"></ion-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingBoard>
+    <div class="board-loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Carregando Kanban...</p>
+    </div>
+  </ng-template>
+
+  <app-cliente-modal
+    [cliente]="selectedCliente"
+    [isOpen]="modalOpen"
+    (closeModal)="closeClienteModal()"
+    (saved)="handleClienteSaved()"
+  ></app-cliente-modal>
+</ion-content>

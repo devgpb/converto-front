@@ -48,6 +48,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
       items: [
         { icon: 'stats-chart', title: 'Relatório de Vendas', href: '/vendas/dashboard' },
         { icon: 'people', title: 'Lista de Clientes', href: '/vendas/lista/clientes' },
+        { icon: 'albums', title: 'Kanban', href: '/vendas/kanban' },
         { icon: 'call', title: 'Lista de Ligações', href: '/vendas/ligacoes' },
         { icon: 'person-add-outline', title: 'Cadastrar Clientes', href: '/vendas/leads' },
         { icon: 'cloud-upload', title: 'Importar/Exportar Clientes', href: '/clientes/importar' },
@@ -145,4 +146,3 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
     }
   }
 }
-

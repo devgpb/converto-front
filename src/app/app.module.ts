@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { LucideAngularModule, UserPlus, Phone, Users, Calendar, Receipt } from 'lucide-angular';
@@ -38,10 +39,11 @@ import { TutoriaisPage } from './tutoriais/tutoriais.page';
 import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
 import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
 import { PaymentRequiredModalComponent } from './components/payment-required-modal/payment-required-modal.component';
+import { KanbanClientesPage } from './kanban-clientes/kanban-clientes.page';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent,ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage, PaymentRequiredModalComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule,
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent, ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage, PaymentRequiredModalComponent, KanbanClientesPage],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule, DragDropModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],
   providers: [

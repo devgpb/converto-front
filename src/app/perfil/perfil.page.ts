@@ -29,6 +29,7 @@ export class PerfilPage {
   showCancelForm = false;
   cancelling = false;
   resuming = false;
+  syncing = false;
   cancelForm = this.fb.group({
     motivo: [''],
     descricao: ['', [Validators.maxLength(500)]],
@@ -108,6 +109,28 @@ export class PerfilPage {
     get canResume(): boolean {
       const sub = this.activeSubscription;
       return !!(this.isAdminOrModerator && sub && (sub.status === 'active' || sub.status === 'trialing') && sub.cancel_at_period_end);
+    }
+
+    synceSubscriptionStatus(): void {
+      if (!this.profile?.tenant?.id) return;
+      if (!this.isAdminOrModerator) return;
+      this.syncing = true;
+      this.billing.sync({ tenant_id: String((this.profile as any)?.tenant?.id) }).subscribe({
+        next: () => {
+          this.syncing = false;
+          const tenantId = (this.profile as any)?.tenant?.id;
+          if (tenantId) this.refreshBillingStatus(String(tenantId));
+        },
+        error: async (err) => {
+          this.syncing = false;
+          const alert = await this.alertCtrl.create({
+            header: 'Erro ao sincronizar',
+            message: err?.error?.error || 'Não foi possível sincronizar o status agora.',
+            buttons: ['OK'],
+          });
+          await alert.present();
+        },
+      });
     }
 
     async cancelSubscription(): Promise<void> {

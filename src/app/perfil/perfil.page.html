@@ -121,6 +121,11 @@
           Ao cancelar a renovação, você manterá o acesso até o fim do período já pago.
         </p>
 
+         <ion-button  fill="outline" color="tertiary" (click)="synceSubscriptionStatus()" [disabled]="syncing">
+            <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          atualizar informações
+        </ion-button>
+
         <ion-button *ngIf="canCancel" fill="outline" color="danger" (click)="showCancelForm = !showCancelForm">
           <ion-icon slot="start" name="close-circle-outline"></ion-icon>
           {{ showCancelForm ? 'Fechar' : 'Cancelar renovação' }}
