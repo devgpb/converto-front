@@ -57,10 +57,11 @@ body.dark {
     /* evita scroll bugado */
   }
 
-  ion-menu.menu-desktop.collapsed {
-    --side-width: 72px;
-    --side-min-width: 72px;
-    --side-max-width: 72px;
+  ion-menu.menu-desktop.collapsed,
+  ion-menu.menu-desktop.menu-collapsed {
+    --side-width: 88px;
+    --side-min-width: 88px;
+    --side-max-width: 88px;
   }
 
 

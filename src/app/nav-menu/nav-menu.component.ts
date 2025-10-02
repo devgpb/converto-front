@@ -2,6 +2,7 @@ import { AfterViewInit, Component, HostBinding, OnInit, inject } from '@angular/
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ProfileService, Profile } from '../services/profile.service';
+import { MenuController } from '@ionic/angular';
 
 interface MenuItem {
   icon: string;
@@ -32,8 +33,11 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
   private auth = inject(AuthService);
   private profileService = inject(ProfileService);
   private router = inject(Router);
+  private menuController = inject(MenuController);
   @HostBinding('class.collapsed') collapsed = false;
   private readonly sectionStateStorageKey = 'navMenuSectionStates';
+  private readonly collapseStorageKey = 'navMenuCollapsed';
+  private menuElement?: HTMLElementTagNameMap['ion-menu'] | null;
   sectionStates: Record<string, boolean> = {};
   profile?: Profile;
   showProfileOverlay = false; // overlay para menu de perfil quando expandido
@@ -104,10 +108,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
   }
 
   toggleProfileOverlay(): void {
-    // No modo colapsado o popover é controlado pelo trigger no template
-    if (!this.collapsed) {
-      this.showProfileOverlay = !this.showProfileOverlay;
-    }
+    this.showProfileOverlay = !this.showProfileOverlay;
   }
 
   closeOverlays(): void {
@@ -116,7 +117,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
 
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
-    localStorage.setItem('navMenuCollapsed', this.collapsed.toString());
+    this.persistCollapseState();
     this.applyCollapsedClass();
     this.closeOverlays();
   }
@@ -140,22 +141,16 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    const stored = localStorage.getItem('navMenuCollapsed');
-    this.collapsed = stored === 'true';
+    const storedCollapse = localStorage.getItem(this.collapseStorageKey);
+    this.collapsed = storedCollapse === 'true';
     this.sectionStates = this.loadSectionStates();
     // Carrega perfil para exibir nome do usuário
     this.profileService.getProfile().subscribe((p) => (this.profile = p));
   }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
+    this.menuElement = await this.menuController.get('main-menu');
     this.applyCollapsedClass();
-  }
-
-  private applyCollapsedClass(): void {
-    const menu = document.querySelector('ion-menu.menu-desktop');
-    if (menu) {
-      menu.classList.toggle('collapsed', this.collapsed);
-    }
   }
 
   private loadSectionStates(): Record<string, boolean> {
@@ -201,6 +196,42 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
       localStorage.setItem(this.sectionStateStorageKey, JSON.stringify(states));
     } catch (error) {
       console.warn('Falha ao salvar estado das seções do menu', error);
+    }
+  }
+
+  private persistCollapseState(): void {
+    try {
+      localStorage.setItem(this.collapseStorageKey, this.collapsed.toString());
+    } catch (error) {
+      console.warn('Falha ao salvar estado de colapso do menu', error);
+    }
+  }
+
+  private applyCollapsedClass(): void {
+    const menuEl = this.menuElement;
+    if (!menuEl) {
+      return;
+    }
+
+    menuEl.classList.toggle('menu-collapsed', this.collapsed);
+    menuEl.classList.toggle('collapsed', this.collapsed);
+
+    const collapsedWidth = '88px';
+    const expandedWidth = '300px';
+    const expandedMinWidth = '280px';
+
+    const targetWidth = this.collapsed ? collapsedWidth : expandedWidth;
+    const targetMinWidth = this.collapsed ? collapsedWidth : expandedMinWidth;
+
+    menuEl.style.setProperty('--width', targetWidth);
+    menuEl.style.setProperty('--min-width', targetMinWidth);
+    menuEl.style.setProperty('--max-width', targetWidth);
+    menuEl.style.setProperty('--side-width', targetWidth);
+
+    const splitPane = menuEl.closest('ion-split-pane');
+    if (splitPane) {
+      splitPane.classList.toggle('menu-collapsed', this.collapsed);
+      splitPane.style.setProperty('--side-width', targetWidth);
     }
   }
 }

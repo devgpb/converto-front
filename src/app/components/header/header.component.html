@@ -1,9 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" class="menu-toggle">
-      <ion-button (click)="toggleMenu()" class="menu-button">
-        <ion-icon name="menu" class="menu-icon" [class.open]="menuOpen"></ion-icon>
-      </ion-button>
+      <ion-menu-button
+        auto-hide="false"
+        menu="main-menu"
+        class="menu-button"
+        [attr.aria-label]="menuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'"
+      >
+        <ion-icon [name]="menuOpen ? 'close' : 'menu'" class="menu-icon"></ion-icon>
+      </ion-menu-button>
     </ion-buttons>
     <ion-title>{{ title }}</ion-title>
   </ion-toolbar>

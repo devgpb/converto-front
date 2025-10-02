@@ -9,9 +9,20 @@
 }
 
 .menu-icon {
-  transition: transform 0.3s ease;
+  font-size: 1.6rem;
 }
 
-.menu-icon.open {
-  transform: rotate(90deg);
+.menu-button::part(native) {
+  border-radius: 12px;
+  padding: 6px;
+  background: transparent;
+}
+
+.menu-button::part(native):hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.menu-button::part(native):focus-visible {
+  outline: 2px solid var(--ion-color-primary, #3880ff);
+  outline-offset: 2px;
 }

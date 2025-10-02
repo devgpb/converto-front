@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -10,13 +10,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./header.component.scss'],
   standalone: false,
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private menu = inject(MenuController);
   title = '';
   menuOpen = false;
   private sub!: Subscription;
+  private cleanupMenuListeners?: () => void;
 
   ngOnInit(): void {
     this.sub = this.router.events
@@ -36,13 +37,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
+  async ngAfterViewInit(): Promise<void> {
+    const menuEl = await this.menu.get('main-menu');
+    if (!menuEl) {
+      return;
+    }
+
+    const handleOpen = () => {
+      this.menuOpen = true;
+    };
+    const handleClose = () => {
+      this.menuOpen = false;
+    };
+
+    menuEl.addEventListener('ionDidOpen', handleOpen);
+    menuEl.addEventListener('ionDidClose', handleClose);
+
+    this.cleanupMenuListeners = () => {
+      menuEl.removeEventListener('ionDidOpen', handleOpen);
+      menuEl.removeEventListener('ionDidClose', handleClose);
+    };
+
+    this.menuOpen = await menuEl.isOpen();
+  }
+
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-  }
-
-  async toggleMenu(): Promise<void> {
-    await this.menu.toggle();
-    this.menuOpen = await this.menu.isOpen();
+    this.cleanupMenuListeners?.();
   }
 }
-

@@ -2,8 +2,25 @@ ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }
 
-ion-menu.menu-desktop.collapsed {
-  --width: 60px;
+ion-menu.menu-desktop {
+  --width: 300px;
+  --min-width: 280px;
+  --side-width: 300px;
+}
+
+ion-split-pane.split-desktop {
+  --side-width: 300px;
+}
+
+ion-menu.menu-desktop.menu-collapsed {
+  --width: 88px;
+  --min-width: 88px;
+  --max-width: 88px;
+  --side-width: 88px;
+}
+
+ion-split-pane.menu-collapsed {
+  --side-width: 88px;
 }
 
 ion-menu.md ion-content {
@@ -131,4 +148,3 @@ ion-item.selected {
 .main-content ion-router-outlet {
   flex: 1;
 }
-
