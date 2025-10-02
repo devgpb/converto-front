@@ -100,6 +100,31 @@
   gap: 0.75rem;
 }
 
+.column-feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px dashed var(--kanban-placeholder-border);
+  background: var(--kanban-placeholder-bg);
+  color: var(--kanban-card-subtle-text);
+}
+
+.column-feedback ion-icon {
+  font-size: 1.2rem;
+}
+
+.kanban-column.column-drag-active {
+  border-color: var(--ion-color-primary, #3880ff);
+  box-shadow: var(--kanban-column-shadow), 0 0 0 2px rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.25);
+}
+
+.kanban-column.column-drag-blocked {
+  border-color: var(--ion-color-danger, #eb445a);
+  box-shadow: var(--kanban-column-shadow), 0 0 0 2px rgba(var(--ion-color-danger-rgb, 235, 68, 90), 0.2);
+}
+
 .column-placeholder {
   text-align: center;
   background: var(--kanban-placeholder-bg);
@@ -135,6 +160,19 @@
 .kanban-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--kanban-card-hover-shadow);
+}
+
+.skeleton-card {
+  cursor: default;
+  pointer-events: none;
+  box-shadow: none;
+  border-style: dashed;
+  border-color: var(--kanban-placeholder-border);
+  background: var(--kanban-placeholder-bg);
+}
+
+.skeleton-card ion-skeleton-text {
+  --border-radius: 0.5rem;
 }
 
 .card-header {

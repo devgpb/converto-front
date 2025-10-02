@@ -23,8 +23,15 @@
       <ion-button size="small" fill="outline" (click)="refreshBoard()">Tentar novamente</ion-button>
     </div>
 
-    <div class="kanban-board" *ngIf="!globalError">
-      <div class="kanban-column" *ngFor="let column of columns; trackBy: trackByColumn">
+    <div class="kanban-board" *ngIf="!globalError" #boardContainer>
+      <div
+        class="kanban-column"
+        *ngFor="let column of columns; trackBy: trackByColumn"
+        [ngClass]="{
+          'column-drag-active': dragOverColumnId === column.id,
+          'column-drag-blocked': blockedColumnId === column.id
+        }"
+      >
         <div class="column-header">
           <div>
             <h2>{{ column.title }}</h2>
@@ -47,8 +54,23 @@
           [cdkDropListData]="column.clientes"
           [cdkDropListConnectedTo]="dropListIds"
           (cdkDropListDropped)="drop($event, column)"
+          (cdkDropListEntered)="onDropListEntered(column, $event)"
+          (cdkDropListExited)="onDropListExited(column, $event)"
           (scroll)="onColumnScroll(column, $event)"
         >
+          <div class="column-feedback" *ngIf="dragOverColumnId === column.id || blockedColumnId === column.id">
+            <ion-icon
+              *ngIf="blockedColumnId === column.id; else columnDropReady"
+              name="close-circle-outline"
+              color="danger"
+            ></ion-icon>
+            <ng-template #columnDropReady>
+              <ion-icon name="arrow-down-circle-outline" color="success"></ion-icon>
+            </ng-template>
+            <ion-text color="danger" *ngIf="blockedColumnId === column.id">Coluna indisponível agora</ion-text>
+            <ion-text color="success" *ngIf="blockedColumnId !== column.id">Solte para mover</ion-text>
+          </div>
+
           <div class="column-placeholder" *ngIf="!column.loading && column.clientes.length === 0 && !column.error">
             <ion-text color="medium">Nenhum cliente neste status</ion-text>
           </div>
@@ -63,6 +85,7 @@
             *ngFor="let cliente of column.clientes; trackBy: trackByCliente"
             cdkDrag
             (cdkDragStarted)="onDragStart($event)"
+            (cdkDragMoved)="onDragMoved($event)"
             (cdkDragEnded)="onDragEnd($event)"
             (click)="openCliente(cliente)"
           >
@@ -90,9 +113,16 @@
             </div>
           </div>
 
-          <div class="column-footer" *ngIf="column.loading && column.clientes.length">
-            <ion-spinner name="crescent"></ion-spinner>
-          </div>
+          <ng-container *ngIf="column.loading && !column.error">
+            <div
+              class="kanban-card skeleton-card"
+              *ngFor="let skeleton of skeletonPlaceholders; trackBy: trackByIndex"
+            >
+              <ion-skeleton-text animated style="width: 70%; height: 16px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 55%; height: 14px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 40%; height: 14px;"></ion-skeleton-text>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>

@@ -1,8 +1,17 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ViewDidEnter } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, firstValueFrom, takeUntil } from 'rxjs';
-import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDragEnd,
+  CdkDragEnter,
+  CdkDragExit,
+  CdkDragMove,
+  CdkDragStart,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 
 import { Cliente, ClientesResponse, ClientesService } from '../services/clientes.service';
 import { AuthService } from '../services/auth.service';
@@ -29,29 +38,35 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly pageSize = 10;
   private readonly initialPages = 2; // 2 * 10 = 20 registros iniciais
+  private readonly autoScrollThreshold = 100;
+  private readonly autoScrollSpeed = 16;
 
   searchControl = new FormControl('');
   meusClientesControl = new FormControl<boolean>(false);
 
   columns: KanbanColumnState[] = [];
   dropListIds: string[] = [];
+  @ViewChild('boardContainer', { static: false }) boardContainer?: ElementRef<HTMLDivElement>;
 
   boardLoading = false;
   reloadingColumns = false;
   globalError: string | null = null;
   isDragging = false;
+  dragOverColumnId: string | null = null;
+  blockedColumnId: string | null = null;
+
+  readonly skeletonPlaceholders = Array.from({ length: 3 });
 
   selectedCliente: Cliente | null = null;
   modalOpen = false;
 
-  private currentUserId: string | null;
+  private readonly clientesService = inject(ClientesService);
+  private readonly authService = inject(AuthService);
+  private currentUserId: string | null = this.authService.getUserId();
+  private autoScrollFrame: number | null = null;
+  private autoScrollDirection: -1 | 0 | 1 = 0;
 
-  constructor(
-    private readonly clientesService: ClientesService,
-    private readonly authService: AuthService,
-  ) {
-    this.currentUserId = this.authService.getUserId();
-
+  constructor() {
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
@@ -72,6 +87,7 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.cancelBoardAutoScroll();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -82,6 +98,10 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
 
   trackByColumn(_index: number, column: KanbanColumnState): string {
     return column.id;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   async onFiltersChanged(): Promise<void> {
@@ -105,6 +125,9 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
   }
 
   async drop(event: CdkDragDrop<Cliente[]>, targetColumn: KanbanColumnState): Promise<void> {
+    this.cancelBoardAutoScroll();
+    this.dragOverColumnId = null;
+    this.blockedColumnId = null;
     const previousColumn = this.findColumnByDropListId(event.previousContainer.id);
     if (!previousColumn) {
       return;
@@ -112,6 +135,11 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
 
     if (event.previousContainer === event.container) {
       moveItemInArray(targetColumn.clientes, event.previousIndex, event.currentIndex);
+      return;
+    }
+
+    if (targetColumn.loading) {
+      this.blockedColumnId = targetColumn.id;
       return;
     }
 
@@ -125,6 +153,13 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
 
     const originalStatus = cliente.status;
     const originalFechado = cliente.fechado ?? null;
+    const previousColumnOriginalTotal = previousColumn.total;
+    const targetColumnOriginalTotal = targetColumn.total;
+
+    if (previousColumn !== targetColumn) {
+      previousColumn.total = Math.max(previousColumn.total - 1, previousColumn.clientes.length);
+      targetColumn.total = Math.max(targetColumn.total + 1, targetColumn.clientes.length);
+    }
 
     try {
       await this.persistStatusChange(cliente, targetColumn.status);
@@ -139,6 +174,10 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
       );
       cliente.status = originalStatus;
       cliente.fechado = originalFechado;
+      if (previousColumn !== targetColumn) {
+        previousColumn.total = previousColumnOriginalTotal;
+        targetColumn.total = targetColumnOriginalTotal;
+      }
       console.error('Falha ao alterar status do cliente', error);
     }
   }
@@ -156,14 +195,35 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
     this.selectedCliente = null;
   }
 
-  onDragStart(_event: CdkDragStart): void {
+  onDragStart(_event: CdkDragStart<Cliente>): void {
     this.isDragging = true;
   }
 
+  onDragMoved(event: CdkDragMove<Cliente>): void {
+    this.handleBoardAutoScroll(event.event);
+  }
+
   onDragEnd(_event: CdkDragEnd): void {
+    this.cancelBoardAutoScroll();
     requestAnimationFrame(() => {
       this.isDragging = false;
+      this.dragOverColumnId = null;
+      this.blockedColumnId = null;
     });
+  }
+
+  onDropListEntered(column: KanbanColumnState, _event: CdkDragEnter<Cliente[]>): void {
+    this.dragOverColumnId = column.id;
+    this.blockedColumnId = column.loading ? column.id : null;
+  }
+
+  onDropListExited(column: KanbanColumnState, _event: CdkDragExit<Cliente[]>): void {
+    if (this.dragOverColumnId === column.id) {
+      this.dragOverColumnId = null;
+    }
+    if (this.blockedColumnId === column.id && !column.loading) {
+      this.blockedColumnId = null;
+    }
   }
 
   async handleClienteSaved(): Promise<void> {
@@ -329,5 +389,94 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
     if (novoStatusLower === 'fechado') {
       cliente.fechado = payload.fechado ?? null;
     }
+  }
+
+  private handleBoardAutoScroll(nativeEvent: MouseEvent | TouchEvent): void {
+    const board = this.boardContainer?.nativeElement;
+    if (!board || board.scrollWidth <= board.clientWidth) {
+      this.cancelBoardAutoScroll();
+      return;
+    }
+
+    const pointerX = this.getPointerClientX(nativeEvent);
+    if (pointerX === null) {
+      this.cancelBoardAutoScroll();
+      return;
+    }
+
+    const bounds = board.getBoundingClientRect();
+    const threshold = this.autoScrollThreshold;
+
+    if (pointerX >= bounds.right - threshold) {
+      this.scheduleBoardAutoScroll(1);
+    } else if (pointerX <= bounds.left + threshold) {
+      this.scheduleBoardAutoScroll(-1);
+    } else {
+      this.cancelBoardAutoScroll();
+    }
+  }
+
+  private scheduleBoardAutoScroll(direction: -1 | 1): void {
+    if (this.autoScrollDirection === direction && this.autoScrollFrame !== null) {
+      return;
+    }
+
+    this.autoScrollDirection = direction;
+    if (this.autoScrollFrame === null) {
+      this.autoScrollFrame = requestAnimationFrame(() => this.performBoardAutoScroll());
+    }
+  }
+
+  private performBoardAutoScroll(): void {
+    const board = this.boardContainer?.nativeElement;
+    if (!board || this.autoScrollDirection === 0) {
+      this.cancelBoardAutoScroll();
+      return;
+    }
+
+    const maxScrollLeft = board.scrollWidth - board.clientWidth;
+    if (maxScrollLeft <= 0) {
+      this.cancelBoardAutoScroll();
+      return;
+    }
+
+    if (this.autoScrollDirection === -1 && board.scrollLeft <= 0) {
+      this.cancelBoardAutoScroll();
+      return;
+    }
+
+    if (this.autoScrollDirection === 1 && board.scrollLeft >= maxScrollLeft) {
+      this.cancelBoardAutoScroll();
+      return;
+    }
+
+    const delta = this.autoScrollDirection * this.autoScrollSpeed;
+    const next = Math.min(Math.max(board.scrollLeft + delta, 0), maxScrollLeft);
+    board.scrollLeft = next;
+    this.autoScrollFrame = requestAnimationFrame(() => this.performBoardAutoScroll());
+  }
+
+  private cancelBoardAutoScroll(): void {
+    if (this.autoScrollFrame !== null) {
+      cancelAnimationFrame(this.autoScrollFrame);
+      this.autoScrollFrame = null;
+    }
+    this.autoScrollDirection = 0;
+  }
+
+  private getPointerClientX(event: MouseEvent | TouchEvent): number | null {
+    if ('clientX' in event) {
+      return event.clientX;
+    }
+
+    if (event.touches && event.touches.length) {
+      return event.touches[0].clientX;
+    }
+
+    if (event.changedTouches && event.changedTouches.length) {
+      return event.changedTouches[0].clientX;
+    }
+
+    return null;
   }
 }

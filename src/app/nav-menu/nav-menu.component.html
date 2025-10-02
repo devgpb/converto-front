@@ -1,37 +1,56 @@
 <div class="menu-wrapper">
-  <div class="collapse-toggle" (click)="toggleCollapse()">
-    <ion-icon [name]="collapsed ? 'chevron-forward-outline' : 'chevron-back-outline'"></ion-icon>
+  <div
+    class="collapse-toggle"
+    (click)="toggleCollapse()"
+    (keydown.enter)="toggleCollapse()"
+    (keydown.space)="toggleCollapse()"
+    role="button"
+    tabindex="0"
+    aria-label="Alternar menu"
+  >
+    <img src="assets/img/logo.png" alt="Logo" class="collapse-logo" />
+    <ion-icon class="collapse-chevron" [name]="collapsed ? 'chevron-forward-outline' : 'chevron-back-outline'"></ion-icon>
   </div>
   <div class="menu-sections">
     <ng-container *ngFor="let section of menuSections">
     <ion-list *ngIf="!isAdminSection(section) || isAdmin()">
-      <ion-list-header>{{ section.title }}</ion-list-header>
-      <ng-container *ngFor="let item of section.items">
-        <ng-container *ngIf="item.hasSubmenu; else regularItem">
-          <ion-accordion-group>
-            <ion-accordion value="{{ item.title }}">
-              <ion-item slot="header">
+      <button type="button"
+              class="section-header"
+              (click)="toggleSection(section.title)"
+              [class.collapsed]="isSectionCollapsed(section.title)"
+              [attr.aria-expanded]="!isSectionCollapsed(section.title)">
+              <span class="section-letter" *ngIf="collapsed">{{ (section.title | slice:0:1 | uppercase) || '' }}</span>
+        <ion-icon class="section-arrow" [name]="isSectionCollapsed(section.title) ? 'chevron-forward-outline' : 'chevron-down-outline'"></ion-icon>
+        <span class="section-title">{{ section.title }}</span>
+      </button>
+      <div class="section-items" *ngIf="!isSectionCollapsed(section.title)">
+        <ng-container *ngFor="let item of section.items">
+          <ng-container *ngIf="item.hasSubmenu; else regularItem">
+            <ion-accordion-group>
+              <ion-accordion value="{{ item.title }}">
+                <ion-item class="start" slot="header">
+                  <ion-icon slot="start" [name]="item.icon"></ion-icon>
+                  <ion-label>{{ item.title }}</ion-label>
+                </ion-item>
+                <ion-list slot="content">
+                  <ion-item *ngFor="let sub of getSubItems(item.title)" [routerLink]="[sub.route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                    <ion-icon slot="start" class="ml-1" [name]="sub.icon"></ion-icon>
+                    <ion-label>{{ sub.title }}</ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-accordion>
+            </ion-accordion-group>
+          </ng-container>
+          <ng-template #regularItem>
+            <ion-menu-toggle auto-hide="false">
+              <ion-item [routerLink]="[item.href]" lines="none" detail="false" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <ion-icon slot="start" [name]="item.icon"></ion-icon>
                 <ion-label>{{ item.title }}</ion-label>
               </ion-item>
-            <ion-list slot="content">
-              <ion-item *ngFor="let sub of getSubItems(item.title)" [routerLink]="[sub.route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-                <ion-label>{{ sub.title }}</ion-label>
-              </ion-item>
-            </ion-list>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ng-container>
-      <ng-template #regularItem>
-        <ion-menu-toggle auto-hide="false">
-          <ion-item [routerLink]="[item.href]" lines="none" detail="false" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <ion-icon slot="start" [name]="item.icon"></ion-icon>
-            <ion-label>{{ item.title }}</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-      </ng-template>
-      </ng-container>
+            </ion-menu-toggle>
+          </ng-template>
+        </ng-container>
+      </div>
     </ion-list>
     </ng-container>
   </div>

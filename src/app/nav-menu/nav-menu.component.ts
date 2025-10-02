@@ -33,6 +33,8 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
   private profileService = inject(ProfileService);
   private router = inject(Router);
   @HostBinding('class.collapsed') collapsed = false;
+  private readonly sectionStateStorageKey = 'navMenuSectionStates';
+  sectionStates: Record<string, boolean> = {};
   profile?: Profile;
   showProfileOverlay = false; // overlay para menu de perfil quando expandido
   public menuSections: MenuSection[] = [
@@ -119,6 +121,15 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
     this.closeOverlays();
   }
 
+  toggleSection(title: string): void {
+    this.sectionStates[title] = !this.sectionStates[title];
+    this.persistSectionStates();
+  }
+
+  isSectionCollapsed(title: string): boolean {
+    return !!this.sectionStates[title];
+  }
+
   isAdmin(): boolean {
     return this.auth.isAdmin();
   }
@@ -131,6 +142,7 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const stored = localStorage.getItem('navMenuCollapsed');
     this.collapsed = stored === 'true';
+    this.sectionStates = this.loadSectionStates();
     // Carrega perfil para exibir nome do usuário
     this.profileService.getProfile().subscribe((p) => (this.profile = p));
   }
@@ -143,6 +155,52 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
     const menu = document.querySelector('ion-menu.menu-desktop');
     if (menu) {
       menu.classList.toggle('collapsed', this.collapsed);
+    }
+  }
+
+  private loadSectionStates(): Record<string, boolean> {
+    try {
+      const stored = localStorage.getItem(this.sectionStateStorageKey);
+      const parsed = stored ? (JSON.parse(stored) as Record<string, boolean>) : {};
+      const normalized = this.ensureSectionStates(parsed);
+      return normalized;
+    } catch (error) {
+      console.warn('Falha ao carregar estado das seções do menu', error);
+      return this.ensureSectionStates({});
+    }
+  }
+
+  private ensureSectionStates(states: Record<string, boolean>): Record<string, boolean> {
+    const normalized: Record<string, boolean> = {};
+    let changed = false;
+    const knownTitles = new Set(this.menuSections.map((section) => section.title));
+
+    this.menuSections.forEach((section) => {
+      const storedValue = states[section.title];
+      if (storedValue === undefined) {
+        changed = true;
+      }
+      normalized[section.title] = storedValue ?? false;
+    });
+
+    Object.keys(states).forEach((title) => {
+      if (!knownTitles.has(title)) {
+        changed = true;
+      }
+    });
+
+    if (changed) {
+      this.persistSectionStates(normalized);
+    }
+
+    return normalized;
+  }
+
+  private persistSectionStates(states: Record<string, boolean> = this.sectionStates): void {
+    try {
+      localStorage.setItem(this.sectionStateStorageKey, JSON.stringify(states));
+    } catch (error) {
+      console.warn('Falha ao salvar estado das seções do menu', error);
     }
   }
 }
