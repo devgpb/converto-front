@@ -22,12 +22,19 @@ import { TutoriaisPage } from './tutoriais/tutoriais.page';
 import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
 import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
 import { KanbanClientesPage } from './kanban-clientes/kanban-clientes.page';
+import { CamposClientesPage } from './campos-clientes/campos-clientes.page';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'admin/campos-clientes',
+    component: CamposClientesPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Campos de clientes' }
   },
   {
     path: 'login',

@@ -14,6 +14,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { Cliente, ClientesResponse, ClientesService } from '../services/clientes.service';
+import { CamposClientesService } from '../services/campos-clientes.service';
 import { AuthService } from '../services/auth.service';
 
 interface KanbanColumnState {
@@ -61,6 +62,7 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
   modalOpen = false;
 
   private readonly clientesService = inject(ClientesService);
+  private readonly camposService = inject(CamposClientesService);
   private readonly authService = inject(AuthService);
   private currentUserId: string | null = this.authService.getUserId();
   private autoScrollFrame: number | null = null;
@@ -238,10 +240,10 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
 
     try {
       if (!this.columns.length || forceReload) {
-        const filtros = await firstValueFrom(this.clientesService.getFiltrosClientes());
-        const statuses = Array.from(new Set((filtros.status ?? []).filter(Boolean)));
-        statuses.sort((a, b) => a.localeCompare(b, 'pt', { sensitivity: 'base' }));
-
+        // Busca ordem de status diretamente da API de campos para garantir ordem absoluta
+        const campos = await firstValueFrom(this.camposService.getStatus());
+        const statuses = (campos.items || []).map(i => i.nome).filter(Boolean);
+        
         this.columns = statuses.map((status, index) => this.createColumn(status, index));
         this.dropListIds = this.columns.map((column) => column.id);
       }

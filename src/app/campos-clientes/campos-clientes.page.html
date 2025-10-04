@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Campos de clientes</ion-title>
+  </ion-toolbar>
+  <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+  <ion-toolbar>
+    <ion-chip color="medium">Listas mestre por empresa. Só é possível excluir valores sem clientes associados.</ion-chip>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <!-- Reordenar status (full width) -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Ordem dos Status</ion-card-title>
+            <ion-card-subtitle>Clique e arraste para mudar a ordem dos status</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div cdkDropList (cdkDropListDropped)="dropStatus($event)" class="status-sort-list">
+              <div class="status-sort-item" *ngFor="let s of status; let i = index" cdkDrag>
+                <ion-icon name="reorder-two" class="drag-handle"></ion-icon>
+                <span class="ordem">{{ i }}</span>
+                <span class="nome">{{ s.nome }}</span>
+                <ion-badge color="medium" class="usando">{{ s.qtd_clientes }} usando</ion-badge>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" sizeMd="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Status</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <form (ngSubmit)="adicionarStatus()" [formGroup]="formStatus">
+              <ion-item>
+                <ion-label position="stacked">Novo status</ion-label>
+                <ion-input formControlName="nome" placeholder="Ex.: Aguardando retorno"></ion-input>
+              </ion-item>
+              <ion-button class="ion-margin-top" type="submit" [disabled]="formStatus.invalid">Adicionar</ion-button>
+            </form>
+            <ion-list class=" scroll-list ion-margin-top">
+              <ion-item *ngFor="let s of status">
+                <ion-label>
+                  <div>{{ s.nome }}</div>
+                  <div class="ion-text-wrap ion-text-small ion-text-muted">{{ s.qtd_clientes }} cliente(s) usando</div>
+                </ion-label>
+                <ion-button slot="end" color="danger" fill="clear" (click)="deletarStatus(s)" [disabled]="s.qtd_clientes > 0">
+                  Excluir
+                </ion-button>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" sizeMd="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Campanhas</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <form (ngSubmit)="adicionarCampanha()" [formGroup]="formCampanha">
+              <ion-item>
+                <ion-label position="stacked">Nova campanha</ion-label>
+                <ion-input formControlName="nome" placeholder="Ex.: Instagram Julho"></ion-input>
+              </ion-item>
+              <ion-button class="ion-margin-top" type="submit" [disabled]="formCampanha.invalid">Adicionar</ion-button>
+            </form>
+            <ion-list class="scroll-list ion-margin-top">
+              <ion-item *ngFor="let c of campanhas">
+                <ion-label>
+                  <div>{{ c.nome }}</div>
+                  <div class="ion-text-wrap ion-text-small ion-text-muted">{{ c.qtd_clientes }} cliente(s) usando</div>
+                </ion-label>
+                <ion-button slot="end" color="danger" fill="clear" (click)="deletarCampanha(c)" [disabled]="c.qtd_clientes > 0">
+                  Excluir
+                </ion-button>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="errorMsg">
+      <ion-col size="12">
+        <ion-text color="danger">{{ errorMsg }}</ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
