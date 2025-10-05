@@ -11,5 +11,10 @@
       </ion-menu-button>
     </ion-buttons>
     <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="end" *ngIf="help && help.length">
+      <ion-button (click)="openHelp()" class="quest" aria-label="Ajuda desta tela">
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
