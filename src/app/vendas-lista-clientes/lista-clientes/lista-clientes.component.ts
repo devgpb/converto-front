@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ClientesService, Cliente, ClientesResponse } from '../../services/clientes.service';
 import { AuthService } from '../../services/auth.service';
 import { ViewPreferenceService } from '../../services/view-preference.service';
+import { TagsService, Tag } from '../../services/tags.service';
 
 @Component({
   selector: 'app-lista-clientes',
@@ -29,6 +30,10 @@ export class ListaClientesComponent implements OnInit {
   cidadesUnicas: string[] = [];
   meusClientes = new FormControl(false);
   tenantId: string | null;
+  // filtro por tags (multi)
+  allTags: Tag[] = [];
+  tagFilterQuery = '';
+  selectedTagIds = new Set<string>();
 
   clienteSelecionado: Cliente | null = null;
   modalAberto = false;
@@ -36,6 +41,7 @@ export class ListaClientesComponent implements OnInit {
   private clientesService = inject(ClientesService);
   private authService = inject(AuthService);
   private viewPref = inject(ViewPreferenceService);
+  private tagsService = inject(TagsService);
 
   constructor() {
     this.tenantId = this.authService.getTenantId();
@@ -44,6 +50,7 @@ export class ListaClientesComponent implements OnInit {
   ngOnInit(): void {
     this.viewMode = this.viewPref.getViewMode();
     this.carregarFiltros();
+    this.carregarTags();
   }
 
   private buildParams(extra: any = {}) {
@@ -73,6 +80,27 @@ export class ListaClientesComponent implements OnInit {
     });
   }
 
+  private carregarTags(): void {
+    this.tagsService.list('', 1, 200).subscribe({
+      next: (res) => { this.allTags = res?.data || []; },
+      error: () => { this.allTags = []; }
+    });
+  }
+
+  get filteredTags(): Tag[] {
+    const q = this.tagFilterQuery.trim().toLowerCase();
+    if (!q) return this.allTags;
+    return (this.allTags || []).filter(t => (t.name || '').toLowerCase().includes(q));
+  }
+
+  toggleTagFilter(tag: Tag): void {
+    const id = String(tag.id);
+    if (this.selectedTagIds.has(id)) this.selectedTagIds.delete(id);
+    else this.selectedTagIds.add(id);
+  }
+
+  hasTagFilter(tagId: string): boolean { return this.selectedTagIds.has(String(tagId)); }
+
   fetch(): void {
     this.carregandoBusca = true;
     this.clientesService.getClientes(this.buildParams()).subscribe({
@@ -93,7 +121,9 @@ export class ListaClientesComponent implements OnInit {
       this.page = 1;
     }
     this.carregandoBusca = true;
-    this.clientesService.getClientes(this.buildParams({ fromSearch: true })).subscribe({
+    const tagIds = Array.from(this.selectedTagIds);
+    const params = this.buildParams({ fromSearch: true, tagIds: tagIds.length ? tagIds.join(',') : undefined });
+    this.clientesService.getClientes(params).subscribe({
       next: (resp: ClientesResponse) => {
         this.clientes = resp.data;
         this.total = resp.meta.total;
@@ -125,6 +155,8 @@ export class ListaClientesComponent implements OnInit {
     this.statusFilter = 'todos';
     this.cidadeFilter = 'todas';
     this.meusClientes.setValue(false);
+    this.tagFilterQuery = '';
+    this.selectedTagIds.clear();
     this.page = 1;
     this.fetch();
   }

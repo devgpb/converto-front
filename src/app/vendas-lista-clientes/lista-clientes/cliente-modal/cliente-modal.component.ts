@@ -4,6 +4,8 @@ import { VendasService } from '../../../services/vendas/vendas.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { LigacoesService } from 'src/app/services/ligacoes.service';
 import { ClienteLigacoesListComponent } from './cliente-ligacoes-list/cliente-ligacoes-list.component';
+import { TagsService, Tag } from 'src/app/services/tags.service';
+import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
   selector: 'app-cliente-modal',
@@ -23,6 +25,15 @@ export class ClienteModalComponent implements OnChanges {
   statuses: string[] = [];
   campanhas: string[] = [];
   idUsuario: any;
+  // tags do usuário (logado)
+  allTags: Tag[] = [];
+  userTagIds = new Set<string>();
+  tagQuery = '';
+  savingTags = false;
+  // animações de fade
+  fadingOutOptionId: string | null = null;
+  fadingOutSelectedId: string | null = null;
+  fadingInSelectedId: string | null = null;
 
   // eventos
   eventos: ClienteEvento[] = [];
@@ -42,6 +53,8 @@ export class ClienteModalComponent implements OnChanges {
     private clientesService: ClientesService,
     private vendasService: VendasService,
     private ligacoesService: LigacoesService,
+    private tagsService: TagsService,
+    private usuariosService: UsuariosService,
   ) {
     this.idUsuario = this.auth.getUserId()
     console.log(this.idUsuario, this.auth.getUserId())
@@ -58,11 +71,78 @@ export class ClienteModalComponent implements OnChanges {
       this.campanhas = this.clientesService.listaDeCampanhas;
       this.carregarEventosCliente();
       this.view = 'form';
+      this.carregarTags();
     }
     if (changes['isOpen'] && !this.isOpen) {
       // reset view when modal closes
       this.view = 'form';
     }
+  }
+
+  private carregarTags(): void {
+    // carrega universo de tags
+    this.tagsService.list('', 1, 200).subscribe({
+      next: (res) => {
+        this.allTags = res?.data || [];
+      },
+      error: () => { this.allTags = []; }
+    });
+    // carrega tags do usuário logado
+    if (this.idUsuario) {
+      this.usuariosService.getById(this.idUsuario).subscribe({
+        next: (u) => {
+          const tags = Array.isArray(u?.tags) ? u.tags : [];
+          this.userTagIds = new Set(tags.map((t: any) => String(t.id)));
+        },
+        error: () => { this.userTagIds = new Set(); }
+      });
+    }
+  }
+
+  get filteredAvailableTags(): Tag[] {
+    const q = this.tagQuery.trim().toLowerCase();
+    let list = this.allTags || [];
+    // remove já selecionadas do seletor
+    list = list.filter(t => !this.userTagIds.has(String(t.id)));
+    if (!q) return list;
+    return list.filter(t => (t.name || '').toLowerCase().includes(q));
+  }
+
+  toggleUserTag(tag: Tag): void {
+    const id = String(tag.id);
+    if (!this.userTagIds.has(id)) {
+      // adicionar: fade out no seletor, depois move para selecionadas com fade in
+      this.fadingOutOptionId = id;
+      setTimeout(() => {
+        this.userTagIds.add(id);
+        this.fadingOutOptionId = null;
+        this.fadingInSelectedId = id;
+        setTimeout(() => { this.fadingInSelectedId = null; }, 220);
+      }, 180);
+    } else {
+      // remover: fade out na lista selecionada, depois volta para seletor
+      this.fadingOutSelectedId = id;
+      setTimeout(() => {
+        this.userTagIds.delete(id);
+        this.fadingOutSelectedId = null;
+      }, 180);
+    }
+  }
+
+  trackTagById(_: number, t: Tag) { return t.id; }
+
+  hasUserTag(tagId: string): boolean {
+    return this.userTagIds.has(String(tagId));
+  }
+
+  salvarTagsUsuario(): void {
+    if (!this.idUsuario) return;
+    this.savingTags = true;
+    const payload = { tag_ids: Array.from(this.userTagIds) } as any;
+    this.usuariosService.update(this.idUsuario, payload).subscribe({
+      next: () => { this.savingTags = false; },
+      error: () => { this.savingTags = false; }
+    });
   }
 
   fetchFiltros(): void {

@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { CamposClientesService } from '../services/campos-clientes.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ToastController } from '@ionic/angular';
+import { TagsService, Tag } from '../services/tags.service';
 
 @Component({
   selector: 'app-campos-clientes',
@@ -14,14 +15,21 @@ export class CamposClientesPage implements OnInit {
   private campos = inject(CamposClientesService);
   private fb = inject(FormBuilder);
   private toast = inject(ToastController);
+  private tagsService = inject(TagsService);
 
   status: { id: number; nome: string; qtd_clientes: number; ordem?: number }[] = [];
   campanhas: { id: number; nome: string; qtd_clientes: number }[] = [];
+  tags: Tag[] = [];
   loading = false;
   errorMsg = '';
 
   formStatus = this.fb.group({ nome: ['', [Validators.required, Validators.minLength(2)]] });
   formCampanha = this.fb.group({ nome: ['', [Validators.required, Validators.minLength(2)]] });
+  formTag = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(2)]],
+    description: [''],
+    color_hex: ['#1976D2']
+  });
 
   ngOnInit(): void {
     this.load();
@@ -43,6 +51,10 @@ export class CamposClientesPage implements OnInit {
         this.campanhas = (res.items || []).slice();
       },
       error: (err) => { this.errorMsg = err?.error?.error || 'Falha ao carregar campanhas'; },
+    });
+    this.tagsService.list('', 1, 200).subscribe({
+      next: (res) => { this.tags = res.data || []; },
+      error: (err) => { this.errorMsg = err?.error?.error || 'Falha ao carregar tags'; }
     });
   }
 
@@ -108,6 +120,48 @@ export class CamposClientesPage implements OnInit {
         const msg = err?.error?.error || 'Falha ao salvar ordem dos status';
         this.errorMsg = msg;
         const t = await this.toast.create({ message: msg, duration: 2000, color: 'danger', position: 'bottom' });
+        t.present();
+      }
+    });
+  }
+
+  criarTag(): void {
+    if (this.formTag.invalid) return;
+    const payload = {
+      name: (this.formTag.value.name || '').trim(),
+      description: (this.formTag.value.description || '').trim() || null,
+      color_hex: this.formTag.value.color_hex || null,
+    } as { name: string; description?: string | null; color_hex?: string | null };
+    if (!payload.name) return;
+    this.tagsService.create(payload).subscribe({
+      next: async (tag) => {
+        this.formTag.reset({ name: '', description: '', color_hex: '#1976D2' });
+        this.tags.unshift(tag);
+        const t = await this.toast.create({ message: 'Tag criada', duration: 1200, color: 'success', position: 'bottom' });
+        t.present();
+      },
+      error: async (err) => {
+        const msg = err?.error?.error || 'Falha ao criar tag';
+        this.errorMsg = msg;
+        const t = await this.toast.create({ message: msg, duration: 1800, color: 'danger', position: 'bottom' });
+        t.present();
+      }
+    });
+  }
+
+  removerTag(tag: Tag): void {
+    if (!tag?.id) return;
+    if (!confirm(`Excluir tag "${tag.name}"?`)) return;
+    this.tagsService.remove(tag.id).subscribe({
+      next: async () => {
+        this.tags = this.tags.filter(t => t.id !== tag.id);
+        const t = await this.toast.create({ message: 'Tag removida', duration: 1000, color: 'success', position: 'bottom' });
+        t.present();
+      },
+      error: async (err) => {
+        const msg = err?.error?.error || 'Falha ao remover tag';
+        this.errorMsg = msg;
+        const t = await this.toast.create({ message: msg, duration: 1800, color: 'danger', position: 'bottom' });
         t.present();
       }
     });

@@ -34,3 +34,27 @@
 }
 
 
+.tag-filter-row { display: flex; flex-wrap: nowrap; gap: 8px; padding: 4px 0; overflow-x: auto; overflow-y: hidden; }
+.tags-row { display: flex; flex-wrap: nowrap; gap: 8px; padding: 4px 0; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+.tag-dot { width: 12px; height: 12px; border-radius: 50%; }
+.clickable { cursor: pointer; background: var(--ion-color-primary-contrast); color: white;}
+
+/* Linha corrida para as tags de filtro */
+.tags-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory; /* opcional */
+}
+
+.tags-row ion-chip {
+  flex: 0 0 auto !important;   /* evita que o chip achate */
+  white-space: nowrap;         /* impede quebra do texto */
+  scroll-snap-align: start;    /* opcional, para rolagem suave */
+}
+

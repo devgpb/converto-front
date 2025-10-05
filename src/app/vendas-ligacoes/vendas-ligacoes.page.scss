@@ -61,9 +61,7 @@
   padding: 12px;
 }
 
-ion-label, .label-stacked{
-  margin-bottom: 8px;
-}
+
 .limit-item {
   height: 71px;
 }
@@ -86,3 +84,77 @@ ion-label, .label-stacked{
   --inner-padding-end: 0;
   --padding-start: 0;
 }
+
+.tag-filter-row {
+  display: flex;
+  flex-wrap: nowrap;       /* mantém tudo em uma linha */
+  overflow-x: auto;        /* ativa o scroll horizontal */
+  gap: 0.5rem;             /* espaçamento entre os chips */
+  padding-bottom: 0.5rem;  /* espaço visual inferior (opcional) */
+  scroll-behavior: smooth; /* rolagem suave */
+  -webkit-overflow-scrolling: touch; /* melhora scroll no iOS */
+}
+.tags-row { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:0.5rem; padding-bottom:0.5rem; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
+
+
+.tag-filter-row ion-chip {
+  flex: 0 0 auto;          /* impede compressão */
+  white-space: nowrap;     /* impede quebra de texto dentro do chip */
+}
+
+.clickable {
+  cursor: pointer;
+  background: var(--ion-color-primary-contrast);
+  color: white;
+}
+
+/* Linha corrida horizontal com scroll visível e chips dimensionados pelo conteúdo */
+.tags-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.5rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory; /* opcional — para rolagem suave */
+}
+
+/* Chips respeitam seu tamanho natural e não achatam */
+.tags-row ion-chip {
+  flex: 0 0 auto !important;
+  white-space: nowrap;
+  scroll-snap-align: start;
+}
+
+/* Estilo do scrollbar (opcional — você pode escolher o comportamento) */
+
+/* 1️⃣ — Mostrar scrollbar sempre */
+.tags-row {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ion-color-medium) transparent;
+}
+
+.tags-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tags-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tags-row::-webkit-scrollbar-thumb {
+  background-color: var(--ion-color-medium);
+  border-radius: 3px;
+}
+
+/* 2️⃣ — OU, se quiser esconder, basta reativar esta linha */
+// .tags-row::-webkit-scrollbar { display: none; }
+
+.tag-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+

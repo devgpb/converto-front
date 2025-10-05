@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { SeatsService } from '../services/seats.service';
 import { Usuario } from '../services/usuarios.service';
+import { TagsService, Tag } from '../services/tags.service';
 
 interface MetaPage {
   total: number;
@@ -25,6 +26,7 @@ export class VendasLigacoesPage implements OnInit {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private seats = inject(SeatsService);
+  private tagsService = inject(TagsService);
 
   isAdmin = false;
   currentUserId: string | null = null;
@@ -35,6 +37,9 @@ export class VendasLigacoesPage implements OnInit {
   meta: MetaPage = { total: 0, page: 1, perPage: 10, totalPages: 0 };
   cidades: string[] = [];
   statusList: string[] = [];
+  allTags: Tag[] = [];
+  tagQuery = '';
+  selectedTagIds = new Set<string>();
   observacoes: Record<string, string> = {};
   removing: Record<string, boolean> = {};
 
@@ -56,8 +61,30 @@ export class VendasLigacoesPage implements OnInit {
     this.currentUserId = this.auth.getUserId();
     this.carregarUsuarios();
     this.carregarFiltrosClientes();
+    this.carregarTags();
     // Mantém seletor começando em 'Todos' e não busca automaticamente
   }
+
+  private carregarTags(): void {
+    this.tagsService.list('', 1, 200).subscribe({
+      next: (res) => { this.allTags = res?.data || []; },
+      error: () => { this.allTags = []; }
+    });
+  }
+
+  get filteredTags(): Tag[] {
+    const q = this.tagQuery.trim().toLowerCase();
+    if (!q) return this.allTags;
+    return (this.allTags || []).filter(t => (t.name || '').toLowerCase().includes(q));
+  }
+
+  toggleTag(tag: Tag): void {
+    const id = String(tag.id);
+    if (this.selectedTagIds.has(id)) this.selectedTagIds.delete(id);
+    else this.selectedTagIds.add(id);
+  }
+
+  hasTag(id: string): boolean { return this.selectedTagIds.has(String(id)); }
 
   private carregarUsuarios(): void {
     this.usuarios = [];
@@ -126,6 +153,8 @@ export class VendasLigacoesPage implements OnInit {
       perPage: Number(f.perPage || 10),
       limiteTotal: Number(f.limiteTotal || 10),
     };
+    const tagIds = Array.from(this.selectedTagIds);
+    if (tagIds.length) params.tagIds = tagIds.join(',');
 
     Object.keys(params).forEach((k) => {
       const v = params[k];

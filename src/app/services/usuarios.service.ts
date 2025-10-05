@@ -30,4 +30,12 @@ export class UsuariosService {
   listAll(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.api);
   }
+
+  getById(id: string | number): Observable<any> {
+    return this.http.get<any>(`${this.api}/${id}`);
+  }
+
+  update(id: string | number, payload: any): Observable<any> {
+    return this.http.put<any>(`${this.api}/${id}`, payload);
+  }
 }

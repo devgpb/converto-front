@@ -52,6 +52,35 @@
             </ion-item>
           </ion-col>
         </ion-row>
+        <!-- Filtro de Tags (multi, inline, com busca) -->
+        <ion-row>
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-label position="stacked">Tags</ion-label>
+            <ion-input
+              [(ngModel)]="tagQuery"
+              [ngModelOptions]="{standalone: true}"
+              placeholder="Pesquisar tags...">
+            </ion-input>
+          </ion-item>
+
+          <div class="tags-row">
+            <ion-chip
+              *ngFor="let t of filteredTags"
+              (click)="toggleTag(t)"
+              [color]="hasTag(t.id) ? 'primary' : 'medium'"
+              class="clickable">
+              <ion-avatar
+                *ngIf="t.color_hex"
+                class="tag-dot"
+                [style.background]="t.color_hex">
+              </ion-avatar>
+              <ion-label>{{ t.name }}</ion-label>
+            </ion-chip>
+          </div>
+        </ion-col>
+      </ion-row>
+
         <ion-row class="row-bottom">
   <ion-col size="6" size-md="2">
     <ion-item>
@@ -131,8 +160,6 @@
     <ion-button size="small" (click)="proximaPagina()" [disabled]="meta.page >= meta.totalPages">Próxima</ion-button>
   </div>
 </ion-content>
-
-
 
 
 

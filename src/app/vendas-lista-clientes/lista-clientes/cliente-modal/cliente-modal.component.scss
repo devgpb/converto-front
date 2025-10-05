@@ -117,6 +117,50 @@ ion-datetime.centered-datetime {
 }
 
 /* Grid for form fields on desktop; mobile remains stacked via IonCol size */
-.form-grid {
-  width: 100%;
+/* Linha corrida horizontal com scroll — corrigida para Ionic */
+.tags-scroll {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
+
+/* Impede compressão dos chips */
+.tags-scroll ion-chip {
+  flex: 0 0 auto !important;
+  white-space: nowrap;
+}
+
+/* Opcional: rolagem suave tipo carrossel */
+.tags-scroll {
+  scroll-snap-type: x mandatory;
+}
+.tags-scroll ion-chip {
+  scroll-snap-align: start;
+}
+
+
+
+.tag-dot{
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.clickable { cursor: pointer; }
+.tags-list { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; overflow-y: hidden; }
+.tags-scroll { overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; }
+.tags-separator { border: 0; border-top: 1px solid var(--ion-color-step-200, #e0e0e0); margin: 8px 0; }
+.fade-in { animation: fadeIn 200ms ease-in; }
+.fade-out { animation: fadeOut 180ms ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+.tag-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 12px; }
+.tag-chip .remove { background: transparent; border: none; color: inherit; cursor: pointer; font-size: 16px; }
+
+.tags-row { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding:4px 0; -webkit-overflow-scrolling: touch; }
+

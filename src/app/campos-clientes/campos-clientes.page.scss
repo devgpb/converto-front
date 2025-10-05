@@ -26,3 +26,24 @@
 .status-sort-item .usando { margin-left: auto; }
 
 .scroll-list { max-height: 50vh; overflow: auto; }
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-medium);
+}
+.tag-chip .name { font-weight: 500; margin-right: 8px; }
+.tag-chip .remove {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}

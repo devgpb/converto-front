@@ -44,6 +44,25 @@
             </ion-item>
           </ion-col>
 
+          <!-- Filtro por Tags (multi, inline, com busca) -->
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label position="stacked">Tags (filtro)</ion-label>
+              <ion-input [(ngModel)]="tagFilterQuery" placeholder="Pesquisar tags..."></ion-input>
+            </ion-item>
+            <div class="tags-row">
+              <ion-chip
+                *ngFor="let t of filteredTags"
+                (click)="toggleTagFilter(t)"
+                [color]="hasTagFilter(t.id) ? 'primary' : 'medium'"
+                class="clickable">
+                <ion-avatar *ngIf="t.color_hex" class="tag-dot" [style.background]="t.color_hex"></ion-avatar>
+                <ion-label>{{ t.name }}</ion-label>
+              </ion-chip>
+            </div>
+          </ion-col>
+
+
           <ion-col size="6" size-md="3">
             <ion-item>
               <ion-label>Ordenar por</ion-label>

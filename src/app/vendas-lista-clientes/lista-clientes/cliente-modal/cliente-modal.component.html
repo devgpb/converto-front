@@ -7,7 +7,9 @@
             <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
           </ion-button>
         </ion-buttons>
+
         <ion-title>{{ formData?.nome || 'Cliente' }}</ion-title>
+
         <ion-buttons slot="end">
           <ion-button *ngIf="view === 'form'" (click)="openHistorico()">
             <ion-icon slot="start" name="call"></ion-icon>
@@ -24,12 +26,9 @@
       <ng-container *ngIf="view === 'historico'; else formView">
         <ion-item lines="none" class="ion-margin-bottom">
           <ion-label position="stacked">Data da ligação</ion-label>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="ligacaoDate"
-            locale="pt-BR"
-          ></ion-datetime>
+          <ion-datetime presentation="date" [(ngModel)]="ligacaoDate" locale="pt-BR"></ion-datetime>
         </ion-item>
+
         <!-- Adicionar ligação -->
         <ion-card class="ion-margin-bottom">
           <ion-card-header>
@@ -40,223 +39,335 @@
               <ion-label position="stacked">Observação</ion-label>
               <ion-textarea autoGrow="true" [(ngModel)]="observacaoLigacao"></ion-textarea>
             </ion-item>
+
             <div class="acoes" style="display:flex; gap:8px; margin-top:8px;">
-              <ion-button color="success" (click)="adicionarLigacao(true)" [disabled]="savingLigacao">Atendeu</ion-button>
-              <ion-button color="medium" (click)="adicionarLigacao(false)" [disabled]="savingLigacao">Não Atendeu</ion-button>
+              <ion-button color="success" (click)="adicionarLigacao(true)" [disabled]="savingLigacao">
+                Atendeu
+              </ion-button>
+              <ion-button color="medium" (click)="adicionarLigacao(false)" [disabled]="savingLigacao">
+                Não Atendeu
+              </ion-button>
             </div>
           </ion-card-content>
         </ion-card>
 
         <!-- Lista de ligações -->
-        <app-cliente-ligacoes-list #ligacoesList [idCliente]="formData.id_cliente" [pageSize]="10"></app-cliente-ligacoes-list>
+        <app-cliente-ligacoes-list
+          #ligacoesList
+          [idCliente]="formData.id_cliente"
+          [pageSize]="10">
+        </app-cliente-ligacoes-list>
       </ng-container>
+
       <ng-template #formView>
-      <!-- Informações fixas -->
-      <ion-card class="info-card">
-        <ion-card-content>
-          <!-- Nome do cliente centralizado -->
-          <div class="name-row">
-            <div class="client-name">{{ formData.nome }}</div>
-          </div>
-
-          <!-- Linha de metadados (ID, responsável, criação, atualização, fechado) -->
-          <div class="info-grid">
-            <div class="info-item">
-              <ion-icon name="pricetag-outline"></ion-icon>
-              <div class="info-text">
-                <p>ID do Cliente</p>
-                <h3>
-                  {{ truncateId((formData.id_cliente != null ? formData.id_cliente.toString() : '')) }}
-                  <ion-button fill="clear" size="small" (click)="copyId((formData.id_cliente != null ? formData.id_cliente.toString() : ''))">
-                    <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
-                  </ion-button>
-                </h3>
-              </div>
-            </div>
-            <div class="info-item">
-              <ion-icon name="person-circle-outline"></ion-icon>
-              <div class="info-text">
-                <p>Cadastrado por</p>
-                <h3>{{ formData.responsavel?.name || '-' }}</h3>
-              </div>
-            </div>
-            <div class="info-item">
-              <ion-icon name="calendar-outline"></ion-icon>
-              <div class="info-text">
-                <p>Data de Criação</p>
-                <h3>{{ formData.created_at | date: 'dd/MM/yyyy HH:mm' }}</h3>
-              </div>
-            </div>
-            <div class="info-item">
-              <ion-icon name="refresh-outline"></ion-icon>
-              <div class="info-text">
-                <p>Última Atualização</p>
-                <h3>{{ formData.updated_at | date: 'dd/MM/yyyy HH:mm' }}</h3>
-              </div>
-            </div>
-            <div class="info-item" *ngIf="formData.fechado">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              <div class="info-text">
-                <p>Fechado em</p>
-                <h3>{{ formData.fechado | date: 'dd/MM/yyyy HH:mm' }}</h3>
-              </div>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-
-      <!-- Formulário de edição -->
-      <ion-grid class="form-grid">
-        <ion-row>
-          <ion-col size="12">
-            <ion-item>
-              <ion-label position="stacked">Nome *</ion-label>
-              <ion-input [(ngModel)]="formData.nome" [class.ion-invalid]="errors['nome']"></ion-input>
-              <ion-note slot="error" color="danger" *ngIf="errors['nome']">{{ errors['nome'] }}</ion-note>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="12" sizeMd="6" sizeLg="4">
-            <ion-item>
-              <ion-label position="stacked">Celular *</ion-label>
-              <ion-input [(ngModel)]="formData.celular" [class.ion-invalid]="errors['celular']" type="tel"></ion-input>
-              <ion-note slot="error" color="danger" *ngIf="errors['celular']">{{ errors['celular'] }}</ion-note>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="12" sizeMd="6" sizeLg="4">
-            <ion-item>
-              <ion-label position="stacked">Cidade</ion-label>
-              <ion-select [(ngModel)]="formData.cidade" interface="popover" placeholder="Selecionar ou digitar">
-                <ion-select-option *ngFor="let c of cidades" [value]="c">{{ c }}</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="12" sizeMd="6" sizeLg="4">
-            <ion-item>
-              <ion-label position="stacked">Status</ion-label>
-              <ion-select [(ngModel)]="formData.status" interface="popover" placeholder="Selecionar ou digitar">
-                <ion-select-option *ngFor="let s of statuses" [value]="s">{{ s }}</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="12" sizeMd="6" sizeLg="6">
-            <ion-item>
-              <ion-label position="stacked">Campanha</ion-label>
-              <ion-select [(ngModel)]="formData.campanha" interface="popover" placeholder="Selecionar ou digitar">
-                <ion-select-option *ngFor="let c of campanhas" [value]="c">{{ c }}</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="12" sizeMd="6" sizeLg="6">
-            <ion-item>
-              <ion-label position="stacked">Indicação</ion-label>
-              <ion-input [(ngModel)]="formData.indicacao"></ion-input>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="12">
-            <ion-item>
-              <ion-label position="stacked">Observações</ion-label>
-              <ion-textarea rows="3" [(ngModel)]="formData.observacao"></ion-textarea>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-
-      <!-- Eventos -->
-      <ion-card class="ion-margin-top">
-        <ion-card-header>
-          <ion-card-title>Eventos do Cliente</ion-card-title>
-          <ion-card-subtitle>{{ eventos.length }} registro(s)</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-item>
-            <ion-input placeholder="Título do evento" [(ngModel)]="evTitulo"></ion-input>
-          </ion-item>
-          <div class="datetime-container">
-            <ion-item lines="none" class="datetime-item">
-              <ion-label position="stacked" class="ion-text-center">Data</ion-label>
-              <ion-datetime
-                class="centered-datetime"
-                presentation="date"
-                [preferWheel]="false"
-                locale="pt-BR"
-                [(ngModel)]="evDate"
-              ></ion-datetime>
-            </ion-item>
-            <ion-item lines="none" class="datetime-item">
-              <ion-label position="stacked" class="ion-text-center">Hora (opcional)</ion-label>
-              <ion-datetime
-                class="centered-datetime"
-                presentation="time"
-                [preferWheel]="true"
-                locale="pt-BR"
-                [(ngModel)]="evTime"
-              ></ion-datetime>
-            </ion-item>
-          </div>
-          <ion-text color="medium" class="event-hint">
-            * Se não informar hora, será considerado 00:00 no seu fuso
-            (America/Fortaleza).
-          </ion-text>
-          <ion-button expand="block" (click)="marcarEvento()" [disabled]="isSavingEvento">
-            <ion-icon slot="start" name="calendar-outline"></ion-icon>
-            Marcar
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
-
-      <ng-container *ngIf="eventos.length > 0">
-        <ion-card *ngFor="let ev of eventos" class="ion-margin-bottom">
-          <ion-item lines="none">
-            <ion-icon slot="start" name="time-outline"></ion-icon>
-            <ion-label>
-              <h2>{{ ev.dataLocal }}</h2>
-              <p>{{ ev.evento || 'Evento sem título' }}</p>
-            </ion-label>
-            <ion-badge slot="end" [color]="ev.confirmado === null ? 'warning' : ev.confirmado ? 'success' : 'danger'">
-              {{ ev.confirmado === null ? 'Pendente' : ev.confirmado ? 'Confirmado' : 'Cancelado' }}
-            </ion-badge>
-          </ion-item>
+        <!-- Informações fixas -->
+        <ion-card class="info-card">
           <ion-card-content>
-            <ion-button size="small" color="success" expand="block" *ngIf="ev.confirmado === null" (click)="confirmarEventoLocal(ev)">
-              <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
-              Confirmar
-            </ion-button>
-            <ion-button size="small" color="medium" expand="block" *ngIf="ev.confirmado === null" (click)="cancelarEventoLocal(ev)">
-              <ion-icon slot="start" name="close-circle-outline"></ion-icon>
-              Cancelar
+            <div class="name-row">
+              <div class="client-name">{{ formData.nome }}</div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <ion-icon name="pricetag-outline"></ion-icon>
+                <div class="info-text">
+                  <p>ID do Cliente</p>
+                  <h3>
+                    {{ truncateId((formData.id_cliente != null ? formData.id_cliente.toString() : '')) }}
+                    <ion-button
+                      fill="clear"
+                      size="small"
+                      (click)="copyId((formData.id_cliente != null ? formData.id_cliente.toString() : ''))">
+                      <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+                    </ion-button>
+                  </h3>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                <div class="info-text">
+                  <p>Cadastrado por</p>
+                  <h3>{{ formData.responsavel?.name || '-' }}</h3>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <div class="info-text">
+                  <p>Data de Criação</p>
+                  <h3>{{ formData.created_at | date: 'dd/MM/yyyy HH:mm' }}</h3>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <ion-icon name="refresh-outline"></ion-icon>
+                <div class="info-text">
+                  <p>Última Atualização</p>
+                  <h3>{{ formData.updated_at | date: 'dd/MM/yyyy HH:mm' }}</h3>
+                </div>
+              </div>
+
+              <div class="info-item" *ngIf="formData.fechado">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <div class="info-text">
+                  <p>Fechado em</p>
+                  <h3>{{ formData.fechado | date: 'dd/MM/yyyy HH:mm' }}</h3>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Formulário de edição -->
+        <ion-grid class="form-grid">
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-label position="stacked">Nome *</ion-label>
+                <ion-input [(ngModel)]="formData.nome" [class.ion-invalid]="errors['nome']"></ion-input>
+                <ion-note slot="error" color="danger" *ngIf="errors['nome']">{{ errors['nome'] }}</ion-note>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="6" sizeLg="4">
+              <ion-item>
+                <ion-label position="stacked">Celular *</ion-label>
+                <ion-input
+                  [(ngModel)]="formData.celular"
+                  [class.ion-invalid]="errors['celular']"
+                  type="tel"></ion-input>
+                <ion-note slot="error" color="danger" *ngIf="errors['celular']">{{ errors['celular'] }}</ion-note>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="6" sizeLg="4">
+              <ion-item>
+                <ion-label position="stacked">Cidade</ion-label>
+                <ion-select [(ngModel)]="formData.cidade" interface="popover" placeholder="Selecionar ou digitar">
+                  <ion-select-option *ngFor="let c of cidades" [value]="c">{{ c }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="6" sizeLg="4">
+              <ion-item>
+                <ion-label position="stacked">Status</ion-label>
+                <ion-select [(ngModel)]="formData.status" interface="popover" placeholder="Selecionar ou digitar">
+                  <ion-select-option *ngFor="let s of statuses" [value]="s">{{ s }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="6" sizeLg="6">
+              <ion-item>
+                <ion-label position="stacked">Campanha</ion-label>
+                <ion-select [(ngModel)]="formData.campanha" interface="popover" placeholder="Selecionar ou digitar">
+                  <ion-select-option *ngFor="let c of campanhas" [value]="c">{{ c }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="6" sizeLg="6">
+              <ion-item>
+                <ion-label position="stacked">Indicação</ion-label>
+                <ion-input [(ngModel)]="formData.indicacao"></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12">
+              <ion-item>
+                <ion-label position="stacked">Observações</ion-label>
+                <ion-textarea rows="3" [(ngModel)]="formData.observacao"></ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- Tags do Usuário -->
+        <ion-card class="ion-margin-top">
+          <ion-card-header>
+            <ion-card-title>Tags Do Cliente</ion-card-title>
+            <ion-card-subtitle>Selecione tags para o cliente</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <div class="tag-selector-row">
+              <ion-item lines="none" class="ion-margin-bottom">
+                <ion-label position="stacked">Pesquisar tags</ion-label>
+                <ion-input [(ngModel)]="tagQuery" placeholder="Digite para filtrar as tags"></ion-input>
+              </ion-item>
+
+              <div class="tag-options tags-scroll">
+                <ion-chip
+                  *ngFor="let t of filteredAvailableTags; trackBy: trackTagById"
+                  (click)="toggleUserTag(t)"
+                  [class.fade-out]="fadingOutOptionId === t.id"
+                  class="clickable">
+                  <ion-avatar *ngIf="t.color_hex" class="tag-dot" [style.background]="t.color_hex"></ion-avatar>
+                  <ion-label>{{ t.name }}</ion-label>
+                </ion-chip>
+              </div>
+            </div>
+
+            <hr class="tags-separator" />
+
+            <div class="tags-list tags-scroll ion-margin-top">
+              <ion-chip
+                *ngFor="let t of allTags; trackBy: trackTagById"
+                [class.fade-out]="fadingOutSelectedId === t.id"
+                [class.fade-in]="fadingInSelectedId === t.id"
+                [style.display]="hasUserTag(t.id) ? 'inline-flex' : 'none'"
+                class="tag-chip clickable">
+                <ion-avatar *ngIf="t.color_hex" class="tag-dot" [style.background]="t.color_hex"></ion-avatar>
+                <ion-label>{{ t.name }}</ion-label>
+                <button type="button" class="remove" (click)="toggleUserTag(t)">&times;</button>
+              </ion-chip>
+              <ion-text color="medium" *ngIf="!userTagIds.size">Nenhuma tag selecionada.</ion-text>
+            </div>
+
+            <ion-button
+              class="ion-margin-top"
+              expand="block"
+              (click)="salvarTagsUsuario()"
+              [disabled]="savingTags">
+              <ion-spinner name="crescent" slot="start" *ngIf="savingTags"></ion-spinner>
+              Salvar tags
             </ion-button>
           </ion-card-content>
         </ion-card>
-      </ng-container>
-      <ion-text color="medium" *ngIf="!isLoadingEventos && eventos.length === 0">Nenhum evento cadastrado.</ion-text>
 
-      <div class="dias" *ngIf="formData.created_at">
-        Criado há {{ calcularDias(formData.created_at) }} {{ calcularDias(formData.created_at) === 1 ? 'dia' : 'dias' }}
-        <ion-badge [color]="getBadgeColor(calcularDias(formData.created_at))" class="ion-margin-start">
-          {{ getBadgeText(calcularDias(formData.created_at)) }}
-        </ion-badge>
-      </div>
+        <!-- Eventos -->
+        <ion-card class="ion-margin-top">
+          <ion-card-header>
+            <ion-card-title>Eventos do Cliente</ion-card-title>
+            <ion-card-subtitle>{{ eventos.length }} registro(s)</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-item>
+              <ion-input placeholder="Título do evento" [(ngModel)]="evTitulo"></ion-input>
+            </ion-item>
+
+            <div class="datetime-container">
+              <ion-item lines="none" class="datetime-item">
+                <ion-label position="stacked" class="ion-text-center">Data</ion-label>
+                <ion-datetime
+                  class="centered-datetime"
+                  presentation="date"
+                  [preferWheel]="false"
+                  locale="pt-BR"
+                  [(ngModel)]="evDate">
+                </ion-datetime>
+              </ion-item>
+
+              <ion-item lines="none" class="datetime-item">
+                <ion-label position="stacked" class="ion-text-center">Hora (opcional)</ion-label>
+                <ion-datetime
+                  class="centered-datetime"
+                  presentation="time"
+                  [preferWheel]="true"
+                  locale="pt-BR"
+                  [(ngModel)]="evTime">
+                </ion-datetime>
+              </ion-item>
+            </div>
+
+            <ion-text color="medium" class="event-hint">
+              * Se não informar hora, será considerado 00:00 no seu fuso (America/Fortaleza).
+            </ion-text>
+
+            <ion-button expand="block" (click)="marcarEvento()" [disabled]="isSavingEvento">
+              <ion-icon slot="start" name="calendar-outline"></ion-icon>
+              Marcar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ng-container *ngIf="eventos.length > 0">
+          <ion-card *ngFor="let ev of eventos" class="ion-margin-bottom">
+            <ion-item lines="none">
+              <ion-icon slot="start" name="time-outline"></ion-icon>
+              <ion-label>
+                <h2>{{ ev.dataLocal }}</h2>
+                <p>{{ ev.evento || 'Evento sem título' }}</p>
+              </ion-label>
+              <ion-badge
+                slot="end"
+                [color]="ev.confirmado === null ? 'warning' : ev.confirmado ? 'success' : 'danger'">
+                {{ ev.confirmado === null ? 'Pendente' : ev.confirmado ? 'Confirmado' : 'Cancelado' }}
+              </ion-badge>
+            </ion-item>
+
+            <ion-card-content>
+              <ion-button
+                size="small"
+                color="success"
+                expand="block"
+                *ngIf="ev.confirmado === null"
+                (click)="confirmarEventoLocal(ev)">
+                <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+                Confirmar
+              </ion-button>
+
+              <ion-button
+                size="small"
+                color="medium"
+                expand="block"
+                *ngIf="ev.confirmado === null"
+                (click)="cancelarEventoLocal(ev)">
+                <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+                Cancelar
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+
+        <ion-text color="medium" *ngIf="!isLoadingEventos && eventos.length === 0">
+          Nenhum evento cadastrado.
+        </ion-text>
+
+        <div class="dias" *ngIf="formData.created_at">
+          Criado há {{ calcularDias(formData.created_at) }}
+          {{ calcularDias(formData.created_at) === 1 ? 'dia' : 'dias' }}
+          <ion-badge
+            [color]="getBadgeColor(calcularDias(formData.created_at))"
+            class="ion-margin-start">
+            {{ getBadgeText(calcularDias(formData.created_at)) }}
+          </ion-badge>
+        </div>
       </ng-template>
     </ion-content>
 
     <ion-footer class="ion-padding" *ngIf="view === 'form'">
-      <ion-button expand="block" fill="outline" color="warning" *ngIf="!formData.fechado" (click)="fecharCliente()" [disabled]="isLoading">
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="warning"
+        *ngIf="!formData.fechado"
+        (click)="fecharCliente()"
+        [disabled]="isLoading">
         Fechar cliente
       </ion-button>
-      <ion-button expand="block" fill="outline" color="medium" *ngIf="formData.fechado" (click)="reabrirCliente()" [disabled]="isLoading">
+
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="medium"
+        *ngIf="formData.fechado"
+        (click)="reabrirCliente()"
+        [disabled]="isLoading">
         Reabrir cliente
       </ion-button>
+
       <ion-button expand="block" (click)="save()" [disabled]="isLoading">
         <ion-spinner slot="start" *ngIf="isLoading" name="crescent"></ion-spinner>
         Salvar
       </ion-button>
-      <ion-button expand="block" fill="clear" (click)="close()">Cancelar</ion-button>
+
+      <ion-button expand="block" fill="clear" (click)="close()">
+        Cancelar
+      </ion-button>
     </ion-footer>
   </ng-template>
 </ion-modal>
