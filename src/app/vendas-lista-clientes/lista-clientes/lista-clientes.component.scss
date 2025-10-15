@@ -58,3 +58,12 @@
   scroll-snap-align: start;    /* opcional, para rolagem suave */
 }
 
+/* Destaque visual para chips selecionados */
+.tags-row ion-chip.clickable {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.tags-row ion-chip.clickable.selected {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 2px var(--ion-text-color);
+}
+

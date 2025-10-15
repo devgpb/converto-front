@@ -86,8 +86,12 @@ export class VendasLeadsPage implements OnInit {
   fetchFiltros(): void {
     this.clientesService.getFiltrosClientes().subscribe({
       next: (data) => {
-        this.cidades = data.cidades;
-        this.statusList = data.status;
+        const norm = (arr: any[]): string[] =>
+          (arr || [])
+            .map((x: any) => typeof x === 'string' ? x : (x && x.nome) ? String(x.nome) : '')
+            .filter((s: string) => !!s);
+        this.cidades = norm((data as any).cidades);
+        this.statusList = norm((data as any).status);
       },
       error: () => { },
     });

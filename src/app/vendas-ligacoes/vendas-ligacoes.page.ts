@@ -109,8 +109,12 @@ export class VendasLigacoesPage implements OnInit {
   private carregarFiltrosClientes(): void {
     this.clientesService.getFiltrosClientes().subscribe({
       next: (res) => {
-        this.cidades = res.cidades || [];
-        this.statusList = res.status || [];
+        const norm = (arr: any[]): string[] =>
+          (arr || [])
+            .map((x: any) => typeof x === 'string' ? x : (x && x.nome) ? String(x.nome) : '')
+            .filter((s: string) => !!s);
+        this.cidades = norm((res as any).cidades);
+        this.statusList = norm((res as any).status);
       },
       error: () => {}
     });

@@ -75,8 +75,13 @@ export class ListaClientesComponent implements OnInit {
 
   carregarFiltros(): void {
     this.clientesService.getFiltrosClientes().subscribe(data => {
-      this.statusUnicos = data.status || [];
-      this.cidadesUnicas = data.cidades || [];
+      const norm = (arr: any[]): string[] =>
+        (arr || [])
+          .map((x: any) => typeof x === 'string' ? x : (x && x.nome) ? String(x.nome) : '')
+          .filter((s: string) => !!s);
+
+      this.statusUnicos = norm((data as any).status);
+      this.cidadesUnicas = norm((data as any).cidades);
     });
   }
 

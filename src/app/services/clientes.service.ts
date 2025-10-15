@@ -46,8 +46,14 @@ export class ClientesService {
     return this.http.post<any>(this.api, cliente);
   }
 
-  getFiltrosClientes(): Observable<{ cidades: string[]; status: string[] }> {
-    return this.http.get<{ cidades: string[]; status: string[] }>(`${this.api}/filtros`);
+  getFiltrosClientes(): Observable<{
+    cidades: (string | { id: number | string; nome: string })[];
+    status: (string | { id: number | string; nome: string })[];
+  }> {
+    return this.http.get<{
+      cidades: (string | { id: number | string; nome: string })[];
+      status: (string | { id: number | string; nome: string })[];
+    }>(`${this.api}/filtros`);
   }
 
   getClientes(params: any): Observable<ClientesResponse> {

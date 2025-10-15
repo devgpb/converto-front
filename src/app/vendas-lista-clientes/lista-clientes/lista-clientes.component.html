@@ -27,7 +27,7 @@
           <ion-col size="6" size-md="3">
             <ion-item>
               <ion-label>Status</ion-label>
-              <ion-select [(ngModel)]="statusFilter">
+              <ion-select [(ngModel)]="statusFilter" interface="popover">
                 <ion-select-option value="todos">Todos os status</ion-select-option>
                 <ion-select-option *ngFor="let s of statusUnicos" [value]="s.toLowerCase()">{{ s }}</ion-select-option>
               </ion-select>
@@ -55,7 +55,8 @@
                 *ngFor="let t of filteredTags"
                 (click)="toggleTagFilter(t)"
                 [color]="hasTagFilter(t.id) ? 'primary' : 'medium'"
-                class="clickable">
+                class="clickable"
+                [class.selected]="hasTagFilter(t.id)">
                 <ion-avatar *ngIf="t.color_hex" class="tag-dot" [style.background]="t.color_hex"></ion-avatar>
                 <ion-label>{{ t.name }}</ion-label>
               </ion-chip>

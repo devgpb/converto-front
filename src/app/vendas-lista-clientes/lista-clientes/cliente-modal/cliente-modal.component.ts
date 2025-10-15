@@ -147,8 +147,12 @@ export class ClienteModalComponent implements OnChanges {
 
   fetchFiltros(): void {
     this.clientesService.getFiltrosClientes().subscribe((data) => {
-      this.cidades = data.cidades || [];
-      this.statuses = data.status || [];
+      const norm = (arr: any[]): string[] =>
+        (arr || [])
+          .map((x: any) => typeof x === 'string' ? x : (x && x.nome) ? String(x.nome) : '')
+          .filter((s: string) => !!s);
+      this.cidades = norm((data as any).cidades);
+      this.statuses = norm((data as any).status);
       if (this.formData.cidade && !this.cidades.includes(this.formData.cidade)) {
         this.cidades.push(this.formData.cidade);
       }

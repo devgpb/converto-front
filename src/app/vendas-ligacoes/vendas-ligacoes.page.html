@@ -69,7 +69,8 @@
               *ngFor="let t of filteredTags"
               (click)="toggleTag(t)"
               [color]="hasTag(t.id) ? 'primary' : 'medium'"
-              class="clickable">
+              class="clickable"
+              [class.selected]="hasTag(t.id)">
               <ion-avatar
                 *ngIf="t.color_hex"
                 class="tag-dot"
@@ -160,7 +161,6 @@
     <ion-button size="small" (click)="proximaPagina()" [disabled]="meta.page >= meta.totalPages">Próxima</ion-button>
   </div>
 </ion-content>
-
 
 
 
