@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { JobsService } from '../services/jobs.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-jobs',
@@ -9,6 +10,7 @@ import { JobsService } from '../services/jobs.service';
 })
 export class JobsPage implements OnInit {
   private jobsService = inject(JobsService);
+  private alertController = inject(AlertController);
   jobs: any[] = [];
   loading = false;
 
@@ -22,6 +24,9 @@ export class JobsPage implements OnInit {
   metadataOpen = false;
   metadataLoading = false;
   metadata: { label: string; value: any }[] = [];
+  selectedJob: any = null;
+  jobDetails: any = null;
+  jobErrors: { linha?: number; motivo?: string }[] = [];
 
   ngOnInit(): void {
     this.fetch();
@@ -110,21 +115,14 @@ export class JobsPage implements OnInit {
   }
 
   viewData(job: any): void {
-    const queue = job.queue || job.queueName;
+    this.selectedJob = job;
     this.metadataOpen = true;
-    this.metadataLoading = true;
-    this.metadata = [];
-    this.jobsService.getJob(queue, job.id).subscribe({
-      next: (res) => {
-        this.metadata = res?.result?.metadata ?? [];
-        console.log(res)
-        this.metadataLoading = false;
-      },
-      error: () => {
-        this.metadata = [];
-        this.metadataLoading = false;
-      },
-    });
+    this.metadataLoading = false; // usamos os dados já carregados
+    const result = job?.returnvalue ?? null;
+    this.jobDetails = { ...job, result };
+    this.metadata = Array.isArray(result?.metadata) ? result.metadata : [];
+    const erros = result?.summary?.erros;
+    this.jobErrors = Array.isArray(erros) ? erros : [];
   }
 
   closeMetadata(): void {
@@ -185,6 +183,30 @@ export class JobsPage implements OnInit {
     const exp = this.getExportExpiry(job);
     if (!exp) return false; // sem expiração definida, não desabilita
     return Date.now() > exp.getTime();
+  }
+
+  async downloadExport(job: any): Promise<void> {
+    const link = this.getExportLink(job);
+    const expired = this.isExpired(job);
+    if (!link || expired) {
+      const alert = await this.alertController.create({
+        header: 'Link indisponível',
+        message: expired ? 'O link de download expirou. Gere uma nova exportação.' : 'Não há link de download disponível.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+    try {
+      window.open(link, '_blank');
+    } catch {
+      const alert = await this.alertController.create({
+        header: 'Falha ao abrir o link',
+        message: 'Não foi possível abrir o link de download. Tente copiar e colar no navegador.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   get startIndex(): number {

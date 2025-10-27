@@ -22,7 +22,7 @@
   font-weight: 600;
   color: var(--ion-color-medium-shade, #666);
 }
-.status-sort-item .nome { flex: 1; }
+.status-sort-item .nome { flex: 1; color: var(--ion-background-color);}
 .status-sort-item .usando { margin-left: auto; }
 
 .scroll-list { max-height: 50vh; overflow: auto; }

@@ -48,19 +48,36 @@ export class VendasLeadsPage implements OnInit {
       this.clienteForm.markAllAsTouched();
       return;
     }
-    const tenantId = this.auth.getTenantId();
     const formValue = this.clienteForm.value;
-    const cliente = {
-      nome: formValue.nome ?? '',
-      celular: formValue.celular ?? '',
-      cidade: formValue.cidade ?? '',
-      status: formValue.status ?? '',
-      indicacao: formValue.indicacao ?? '',
-      campanha: formValue.campanha ?? '',
-      observacao: formValue.observacao ?? '',
-      tenant_id: tenantId,
+    // Alinha payload com API: enviar apenas campos com valor
+    const trim = (v: any) => typeof v === 'string' ? v.trim() : v;
+    const maybe = (v: any) => {
+      const t = trim(v);
+      return t === undefined || t === null || t === '' ? undefined : t;
     };
-    this.clientesService.postCliente(cliente).subscribe({
+
+    // A API aceita status/campanha por nome ou id; aqui enviamos o que vier do form
+    const payload: any = {};
+    payload.nome = trim(formValue.nome) || '';
+    payload.celular = trim(formValue.celular) || '';
+    const cidade = maybe(formValue.cidade);
+    if (cidade !== undefined) payload.cidade = cidade;
+    let status = maybe(formValue.status) as any;
+    if (typeof status === 'string' && status.trim().toLowerCase() === 'fechado') {
+      // Backend exige usar campo "fechado" para encerrar
+      payload.fechado = new Date().toISOString();
+      status = undefined;
+    }
+    if (status !== undefined) payload.status = status;
+    const indicacao = maybe(formValue.indicacao);
+    if (indicacao !== undefined) payload.indicacao = indicacao;
+    const campanha = maybe(formValue.campanha);
+    if (campanha !== undefined) payload.campanha = campanha;
+    const observacao = maybe(formValue.observacao);
+    if (observacao !== undefined) payload.observacao = observacao;
+
+    // Importante: enterprise/tenant vem do token; nao enviar tenant_id
+    this.clientesService.postCliente(payload).subscribe({
       next: () => {
         this.alertController
           .create({
@@ -71,11 +88,12 @@ export class VendasLeadsPage implements OnInit {
           .then((a) => a.present());
         this.clienteForm.reset();
       },
-      error: () => {
+      error: (err) => {
+        const msg = err?.error?.error || 'Ocorreu um erro ao cadastrar o cliente.';
         this.alertController
           .create({
             header: 'Erro!',
-            message: 'Ocorreu um erro ao cadastrar o cliente.',
+            message: msg,
             buttons: ['OK'],
           })
           .then((a) => a.present());

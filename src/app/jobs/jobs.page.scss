@@ -42,3 +42,34 @@
     min-width: 520px; /* garante rolagem quando necessário */
   }
 }
+
+.code-block {
+  background: var(--ion-color-step-100, #f4f5f8);
+  border-radius: 8px;
+  padding: 12px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: var(--ion-background-color);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+ion-card-title ion-badge {
+  vertical-align: middle;
+}
+
+/* Modal maior em telas grandes */
+:host ::ng-deep .job-modal {
+  --max-width: 96vw;
+  --width: 92vw;
+  --height: auto;
+  --border-radius: 12px;
+}
+
+@media (min-width: 992px) {
+  :host ::ng-deep .job-modal {
+    --width: 1000px;
+    --max-width: 1000px;
+    --height: auto;
+  }
+}
