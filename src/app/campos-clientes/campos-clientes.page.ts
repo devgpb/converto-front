@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CamposClientesService } from '../services/campos-clientes.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { TagsService, Tag } from '../services/tags.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class CamposClientesPage implements OnInit {
   private campos = inject(CamposClientesService);
   private fb = inject(FormBuilder);
   private toast = inject(ToastController);
+  private alert = inject(AlertController);
   private tagsService = inject(TagsService);
 
   status: { id: number; nome: string; qtd_clientes: number; ordem?: number }[] = [];
@@ -84,24 +85,62 @@ export class CamposClientesPage implements OnInit {
     });
   }
 
-  deletarStatus(item: { id: number; nome: string; qtd_clientes: number }): void {
+  async deletarStatus(item: { id: number; nome: string; qtd_clientes: number }): Promise<void> {
     if (!item?.id) return;
-    if (!confirm(`Excluir status "${item.nome}"?`)) return;
-    this.errorMsg = '';
-    this.campos.deleteStatus(item.id).subscribe({
-      next: () => this.load(),
-      error: (err) => { this.errorMsg = err?.error?.error || 'Não foi possível excluir o status'; },
+    if (item.qtd_clientes > 0) {
+      const t = await this.toast.create({ message: 'Não é possível excluir status em uso', duration: 1600, color: 'warning', position: 'bottom' });
+      t.present();
+      return;
+    }
+    const alert = await this.alert.create({
+      header: 'Excluir status',
+      message: `Deseja realmente excluir o status "${item.nome}"?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Excluir', role: 'destructive', handler: () => {
+            this.errorMsg = '';
+            this.campos.deleteStatus(item.id).subscribe({
+              next: () => this.load(),
+              error: async (err) => {
+                const msg = err?.error?.error || 'Não foi possível excluir o status';
+                this.errorMsg = msg;
+                const t = await this.toast.create({ message: msg, duration: 1800, color: 'danger', position: 'bottom' });
+                t.present();
+              },
+            });
+          } }
+      ]
     });
+    await alert.present();
   }
 
-  deletarCampanha(item: { id: number; nome: string; qtd_clientes: number }): void {
+  async deletarCampanha(item: { id: number; nome: string; qtd_clientes: number }): Promise<void> {
     if (!item?.id) return;
-    if (!confirm(`Excluir campanha "${item.nome}"?`)) return;
-    this.errorMsg = '';
-    this.campos.deleteCampanha(item.id).subscribe({
-      next: () => this.load(),
-      error: (err) => { this.errorMsg = err?.error?.error || 'Não foi possível excluir a campanha'; },
+    if (item.qtd_clientes > 0) {
+      const t = await this.toast.create({ message: 'Não é possível excluir campanha em uso', duration: 1600, color: 'warning', position: 'bottom' });
+      t.present();
+      return;
+    }
+    const alert = await this.alert.create({
+      header: 'Excluir campanha',
+      message: `Deseja realmente excluir a campanha "${item.nome}"?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Excluir', role: 'destructive', handler: () => {
+            this.errorMsg = '';
+            this.campos.deleteCampanha(item.id).subscribe({
+              next: () => this.load(),
+              error: async (err) => {
+                const msg = err?.error?.error || 'Não foi possível excluir a campanha';
+                this.errorMsg = msg;
+                const t = await this.toast.create({ message: msg, duration: 1800, color: 'danger', position: 'bottom' });
+                t.present();
+              },
+            });
+          } }
+      ]
     });
+    await alert.present();
   }
 
   // Drag and drop ordering of status

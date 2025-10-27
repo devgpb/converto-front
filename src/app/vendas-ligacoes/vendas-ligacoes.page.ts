@@ -51,7 +51,7 @@ export class VendasLigacoesPage implements OnInit {
       search: [''],
       cidade: ['todas'],
       status: ['todos'],
-      sortBy: [''],
+      sortBy: ['random'],
       ocultarLigadosHoje: [true],
       perPage: [10],
       limiteTotal: [10],

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ViewDidEnter } from '@ionic/angular';
+import { AlertController, ViewDidEnter } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, firstValueFrom, takeUntil } from 'rxjs';
 import {
   CdkDragDrop,
@@ -64,6 +64,7 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
   private readonly clientesService = inject(ClientesService);
   private readonly camposService = inject(CamposClientesService);
   private readonly authService = inject(AuthService);
+  private readonly alert = inject(AlertController);
   private currentUserId: string | null = this.authService.getUserId();
   private autoScrollFrame: number | null = null;
   private autoScrollDirection: -1 | 0 | 1 = 0;
@@ -164,6 +165,26 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
     }
 
     try {
+      const targetLower = (targetColumn.status || '').toLowerCase();
+      if (targetLower === 'fechado') {
+        const ok = await this.confirmFecharCliente(cliente);
+        if (!ok) {
+          // retorna cliente para a coluna original caso cancele
+          transferArrayItem(
+            event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex,
+          );
+          cliente.status = originalStatus;
+          cliente.fechado = originalFechado;
+          if (previousColumn !== targetColumn) {
+            previousColumn.total = previousColumnOriginalTotal;
+            targetColumn.total = targetColumnOriginalTotal;
+          }
+          return;
+        }
+      }
       await this.persistStatusChange(cliente, targetColumn.status);
       cliente.status = targetColumn.status;
     } catch (error) {
@@ -182,6 +203,20 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
       }
       console.error('Falha ao alterar status do cliente', error);
     }
+  }
+
+  private async confirmFecharCliente(cliente: Cliente): Promise<boolean> {
+    const alert = await this.alert.create({
+      header: 'Fechar cliente',
+      message: `Confirmar fechamento de "${cliente.nome}"? O status será marcado como Fechado. Para alterar depois, será necessário reabrir.`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Fechar', role: 'confirm' }
+      ]
+    });
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'confirm';
   }
 
   openCliente(cliente: Cliente): void {
@@ -368,17 +403,23 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
   }
 
   private async persistStatusChange(cliente: Cliente, novoStatus: string): Promise<void> {
-    const payload: Partial<Cliente> & { fechado?: string | null } = {
-      id_cliente: cliente.id_cliente,
-      status: novoStatus,
-    } as any;
-
     const novoStatusLower = (novoStatus || '').toLowerCase();
 
+    // Fechar: não enviar status, apenas 'fechado' para seguir regra do controller
     if (novoStatusLower === 'fechado') {
-      payload.fechado = new Date().toISOString();
-    } else if (cliente.fechado) {
-      // Reabre antes de aplicar o novo status
+      const payload = {
+        id_cliente: cliente.id_cliente,
+        fechado: new Date().toISOString(),
+      } as any;
+      await firstValueFrom(this.clientesService.postCliente(payload));
+      cliente.fechado = payload.fechado ?? null;
+      // atualiza label localmente; backend definirá status para o id de "Fechado"
+      (cliente as any).status = 'Fechado';
+      return;
+    }
+
+    // Mudança comum de status: se estava fechado, reabre primeiro
+    if (cliente.fechado) {
       await firstValueFrom(this.clientesService.postCliente({
         id_cliente: cliente.id_cliente,
         fechado: null,
@@ -386,11 +427,11 @@ export class KanbanClientesPage implements ViewDidEnter, OnDestroy {
       cliente.fechado = null;
     }
 
+    const payload = {
+      id_cliente: cliente.id_cliente,
+      status: novoStatus,
+    } as any;
     await firstValueFrom(this.clientesService.postCliente(payload));
-
-    if (novoStatusLower === 'fechado') {
-      cliente.fechado = payload.fechado ?? null;
-    }
   }
 
   private handleBoardAutoScroll(nativeEvent: MouseEvent | TouchEvent): void {

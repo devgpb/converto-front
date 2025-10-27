@@ -44,6 +44,7 @@
             <ion-item>
               <ion-label position="stacked">Ordenar</ion-label>
               <ion-select formControlName="sortBy" interface="popover">
+                <ion-select-option value="random">Aleatório</ion-select-option>
                 <ion-select-option value="">Recentes</ion-select-option>
                 <ion-select-option value="antigo">Mais antigos</ion-select-option>
                 <ion-select-option value="nome">Nome (A-Z)</ion-select-option>
@@ -161,7 +162,6 @@
     <ion-button size="small" (click)="proximaPagina()" [disabled]="meta.page >= meta.totalPages">Próxima</ion-button>
   </div>
 </ion-content>
-
 
 
 
