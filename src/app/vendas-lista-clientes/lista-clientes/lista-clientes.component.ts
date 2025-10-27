@@ -29,7 +29,7 @@ export class ListaClientesComponent implements OnInit {
   statusUnicos: string[] = [];
   cidadesUnicas: string[] = [];
   meusClientes = new FormControl(false);
-  tenantId: string | null;
+  userId: string | null;
   // filtro por tags (multi)
   allTags: Tag[] = [];
   tagFilterQuery = '';
@@ -44,7 +44,7 @@ export class ListaClientesComponent implements OnInit {
   private tagsService = inject(TagsService);
 
   constructor() {
-    this.tenantId = this.authService.getTenantId();
+    this.userId = this.authService.getUserId();
   }
 
   ngOnInit(): void {
@@ -60,8 +60,8 @@ export class ListaClientesComponent implements OnInit {
       sortBy: this.sortBy,
     };
 
-    if (this.meusClientes.value && this.tenantId) {
-      base.tenantId = this.tenantId;
+    if (this.meusClientes.value && this.userId) {
+      base.id_usuario = this.userId;
     }
 
     if (extra.fromSearch) {

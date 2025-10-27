@@ -316,7 +316,41 @@ export class ClienteModalComponent implements OnChanges {
     if (!this.evDate) {
       return;
     }
-    const data = `${this.evDate}T${this.evTime || '00:00'}`;
+    // Sanitiza date/time vindos do ion-datetime para montar um ISO válido
+    // evDate pode vir como 'YYYY-MM-DD' ou 'YYYY-MM-DDTHH:mm[:ss][.SSS]Z'
+    // evTime pode vir como 'HH:mm' ou 'HH:mm:ss' ou ISO com 'T'
+    const rawDate = String(this.evDate);
+    let datePart = '';
+    if (rawDate.includes('T')) {
+      // pega apenas a parte da data
+      datePart = rawDate.split('T')[0];
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+      datePart = rawDate;
+    } else {
+      // tenta normalizar via Date
+      const d = new Date(rawDate);
+      if (isNaN(d.getTime())) {
+        return; // data inválida
+      }
+      datePart = d.toISOString().slice(0, 10);
+    }
+
+    let timePart = this.evTime ? String(this.evTime) : '00:00';
+    if (timePart.includes('T')) {
+      // se vier ISO ou contiver T, extrai após o T
+      timePart = timePart.split('T')[1];
+    }
+    // remove timezone e millis se houver
+    timePart = timePart.replace(/Z$/, '');
+    timePart = timePart.split('.')[0];
+    // garante formato HH:mm ou HH:mm:ss
+    const hhmmssMatch = timePart.match(/^\d{2}:\d{2}(?::\d{2})?$/);
+    if (!hhmmssMatch) {
+      // tenta extrair HH:mm de strings como '15:57:00Z'
+      const m = timePart.match(/^(\d{2}:\d{2})(?::\d{2})?/);
+      timePart = m ? m[1] : '00:00';
+    }
+    const data = `${datePart}T${timePart}`;
     this.isSavingEvento = true;
     this.clientesService.criarEvento({
       id_usuario: this.idUsuario,

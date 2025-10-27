@@ -57,7 +57,17 @@ export class ClientesService {
   }
 
   getClientes(params: any): Observable<ClientesResponse> {
-    return this.http.get<ClientesResponse>(this.api, { params });
+    // Garante que não envia chaves com undefined/null (ex: tagIds=undefined)
+    const clean: Record<string, any> = {};
+    if (params && typeof params === 'object') {
+      Object.keys(params).forEach((k) => {
+        const v = (params as any)[k];
+        if (v !== undefined && v !== null && v !== 'undefined') {
+          clean[k] = v;
+        }
+      });
+    }
+    return this.http.get<ClientesResponse>(this.api, { params: clean });
   }
 
   getEventosDoCliente(idCliente: number, params: any = {}): Observable<ClienteEvento[]> {
