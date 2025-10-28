@@ -202,7 +202,7 @@
   </div>
   <app-cliente-modal
     *ngIf="clienteSelecionado"
-    [cliente]="clienteSelecionado"
+    [idCliente]="clienteSelecionado?.id_cliente ?? null"
     [isOpen]="modalAberto"
     (closeModal)="fecharModal()"
     (saved)="salvarCliente()"

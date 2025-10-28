@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import type { Tag } from './tags.service';
 
 export interface Cliente {
   id_cliente: number;
@@ -18,6 +19,7 @@ export interface Cliente {
   responsavel?: { name: string };
   ultimoContato?: string;
   fechado?: string | null;
+  tags?: Tag[];
 }
 
 export interface ClientesResponse {
@@ -83,5 +85,16 @@ export class ClientesService {
     tz?: string;
   }): Observable<ClienteEvento> {
     return this.http.post<ClienteEvento>(`${this.api}/eventos`, payload);
+  }
+
+  getClienteById(id: number | string): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.api}/${id}`);
+  }
+
+  updateClienteTags(id_cliente: number | string, method: 'add' | 'remove', tagIds: Array<string | number>): Observable<{ id_cliente: number | string; tags: Tag[] }> {
+    return this.http.post<{ id_cliente: number | string; tags: Tag[] }>(`${this.api}/${id_cliente}/tags`, {
+      method,
+      tag_ids: tagIds,
+    });
   }
 }

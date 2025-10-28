@@ -1,11 +1,11 @@
 import { Component, EventEmitter, ViewChild, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import { Cliente, ClientesService, ClienteEvento } from '../../../services/clientes.service';
 import { VendasService } from '../../../services/vendas/vendas.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { LigacoesService } from 'src/app/services/ligacoes.service';
 import { ClienteLigacoesListComponent } from './cliente-ligacoes-list/cliente-ligacoes-list.component';
 import { TagsService, Tag } from 'src/app/services/tags.service';
-import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
   selector: 'app-cliente-modal',
@@ -14,22 +14,24 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
   standalone: false,
 })
 export class ClienteModalComponent implements OnChanges {
-  @Input() cliente!: Cliente | null;
+  @Input() idCliente: number | string | null = null;
   @Input() isOpen = false;
   @Output() closeModal = new EventEmitter<void>();
   @Output() saved = new EventEmitter<void>();
   private auth = inject(AuthService);
+  private toastController = inject(ToastController);
 
   formData!: Cliente;
   cidades: string[] = [];
   statuses: string[] = [];
   campanhas: string[] = [];
   idUsuario: any;
-  // tags do usuário (logado)
+  // tags do cliente
   allTags: Tag[] = [];
-  userTagIds = new Set<string>();
+  clienteTagIds = new Set<string>();
   tagQuery = '';
   savingTags = false;
+  isLoadingCliente = false;
   // animações de fade
   fadingOutOptionId: string | null = null;
   fadingOutSelectedId: string | null = null;
@@ -54,24 +56,14 @@ export class ClienteModalComponent implements OnChanges {
     private vendasService: VendasService,
     private ligacoesService: LigacoesService,
     private tagsService: TagsService,
-    private usuariosService: UsuariosService,
   ) {
     this.idUsuario = this.auth.getUserId()
     console.log(this.idUsuario, this.auth.getUserId())
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['cliente'] && this.cliente) {
-      this.formData = { ...this.cliente };
-      this.errors = {};
-      this.fetchFiltros();
-      if (this.formData.campanha && !this.clientesService.listaDeCampanhas.includes(this.formData.campanha)) {
-        this.clientesService.listaDeCampanhas.push(this.formData.campanha);
-      }
-      this.campanhas = this.clientesService.listaDeCampanhas;
-      this.carregarEventosCliente();
-      this.view = 'form';
-      this.carregarTags();
+    if ((changes['idCliente'] && this.idCliente) || (changes['isOpen'] && this.isOpen && this.idCliente)) {
+      this.loadClienteById(String(this.idCliente));
     }
     if (changes['isOpen'] && !this.isOpen) {
       // reset view when modal closes
@@ -79,52 +71,73 @@ export class ClienteModalComponent implements OnChanges {
     }
   }
 
+  private loadClienteById(id: string) {
+    this.isLoadingCliente = true;
+    this.errors = {};
+    this.clientesService.getClienteById(id).subscribe({
+      next: (cli) => {
+        this.formData = { ...cli } as Cliente;
+        // normaliza tags do cliente
+        const tags = Array.isArray((cli as any)?.tags) ? (cli as any).tags : [];
+        this.clienteTagIds = new Set(tags.map((t: any) => String(t.id)));
+        // filtros e campanhas
+        this.fetchFiltros();
+        if (this.formData.campanha && !this.clientesService.listaDeCampanhas.includes(this.formData.campanha)) {
+          this.clientesService.listaDeCampanhas.push(this.formData.campanha);
+        }
+        this.campanhas = this.clientesService.listaDeCampanhas;
+        // carregar eventos e universo de tags
+        this.carregarEventosCliente();
+        this.view = 'form';
+        this.carregarTags();
+        this.isLoadingCliente = false;
+      },
+      error: () => {
+        this.isLoadingCliente = false;
+      }
+    });
+  }
+
   private carregarTags(): void {
     // carrega universo de tags
     this.tagsService.list('', 1, 200).subscribe({
-      next: (res) => {
-        this.allTags = res?.data || [];
-      },
+      next: (res) => { this.allTags = res?.data || []; },
       error: () => { this.allTags = []; }
     });
-    // carrega tags do usuário logado
-    if (this.idUsuario) {
-      this.usuariosService.getById(this.idUsuario).subscribe({
-        next: (u) => {
-          const tags = Array.isArray(u?.tags) ? u.tags : [];
-          this.userTagIds = new Set(tags.map((t: any) => String(t.id)));
-        },
-        error: () => { this.userTagIds = new Set(); }
-      });
-    }
   }
 
   get filteredAvailableTags(): Tag[] {
     const q = this.tagQuery.trim().toLowerCase();
     let list = this.allTags || [];
     // remove já selecionadas do seletor
-    list = list.filter(t => !this.userTagIds.has(String(t.id)));
+    list = list.filter(t => !this.clienteTagIds.has(String(t.id)));
     if (!q) return list;
     return list.filter(t => (t.name || '').toLowerCase().includes(q));
   }
 
   toggleUserTag(tag: Tag): void {
+    if (!this.formData?.id_cliente) return;
     const id = String(tag.id);
-    if (!this.userTagIds.has(id)) {
+    const isAdding = !this.clienteTagIds.has(id);
+    const before = new Set(this.clienteTagIds);
+
+    if (isAdding) {
       // adicionar: fade out no seletor, depois move para selecionadas com fade in
       this.fadingOutOptionId = id;
       setTimeout(() => {
-        this.userTagIds.add(id);
+        this.clienteTagIds.add(id);
         this.fadingOutOptionId = null;
         this.fadingInSelectedId = id;
         setTimeout(() => { this.fadingInSelectedId = null; }, 220);
+        this.persistClienteTag('add', tag, before);
       }, 180);
     } else {
       // remover: fade out na lista selecionada, depois volta para seletor
       this.fadingOutSelectedId = id;
       setTimeout(() => {
-        this.userTagIds.delete(id);
+        this.clienteTagIds.delete(id);
         this.fadingOutSelectedId = null;
+        this.persistClienteTag('remove', tag, before);
       }, 180);
     }
   }
@@ -132,16 +145,38 @@ export class ClienteModalComponent implements OnChanges {
   trackTagById(_: number, t: Tag) { return t.id; }
 
   hasUserTag(tagId: string): boolean {
-    return this.userTagIds.has(String(tagId));
+    return this.clienteTagIds.has(String(tagId));
   }
 
-  salvarTagsUsuario(): void {
-    if (!this.idUsuario) return;
+  private async showToast(message: string, color: 'success' | 'danger' | 'medium' = 'success') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      position: 'top',
+      color,
+    });
+    await toast.present();
+  }
+
+  private persistClienteTag(method: 'add'|'remove', tag: Tag, previous: Set<string>) {
+    if (!this.formData?.id_cliente) return;
     this.savingTags = true;
-    const payload = { tag_ids: Array.from(this.userTagIds) } as any;
-    this.usuariosService.update(this.idUsuario, payload).subscribe({
-      next: () => { this.savingTags = false; },
-      error: () => { this.savingTags = false; }
+    const snapshot = new Set(previous);
+    const tagId = String(tag.id);
+    this.clientesService.updateClienteTags(this.formData.id_cliente, method, [tagId]).subscribe({
+      next: async (res) => {
+        const updatedIds = new Set((res?.tags || []).map((t: any) => String(t.id)));
+        this.clienteTagIds = updatedIds;
+        this.savingTags = false;
+        if (method === 'add') {
+          await this.showToast('Tag adicionada');
+        }
+      },
+      error: async () => {
+        this.clienteTagIds = snapshot;
+        this.savingTags = false;
+        await this.showToast('Falha ao salvar tag', 'danger');
+      }
     });
   }
 

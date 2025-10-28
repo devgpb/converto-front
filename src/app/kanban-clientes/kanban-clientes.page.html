@@ -136,7 +136,7 @@
   </ng-template>
 
   <app-cliente-modal
-    [cliente]="selectedCliente"
+    [idCliente]="selectedCliente?.id_cliente ?? null"
     [isOpen]="modalOpen"
     (closeModal)="closeClienteModal()"
     (saved)="handleClienteSaved()"

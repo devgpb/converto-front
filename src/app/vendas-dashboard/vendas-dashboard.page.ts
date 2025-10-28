@@ -10,6 +10,7 @@ import {
   ApexStroke,
   ApexTooltip,
   ApexFill,
+  ApexGrid,
   ApexNonAxisChartSeries,
   ApexLegend,
   ApexResponsive,
@@ -26,7 +27,6 @@ type ChartOptionsLine = {
   tooltip: ApexTooltip;
   fill: ApexFill;
 };
-
 type ChartOptionsBar = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -35,6 +35,7 @@ type ChartOptionsBar = {
   dataLabels: ApexDataLabels;
   stroke: ApexStroke;
   tooltip: ApexTooltip;
+  grid?: ApexGrid;
   fill: ApexFill;
 };
 
@@ -117,6 +118,17 @@ export class VendasDashboardPage implements OnInit {
     }
   }
 
+  private getCSSVar(name: string): string {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+  }
+
+  private isDarkMode(): boolean {
+    return document.body.classList.contains('dark');
+  }
+
+
   private fetchModal() {
     const kind = this.modalKind();
     if (!kind) return;
@@ -196,9 +208,17 @@ export class VendasDashboardPage implements OnInit {
     const labels = ordered.map((s) => s.status || 'Sem status');
     const values = ordered.map((s) => s.count);
 
+    const isDark = this.isDarkMode();
+
     this.statusChart.set({
       series: [{ name: 'Clientes', data: values }],
-      chart: { type: 'bar', height: 360, toolbar: { show: false } },
+      chart: {
+        type: 'bar',
+        height: 360,
+        toolbar: { show: false },
+        background: 'transparent',
+        foreColor: this.getCSSVar('--ion-text-color'),
+      },
       plotOptions: { bar: { horizontal: true, borderRadius: 6 } },
       dataLabels: {
         enabled: true,
@@ -206,11 +226,21 @@ export class VendasDashboardPage implements OnInit {
         dropShadow: { enabled: true, top: 1, left: 1, blur: 2, color: '#000', opacity: 0.7 },
       },
       stroke: { show: false },
-      xaxis: { categories: labels, labels: { rotate: 0 } },
-      tooltip: { y: { formatter: (val: number) => `${val} clientes` } },
+      xaxis: {
+        categories: labels,
+        labels: { rotate: 0 },
+      },
+      tooltip: {
+        theme: isDark ? 'dark' : 'light',
+        y: { formatter: (val: number) => `${val} clientes` },
+      },
       fill: { opacity: 1 },
+      grid: {
+        borderColor: this.getCSSVar('--ion-color-step-150'),
+      },
     });
   }
+
 
   private buildCampanhaChart(d: IDashboardVendas) {
     const map = new Map<string, number>();

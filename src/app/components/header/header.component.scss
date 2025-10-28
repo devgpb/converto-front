@@ -16,6 +16,12 @@
   border-radius: 12px;
   padding: 6px;
   background: transparent;
+  /* Ensure icon is centered inside the button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
 }
 
 .menu-button::part(native):hover {
@@ -29,4 +35,13 @@
 
 .quest {
   font-size: 1.4rem;
+}
+
+/* Center help icon within its button */
+.quest::part(native) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
 }

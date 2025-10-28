@@ -22,7 +22,11 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding" *ngIf="formData">
+    <ion-content class="ion-padding">
+      <div *ngIf="isLoadingCliente" class="loading-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <div *ngIf="formData" [style.visibility]="isLoadingCliente ? 'hidden' : 'visible'">
       <ng-container *ngIf="view === 'historico'; else formView">
         <ion-item lines="none" class="ion-margin-bottom">
           <ion-label position="stacked">Data da ligação</ion-label>
@@ -223,17 +227,9 @@
                 <ion-label>{{ t.name }}</ion-label>
                 <button type="button" class="remove" (click)="toggleUserTag(t)">&times;</button>
               </ion-chip>
-              <ion-text color="medium" *ngIf="!userTagIds.size">Nenhuma tag selecionada.</ion-text>
+              <ion-text color="medium" *ngIf="!clienteTagIds.size">Nenhuma tag selecionada.</ion-text>
             </div>
-
-            <ion-button
-              class="ion-margin-top"
-              expand="block"
-              (click)="salvarTagsUsuario()"
-              [disabled]="savingTags">
-              <ion-spinner name="crescent" slot="start" *ngIf="savingTags"></ion-spinner>
-              Salvar tags
-            </ion-button>
+      
           </ion-card-content>
         </ion-card>
 
@@ -337,6 +333,7 @@
           </ion-badge>
         </div>
       </ng-template>
+      </div>
     </ion-content>
 
     <ion-footer class="ion-padding" *ngIf="view === 'form'">

@@ -92,6 +92,15 @@
   --kanban-placeholder-bg: rgba(0, 193, 106, 0.1);
   --kanban-placeholder-border: rgba(0, 193, 106, 0.25);
   --kanban-placeholder-text: rgba(15, 61, 39, 0.7);
+  --chart-text-color: #222;
+  --chart-grid-color: #ddd;
+  --chart-bg-color: #fff;
+
+  [data-theme="dark"] {
+    --chart-text-color: #fff;
+    --chart-grid-color: #444;
+    --chart-bg-color: #000;
+  }
 }
 
 /* ====== DARK MODE (ativado pelo ThemeService) ====== */

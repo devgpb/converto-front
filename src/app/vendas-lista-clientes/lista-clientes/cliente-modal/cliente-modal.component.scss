@@ -164,3 +164,16 @@ ion-datetime.centered-datetime {
 
 .tags-row { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding:4px 0; -webkit-overflow-scrolling: touch; }
 
+/* Loading overlay centered */
+.loading-center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+}
