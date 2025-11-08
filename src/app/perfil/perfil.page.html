@@ -137,6 +137,18 @@
           Reativar renovação
         </ion-button>
 
+        <ion-button
+          *ngIf="canReactivateAfterCancellation"
+          color="success"
+          class=""
+          (click)="reactivateSubscription()"
+          [disabled]="reactivating"
+        >
+          <ion-spinner *ngIf="reactivating" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!reactivating" slot="start" name="repeat"></ion-icon>
+          Reativar assinatura
+        </ion-button>
+
         <div *ngIf="showCancelForm && canCancel" class="ion-margin-top">
           <ion-item>
             <ion-label position="stacked">Motivo</ion-label>

@@ -33,4 +33,14 @@ export class BillingService {
   resume(data: { tenant_id: string }): Observable<any> {
     return this.http.post<any>(`${this.api}/resume`, data);
   }
+
+  reactivate(data: {
+    tenant_id: string;
+    success_url: string;
+    cancel_url: string;
+    price_id?: string;
+    seatCountInicial?: number;
+  }): Observable<any> {
+    return this.http.post<any>(`${this.api}/reactivate`, data);
+  }
 }

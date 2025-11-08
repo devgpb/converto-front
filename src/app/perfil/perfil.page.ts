@@ -29,6 +29,7 @@ export class PerfilPage {
   showCancelForm = false;
   cancelling = false;
   resuming = false;
+  reactivating = false;
   syncing = false;
   cancelForm = this.fb.group({
     motivo: [''],
@@ -106,9 +107,28 @@ export class PerfilPage {
       return !!(this.isAdminOrModerator && sub && (sub.status === 'active' || sub.status === 'trialing') && !sub.cancel_at_period_end);
     }
 
+    /**
+     * Indica se a assinatura pode ser retomada (resume).
+     *
+     * Retorna true quando todos os seguintes critérios são satisfeitos:
+     * - o usuário tem permissão de administrador ou moderador (isAdminOrModerator);
+     * - existe uma assinatura ativa (activeSubscription);
+     * - o status da assinatura é 'active' ou 'trialing' (a assinatura ainda está vigente ou em período de teste);
+     * - e a assinatura está marcada para cancelamento ao final do período atual (cancel_at_period_end).
+     *
+     * O uso de "!!" garante que o valor final seja sempre um booleano.
+     *
+     * Em resumo: permite a retomada apenas de assinaturas que ainda estão em vigor, mas foram agendadas para cancelamento, desde que o usuário tenha as permissões necessárias.
+     *
+     * @returns true se a assinatura puder ser retomada segundo os critérios acima; caso contrário, false.
+     */
     get canResume(): boolean {
       const sub = this.activeSubscription;
       return !!(this.isAdminOrModerator && sub && (sub.status === 'active' || sub.status === 'trialing') && sub.cancel_at_period_end);
+    }
+
+    get canReactivateAfterCancellation(): boolean {
+      return !!(this.isAdminOrModerator && this.billingStatus?.status_billing === 'canceled');
     }
 
     synceSubscriptionStatus(): void {
@@ -244,6 +264,69 @@ export class PerfilPage {
         });
     }
 
+    async reactivateSubscription(): Promise<void> {
+      if (!this.profile?.tenant?.id) return;
+      if (!this.isAdminOrModerator) return;
+
+      const confirm = await this.alertCtrl.create({
+        header: 'Reativar assinatura',
+        message: 'Vamos direcionar você para um novo checkout para concluir o pagamento no cartão.',
+        buttons: [
+          { text: 'Voltar', role: 'cancel' },
+          {
+            text: 'Continuar',
+            role: 'confirm',
+            handler: () => this.doReactivate(),
+          },
+        ],
+      });
+      await confirm.present();
+    }
+
+    private doReactivate(): void {
+      if (!this.profile?.tenant?.id) return;
+      const tenantId = String((this.profile as any)?.tenant?.id);
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      if (!origin) {
+        this.alertCtrl.create({
+          header: 'Não foi possível gerar o checkout',
+          message: 'Não conseguimos identificar a origem para montar as URLs de retorno.',
+          buttons: ['OK'],
+        }).then((alert) => alert.present());
+        return;
+      }
+      const cancelUrl = `${origin}/perfil`;
+      const successUrl = `${origin}/perfil?reativada=1`;
+      const seatCount = this.profile?.seats?.paid || this.profile?.seats?.total_users || 1;
+
+      this.reactivating = true;
+
+      this.billing
+        .reactivate({
+          tenant_id: tenantId,
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+          seatCountInicial: seatCount ?? 1,
+        })
+        .subscribe({
+          next: (res) => {
+            this.reactivating = false;
+            if (res?.checkout_url) {
+              window.location.href = res.checkout_url;
+            }
+          },
+          error: async (err) => {
+            this.reactivating = false;
+            const alert = await this.alertCtrl.create({
+              header: 'Erro ao reativar assinatura',
+              message: err?.error?.error || 'Não foi possível gerar o checkout de reativação agora.',
+              buttons: ['OK'],
+            });
+            await alert.present();
+          },
+        });
+    }
+
     private refreshBillingStatus(tenantId: string): void {
       this.billingServiceGetStatus(tenantId);
     }
@@ -255,4 +338,3 @@ export class PerfilPage {
       });
     }
 }
-
