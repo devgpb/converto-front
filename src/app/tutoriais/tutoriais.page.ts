@@ -8,6 +8,11 @@ interface TutorialVideo {
   youtubeUrl: string;
 }
 
+interface TutorialCategory {
+  title: string;
+  videos: TutorialVideo[];
+}
+
 @Component({
   selector: 'app-tutoriais',
   templateUrl: './tutoriais.page.html',
@@ -17,38 +22,76 @@ interface TutorialVideo {
 export class TutoriaisPage {
   constructor(private sanitizer: DomSanitizer) {}
 
-  videos: TutorialVideo[] = [
-    {
-      title: 'Visão Geral do Sistema',
-      description: 'Aprenda a navegar pelo dashboard e atalhos.',
-      icon: 'speedometer-outline',
-      youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    },
-    {
-      title: 'Cadastro de Leads',
-      description: 'Como cadastrar e qualificar novos leads.',
-      icon: 'person-add-outline',
-      youtubeUrl: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
-    },
-    {
-      title: 'Lista de Clientes',
-      description: 'Filtros, busca e ações rápidas na lista.',
-      icon: 'people-outline',
-      youtubeUrl: 'https://www.youtube.com/watch?v=J---aiyznGQ',
-    },
-    {
-      title: 'Mensagens Padrão',
-      description: 'Criação e uso de templates de mensagem.',
-      icon: 'chatbubbles-outline',
-      youtubeUrl: 'https://www.youtube.com/watch?v=a1Y73sPHKxw',
-    },
-    {
-      title: 'Relatórios de Vendas',
-      description: 'Gerando e interpretando gráficos e métricas.',
-      icon: 'stats-chart-outline',
-      youtubeUrl: 'https://www.youtube.com/watch?v=oHg5SJYRHA0',
-    },
-  ];
+  private embedCache = new Map<string, SafeResourceUrl>(); // evita recriar iframes ao entrar em tela cheia
+
+  tutorialCategories: TutorialCategory[] = [
+  {
+    title: 'Tutoriais do sistema',
+    videos: [
+      {
+        title: '#1 Converto Tutorial - Tela de Trabalhos',
+        description: 'Entenda como os trabalhos se relacionam com as operações do dia a dia.',
+        icon: 'briefcase-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=3UAA2IfMmoE',
+      },
+      {
+        title: '#2 Converto Tutorial - Tela de Relatório de Vendas',
+        description: 'Aprofunde-se nas métricas e monitore resultados em tempo real.',
+        icon: 'stats-chart-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=700vuXlahK8',
+      },
+      {
+        title: '#3 Converto Tutorial - Tela de Lista de Clientes',
+        description: 'Use filtros e ações rápidas para gerenciar clientes ativos.',
+        icon: 'people-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=LZgSyii-3zQ',
+      },
+      {
+        title: '#4 Converto Tutorial - Tela de Funil de vendas',
+        description: 'Mantenha o funil atualizado e acompanhe a evolução das oportunidades.',
+        icon: 'git-compare-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=6WvBevmMH5E',
+      },
+      {
+        title: '#5 Converto Tutorial - Tela de Lista de Ligação',
+        description: 'Organize ligações e defina prioridades para sua equipe.',
+        icon: 'call-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=r3D-s7rHZnU',
+      },
+      {
+        title: '#6 Converto Tutorial - Tela de Importação e Exportação',
+        description: 'Veja como importar e exportar bases de contatos com segurança.',
+        icon: 'cloud-upload-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=gxD3i5nG63w',
+      },
+      {
+        title: '#7 Converto Tutorial - Tela de Mensagens Padrão',
+        description: 'Dicas para automatizar rotinas frequentes com respostas prontas.',
+        icon: 'chatbubbles-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=BuE23dWECmc',
+      },
+      {
+        title: '#8 Converto Tutorial - Tela de Mensagens Padrão',
+        description: 'Aprenda a duplicar, editar e organizar seus templates.',
+        icon: 'chatbubble-ellipses-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=axOD8idY-34',
+      },
+      {
+        title: '#9 Converto Tutorial - Tela de Mensagens Padrão',
+        description: 'Personalize mensagens padrão para agilizar o contato com leads.',
+        icon: 'chatbox-ellipses-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=8nn0jJJurjA',
+      },
+      {
+        title: '#10 Converto Tutorial - Tela de Campos de Clientes',
+        description: 'Configure campos personalizados e organize os dados dos clientes.',
+        icon: 'document-text-outline',
+        youtubeUrl: 'https://www.youtube.com/watch?v=YrGKc5y-pIw',
+      },
+    ],
+  },
+];
+
 
   selected?: TutorialVideo;
 
@@ -66,9 +109,14 @@ export class TutoriaisPage {
   }
 
   getEmbedUrl(url: string): SafeResourceUrl {
+    if (this.embedCache.has(url)) {
+      return this.embedCache.get(url)!;
+    }
     const id = this.extractYoutubeId(url);
     const embed = id ? `https://www.youtube.com/embed/${id}?rel=0` : '';
-    return this.sanitizer.bypassSecurityTrustResourceUrl(embed);
+    const safe = this.sanitizer.bypassSecurityTrustResourceUrl(embed);
+    this.embedCache.set(url, safe);
+    return safe;
   }
 
   private extractYoutubeId(url: string): string | null {
@@ -90,4 +138,3 @@ export class TutoriaisPage {
     }
   }
 }
-

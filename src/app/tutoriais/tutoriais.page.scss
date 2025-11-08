@@ -54,6 +54,23 @@
     height: 100%;
   }
 
+  .category-section {
+    margin-bottom: 32px;
+  }
+
+  .category-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+  }
+
+  .category-title ion-icon {
+    color: var(--ion-color-primary, #3880ff);
+  }
+
   .video-card {
     cursor: pointer;
   }
@@ -99,4 +116,3 @@
     vertical-align: middle;
   }
 }
-
