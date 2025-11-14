@@ -80,7 +80,7 @@
 
  
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .header-close {
     display: none;
   }
@@ -200,7 +200,7 @@ ion-item.active ion-icon {
   white-space: nowrap;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   :host(.collapsed) .menu-wrapper {
     width: 88px;
   }

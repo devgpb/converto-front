@@ -2,24 +2,43 @@ ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }
 
-ion-menu.menu-desktop {
-  --width: 300px;
-  --min-width: 280px;
-  --side-width: 300px;
-}
-
 ion-split-pane.split-desktop {
-  --side-width: 300px;
+  --desktop-pane-width: 300px;
+  --side-width: var(--desktop-pane-width);
 }
 
-ion-menu.menu-desktop.menu-collapsed {
-  --width: 88px;
-  --min-width: 88px;
-  --max-width: 88px;
-  --side-width: 88px;
+@media (max-width: 1399px) and (min-width: 1024px) {
+  ion-split-pane.split-desktop {
+    --desktop-pane-width: 260px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  ion-split-pane.split-desktop {
+    --desktop-pane-width: 220px;
+  }
+}
+
+@media (min-width: 768px) {
+  ion-menu.menu-desktop {
+    --width: var(--desktop-pane-width);
+    --min-width: var(--desktop-pane-width);
+    --max-width: var(--desktop-pane-width);
+    --side-width: var(--desktop-pane-width);
+  }
+}
+
+@media (min-width: 768px) {
+  ion-menu.menu-desktop.menu-collapsed {
+    --width: 88px;
+    --min-width: 88px;
+    --max-width: 88px;
+    --side-width: 88px;
+  }
 }
 
 ion-split-pane.menu-collapsed {
+  --desktop-pane-width: 88px;
   --side-width: 88px;
 }
 

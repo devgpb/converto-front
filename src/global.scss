@@ -46,25 +46,13 @@ body.dark {
 }
 
 /* Largura do menu quando o split-pane está visível (desktop) */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   ion-menu.menu-desktop {
-    --side-width: 300px;
-    --side-min-width: 300px;
-    --side-max-width: 300px;
     transition: all 0.3s ease;
     /* anima tanto abrir quanto fechar */
     overflow: hidden;
     /* evita scroll bugado */
   }
-
-  ion-menu.menu-desktop.collapsed,
-  ion-menu.menu-desktop.menu-collapsed {
-    --side-width: 88px;
-    --side-min-width: 88px;
-    --side-max-width: 88px;
-  }
-
-
 }
 
 @media (max-width: 600px) {
