@@ -394,11 +394,11 @@ export class ClienteModalComponent implements OnChanges {
       evento: this.evTitulo || null,
       tz: this.tz
     }).subscribe({
-      next: novo => {
-        this.eventos.unshift(novo);
+      next: () => {
         this.evTitulo = '';
         this.evDate = '';
         this.evTime = null;
+        this.carregarEventosCliente();
         this.isSavingEvento = false;
       },
       error: () => {
@@ -438,4 +438,3 @@ export class ClienteModalComponent implements OnChanges {
     }
   }
 }
-

@@ -23,6 +23,7 @@ import { VendasLigacoesPage } from './vendas-ligacoes/vendas-ligacoes.page';
 import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.page';
 import { KanbanClientesPage } from './kanban-clientes/kanban-clientes.page';
 import { CamposClientesPage } from './campos-clientes/campos-clientes.page';
+import { CalendarioPage } from './calendario/calendario.page';
 
 const routes: Routes = [
   {
@@ -77,6 +78,12 @@ const routes: Routes = [
     component: KanbanClientesPage,
     canActivate: [AuthGuard],
     data: { title: 'Kanban de Clientes' }
+  },
+  {
+    path: 'vendas/calendario',
+    component: CalendarioPage,
+    canActivate: [AuthGuard],
+    data: { title: 'Calendário de Eventos' }
   },
   {
     path: 'vendas/mensagens-padrao',

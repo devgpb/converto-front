@@ -1,0 +1,54 @@
+.lista-eventos-modal {
+  --background: var(--ion-background-color);
+
+  ion-item {
+    --inner-padding-end: 0;
+    --padding-start: 0;
+  }
+}
+
+.modal-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--ion-text-color);
+}
+
+.modal-summary .summary-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modal-summary ion-icon {
+  font-size: 1.75rem;
+  color: var(--ion-color-primary);
+}
+
+.modal-summary h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.modal-summary p {
+  margin: 0;
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
+}
+
+.empty-state {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--ion-color-medium);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.empty-state ion-icon {
+  font-size: 2rem;
+}

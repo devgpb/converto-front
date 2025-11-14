@@ -1,0 +1,225 @@
+<ion-content class="calendario-page ion-padding">
+  <div class="calendar-wrapper">
+    <ion-card class="filters-card">
+      <ion-card-header>
+        <ion-card-title>Calendário de Eventos</ion-card-title>
+        <ion-card-subtitle>{{ currentLabel }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="toolbar-row">
+          <ion-segment [value]="viewMode" (ionChange)="setViewMode($event.detail.value)">
+            <ion-segment-button value="dia">Dia</ion-segment-button>
+            <ion-segment-button value="semana">Semana</ion-segment-button>
+            <ion-segment-button value="mes">Mês</ion-segment-button>
+          </ion-segment>
+          <div class="nav-buttons">
+            <ion-button fill="clear" color="medium" (click)="navigate('prev')" [disabled]="loading">
+              <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="medium" (click)="goToToday()" [disabled]="loading">
+              Hoje
+            </ion-button>
+            <ion-button fill="clear" color="medium" (click)="navigate('next')" [disabled]="loading">
+              <ion-icon name="chevron-forward-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <div class="date-row">
+          <ion-item lines="none">
+            <ion-label position="stacked">Data de referência</ion-label>
+            <ion-input
+              type="date"
+              [value]="selectedDateIso"
+              (ionChange)="onDateChange($event.detail.value)"
+              [disabled]="loading"
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="filters-grid">
+          <ion-item lines="none">
+            <ion-label>Status</ion-label>
+            <ion-select [value]="filters.status" (ionChange)="onStatusChange($event.detail.value)" interface="popover">
+              <ion-select-option *ngFor="let option of statusOptions" [value]="option.value">
+                {{ option.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" *ngIf="canFilterUsers">
+            <ion-label>Usuário</ion-label>
+            <ion-select
+              [value]="filters.usuario"
+              (ionChange)="onUserChange($event.detail.value)"
+              [disabled]="loading || usersLoading"
+              placeholder="Selecione"
+              interface="popover"
+            >
+              <ion-select-option *ngFor="let user of userOptions" [value]="user.value">
+                {{ user.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <div class="filters-actions">
+            <ion-button color="primary" (click)="applyFilters()" [disabled]="loading">
+              <ion-spinner slot="start" name="crescent" *ngIf="loading"></ion-spinner>
+              Atualizar
+            </ion-button>
+            <ion-button fill="clear" color="medium" (click)="clearFilters()" [disabled]="loading">
+              Limpar
+            </ion-button>
+          </div>
+        </div>
+
+        <ion-text color="medium" *ngIf="canFilterUsers && usersLoading">
+          Carregando usuários...
+        </ion-text>
+        <ion-text color="danger" *ngIf="canFilterUsers && usersError">
+          {{ usersError }}
+        </ion-text>
+
+        <div class="meta-row">
+          <ion-chip fill="outline">
+            <ion-icon name="time-outline"></ion-icon>
+            <ion-label>{{ timeZoneLabel }}</ion-label>
+          </ion-chip>
+          <ion-chip fill="outline" color="primary">
+            <ion-icon name="albums-outline"></ion-icon>
+            <ion-label>Total de eventos: {{ totals.eventos }}</ion-label>
+          </ion-chip>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="calendar-card">
+      <ion-card-content>
+        <div class="state-block" *ngIf="loading">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Carregando calendário…</p>
+        </div>
+
+        <div class="state-block error" *ngIf="error && !loading">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>{{ error }}</p>
+          <ion-button size="small" color="primary" (click)="applyFilters()">Tentar novamente</ion-button>
+        </div>
+
+        <ng-container *ngIf="!loading && !error">
+          <div class="day-view" *ngIf="viewMode === 'dia'">
+            <ng-container *ngIf="activeDay as day">
+              <div
+                class="day-row interactive"
+                role="button"
+                tabindex="0"
+                (click)="openDayEvents(day)"
+                (keyup.enter)="openDayEvents(day)"
+                [attr.aria-label]="'Ver eventos de ' + day.label"
+              >
+                <div class="day-info">
+                  <div class="day-weekday">{{ day.weekday | uppercase }}</div>
+                  <div class="day-label">{{ day.label }}</div>
+                  <ion-badge color="primary">{{ day.total }} eventos</ion-badge>
+                </div>
+                <div class="day-events">
+                  <div class="event-pill" *ngFor="let evento of day.events">
+                    <div class="event-hour">{{ evento.hora_local }}</div>
+                    <div class="event-body">
+                      <strong>{{ evento.evento || 'Sem título' }}</strong>
+                      <small *ngIf="evento.cliente">{{ evento.cliente.nome }}</small>
+                    </div>
+                    <ion-badge
+                      [color]="evento.confirmado === true ? 'success' : evento.confirmado === false ? 'medium' : 'warning'"
+                    >
+                      {{
+                        evento.confirmado === true ? 'Confirmado' : evento.confirmado === false ? 'Cancelado' : 'Pendente'
+                      }}
+                    </ion-badge>
+                  </div>
+                  <div class="empty-message" *ngIf="!day.events.length">
+                    Nenhum evento para este dia.
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="week-view" *ngIf="viewMode === 'semana'">
+            <div class="week-scroll">
+              <div
+                class="week-day-card"
+                *ngFor="let day of days; trackBy: trackByDate"
+                [class.today]="day.date === todayIso"
+                role="button"
+                tabindex="0"
+                (click)="openDayEvents(day)"
+                (keyup.enter)="openDayEvents(day)"
+                [attr.aria-label]="'Ver eventos de ' + day.label"
+              >
+                <div class="card-header">
+                  <span class="weekday">{{ day.weekday }}</span>
+                  <span class="label">{{ day.label }}</span>
+                </div>
+                <div class="card-body">
+                  <div class="event-chip" *ngFor="let evento of day.events | slice:0:3" [class]="eventStatusClass(evento)">
+                    <span class="hour">{{ evento.hora_local }}</span>
+                    <span class="text">{{ evento.evento || evento.cliente?.nome || 'Evento' }}</span>
+                  </div>
+                  <div class="more-chip" *ngIf="day.events.length > 3">
+                    +{{ day.events.length - 3 }} evento(s)
+                  </div>
+                  <div class="empty-message" *ngIf="!day.events.length">Sem eventos</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="month-view" *ngIf="viewMode === 'mes'">
+            <div class="weekday-header">
+              <div *ngFor="let label of weekdayHeaders">{{ label }}</div>
+            </div>
+            <div class="month-grid">
+              <div class="week-row" *ngFor="let week of monthGrid">
+                <div
+                  class="day-cell"
+                  *ngFor="let cell of week"
+                  [class.outside]="cell.outside"
+                  [class.today]="cell.day?.date === todayIso"
+                  [class.clickable]="!!cell.day"
+                  [attr.role]="cell.day ? 'button' : 'presentation'"
+                  [attr.tabindex]="cell.day ? 0 : -1"
+                  [attr.aria-label]="cell.day ? 'Ver eventos de ' + cell.day.label : null"
+                  (click)="cell.day && openDayEvents(cell.day)"
+                  (keyup.enter)="cell.day && openDayEvents(cell.day)"
+                >
+                  <div class="cell-label" *ngIf="cell.day">
+                    <span>{{ cell.day.label }}</span>
+                    <ion-badge color="light" *ngIf="cell.day.total">{{ cell.day.total }}</ion-badge>
+                  </div>
+                  <div class="cell-events" *ngIf="cell.day">
+                    <div class="cell-event" *ngFor="let evento of cell.day.events | slice:0:2">
+                      <span class="dot"></span>
+                      <span class="text">
+                        {{ evento.hora_local }} — {{ evento.evento || evento.cliente?.nome || 'Evento' }}
+                      </span>
+                    </div>
+                    <div class="cell-more" *ngIf="cell.day.events.length > 2">
+                      +{{ cell.day.events.length - 2 }} evento(s)
+                    </div>
+                    <div class="empty-message" *ngIf="!cell.day.events.length">—</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="!hasEvents">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <p>Nenhum evento encontrado para os filtros selecionados.</p>
+          </div>
+        </ng-container>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -41,9 +41,11 @@ import { RelatorioVendedorPage } from './relatorio-vendedor/relatorio-vendedor.p
 import { PaymentRequiredModalComponent } from './components/payment-required-modal/payment-required-modal.component';
 import { KanbanClientesPage } from './kanban-clientes/kanban-clientes.page';
 import { CamposClientesPage } from './campos-clientes/campos-clientes.page';
+import { CalendarioPage } from './calendario/calendario.page';
+import { ListaEventosComponent } from './calendario/lista-eventos/lista-eventos.component';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent, ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage, PaymentRequiredModalComponent, KanbanClientesPage, CamposClientesPage],
+  declarations: [AppComponent, NavMenuComponent, VendasDashboardPage, VendasLeadsPage, VendasListaClientesPage, UsuariosPage, SetoresPage, UsuariosNovoPage, PerfilPage, ConfiguracoesPage, ClientesImportarPage, FolderPage, ListaClientesComponent, ClienteModalComponent, ClienteLigacoesListComponent, ClienteCardComponent, SuportePage, JobsPage, MensagensPadraoPage, NewsletterComponent, WelcomeComponent, EsqueciSenhaPage, RedefinirSenhaPage, TutoriaisPage, VendasLigacoesPage, RelatorioVendedorPage, PaymentRequiredModalComponent, KanbanClientesPage, CamposClientesPage, CalendarioPage, ListaEventosComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ComponentsModule, FormsModule, ReactiveFormsModule, NgApexchartsModule, DragDropModule,
     LucideAngularModule.pick({ UserPlus, Phone, Users, Calendar, Receipt })
    ],

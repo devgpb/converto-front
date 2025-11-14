@@ -96,6 +96,18 @@
   --chart-grid-color: #ddd;
   --chart-bg-color: #fff;
 
+  /* Calendário (light) */
+  --calendar-week-card-bg: var(--ion-item-background);
+  --calendar-week-card-border: rgba(0, 0, 0, 0.08);
+  --calendar-week-event-bg: rgba(0, 0, 0, 0.04);
+  --calendar-week-event-text: var(--ion-text-color);
+  --calendar-week-event-confirmed-bg: rgba(0, 193, 106, 0.18);
+  --calendar-week-event-confirmed-text: #0f3d27;
+  --calendar-week-event-pendente-bg: rgba(255, 186, 0, 0.2);
+  --calendar-week-event-pendente-text: #624200;
+  --calendar-week-event-cancelado-bg: rgba(235, 68, 90, 0.18);
+  --calendar-week-event-cancelado-text: #6c1121;
+
   [data-theme="dark"] {
     --chart-text-color: #fff;
     --chart-grid-color: #444;
@@ -195,6 +207,17 @@
   --kanban-placeholder-bg: rgba(37, 211, 102, 0.12);
   --kanban-placeholder-border: rgba(37, 211, 102, 0.32);
   --kanban-placeholder-text: rgba(219, 247, 230, 0.88);
+  /* Calendário (dark) */
+  --calendar-week-card-bg: var(--ion-item-background);
+  --calendar-week-card-border: rgba(255, 255, 255, 0.08);
+  --calendar-week-event-bg: rgba(255, 255, 255, 0.05);
+  --calendar-week-event-text: var(--ion-text-color);
+  --calendar-week-event-confirmed-bg: rgba(37, 211, 102, 0.22);
+  --calendar-week-event-confirmed-text: #d9ffe9;
+  --calendar-week-event-pendente-bg: rgba(255, 186, 0, 0.25);
+  --calendar-week-event-pendente-text: #fff4cf;
+  --calendar-week-event-cancelado-bg: rgba(235, 68, 90, 0.25);
+  --calendar-week-event-cancelado-text: #ffd6dd;
 
 }
 
