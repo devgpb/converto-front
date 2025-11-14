@@ -229,11 +229,15 @@ export class NavMenuComponent implements OnInit, AfterViewInit {
     menuEl.style.setProperty('--min-width', targetMinWidth);
     menuEl.style.setProperty('--max-width', targetWidth);
     menuEl.style.setProperty('--side-width', targetWidth);
+    menuEl.style.setProperty('--side-min-width', targetMinWidth);
+    menuEl.style.setProperty('--side-max-width', targetWidth);
 
     const splitPane = menuEl.closest('ion-split-pane');
     if (splitPane) {
       splitPane.classList.toggle('menu-collapsed', this.collapsed);
       splitPane.style.setProperty('--side-width', targetWidth);
+      splitPane.style.setProperty('--side-min-width', targetMinWidth);
+      splitPane.style.setProperty('--side-max-width', targetWidth);
     }
   }
 }

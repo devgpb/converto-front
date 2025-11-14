@@ -5,6 +5,8 @@ ion-menu ion-content {
 ion-split-pane.split-desktop {
   --desktop-pane-width: 300px;
   --side-width: var(--desktop-pane-width);
+  --side-min-width: var(--desktop-pane-width);
+  --side-max-width: var(--desktop-pane-width);
 }
 
 @media (max-width: 1399px) and (min-width: 1024px) {
@@ -40,6 +42,8 @@ ion-split-pane.split-desktop {
 ion-split-pane.menu-collapsed {
   --desktop-pane-width: 88px;
   --side-width: 88px;
+  --side-min-width: 88px;
+  --side-max-width: 88px;
 }
 
 ion-menu.md ion-content {
