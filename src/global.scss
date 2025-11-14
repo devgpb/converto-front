@@ -81,3 +81,170 @@ ion-item {
 ion-card {
   border-left: 4px solid var(--ion-color-success);
 }
+
+
+
+
+
+
+
+
+
+
+/* ===========================
+   MODAL GLOBAL (CARD MODAL)
+   =========================== */
+
+ion-modal {
+  /* Tamanho e layout base */
+  // --width: 90%;
+  // --max-width: 480px;
+  // --height: auto;
+  --border-radius: 18px;
+  --backdrop-opacity: 0.35;
+  --box-shadow: 0 18px 32px rgba(0, 0, 0, 0.22);
+
+  /* Fundo do modal usando as cores do seu tema */
+  --background: var(--ion-item-background);
+
+  /* Animação suave */
+  --transition: all 0.25s ease;
+
+  // display: flex;
+}
+
+/* Conteúdo interno do modal */
+ion-modal::part(content) {
+  border-radius: 18px;
+  padding: 18px 20px;
+  background: var(--ion-item-background);
+  color: var(--ion-text-color);
+  box-shadow: var(--kanban-column-shadow);
+  animation: modalFadeIn 0.22s ease;
+}
+
+/* Backdrop mais suave e elegante */
+ion-modal::part(backdrop) {
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+
+/* ===========================
+   MODAL HEADER (opcional)
+   =========================== */
+
+ion-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(var(--ion-color-success-rgb), 0.22);
+}
+
+ion-modal .modal-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+ion-modal .close-btn {
+  font-size: 1.4rem;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--ion-text-color);
+  opacity: 0.65;
+  transition: 0.2s;
+}
+
+ion-modal .close-btn:hover {
+  opacity: 1;
+}
+
+
+/* ===========================
+   LISTA / ITENS DENTRO DO MODAL
+   =========================== */
+
+ion-modal ion-item {
+  --background: transparent;
+  --border-color: rgba(var(--ion-color-success-rgb), 0.25);
+  margin-top: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--ion-color-success-rgb), 0.25);
+}
+
+ion-modal ion-label,
+ion-modal ion-input,
+ion-modal ion-textarea {
+  color: var(--ion-text-color);
+}
+
+
+/* ===========================
+   BOTÕES DO MODAL
+   =========================== */
+
+ion-modal .modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+ion-modal .modal-actions ion-button {
+  --border-radius: 14px;
+  --padding-start: 18px;
+  --padding-end: 18px;
+  font-weight: 600;
+}
+
+
+/* ===========================
+   ANIMAÇÃO
+   =========================== */
+
+@keyframes modalFadeIn {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+
+/* ===========================
+   DARK MODE
+   =========================== */
+
+.dark ion-modal {
+  --background: #1e1e1e;
+  --box-shadow: 0 18px 34px rgba(0, 0, 0, 0.55);
+  --backdrop-opacity: 0.45;
+}
+
+.dark ion-modal::part(content) {
+  background: var(--ion-item-background);
+  color: var(--ion-text-color);
+  border: 1px solid rgba(var(--ion-color-primary-rgb), 0.25);
+}
+
+.dark ion-modal::part(backdrop) {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.dark ion-modal .modal-header {
+  border-bottom: 1px solid rgba(var(--ion-color-primary-rgb), 0.35);
+}
+
+.dark ion-modal ion-item {
+  border: 1px solid rgba(var(--ion-color-primary-rgb), 0.35);
+}
+
+.dark ion-modal .close-btn {
+  color: var(--ion-text-color);
+}

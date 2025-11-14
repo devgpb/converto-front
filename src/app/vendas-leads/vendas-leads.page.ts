@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./vendas-leads.page.scss'],
   standalone: false,
 })
-export class VendasLeadsPage implements OnInit {
+export class VendasLeadsPage {
   private fb = inject(FormBuilder);
   private clientesService = inject(ClientesService);
   private auth = inject(AuthService);
@@ -30,7 +30,7 @@ export class VendasLeadsPage implements OnInit {
   statusList: string[] = [];
   listaCampanhas: string[] = [];
 
-  ngOnInit(): void {
+  ionViewWillEnter(): void {
     this.listaCampanhas = this.clientesService.listaDeCampanhas;
     this.fetchFiltros();
   }

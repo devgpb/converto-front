@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { VendasService } from 'src/app/services/vendas/vendas.service';
 import { IDashboardVendas } from 'src/app/interfaces/IDashboardVendas';
 import {
@@ -57,7 +57,7 @@ type ModalKind = 'novos' | 'atendidos' | 'fechados' | 'eventos' | 'ligacoes' | n
   styleUrls: ['./vendas-dashboard.page.scss'],
   standalone: false,
 })
-export class VendasDashboardPage implements OnInit {
+export class VendasDashboardPage implements OnDestroy {
   data = signal<IDashboardVendas | null>(null);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
@@ -80,13 +80,29 @@ export class VendasDashboardPage implements OnInit {
   modalMeta = signal<any>(null);
   modalPage = signal<number>(1);
   readonly modalPerPage = 12;
+  extensionModalOpen = signal<boolean>(false);
+  private readonly extensionMarkerId = 'converto_ext_true';
+  private readonly extensionDismissKey = 'converto_ext_dismiss_until';
+  private readonly extensionDismissDays = 10;
+  readonly extensionInstallUrl =
+    'https://chromewebstore.google.com/detail/converto-crm/fddnccmdackeflbidapfcffaeamliigd?hl=pt-BR&utm_source=ext_sidebar';
+  private extensionCheckHandle: number | null = null;
+  private extensionCheckAttempts = 0;
+  private readonly extensionCheckMaxAttempts = 10;
+  private readonly extensionCheckInterval = 100;
 
   constructor(private api: VendasService) {}
 
-  ngOnInit(): void {}
+  ngOnDestroy(): void {
+    if (this.extensionCheckHandle !== null) {
+      window.clearTimeout(this.extensionCheckHandle);
+      this.extensionCheckHandle = null;
+    }
+  }
 
   ionViewWillEnter(): void {
     this.fetch();
+    this.scheduleExtensionCheck(0, true);
   }
 
   openModal(kind: Exclude<ModalKind, null>) {
@@ -98,6 +114,20 @@ export class VendasDashboardPage implements OnInit {
 
   closeModal() {
     this.modalOpen.set(false);
+  }
+
+  dismissExtensionReminder() {
+    this.extensionModalOpen.set(false);
+    if (this.extensionCheckHandle !== null) {
+      window.clearTimeout(this.extensionCheckHandle);
+      this.extensionCheckHandle = null;
+    }
+    this.storeExtensionDismissUntil(this.computeDismissUntilDate());
+  }
+
+  retryExtensionCheck() {
+    this.clearExtensionDismissal();
+    this.scheduleExtensionCheck(150, true);
   }
 
   nextPage() {
@@ -414,5 +444,85 @@ export class VendasDashboardPage implements OnInit {
     const day = String(d.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
   }
-}
 
+  private scheduleExtensionCheck(delay = 0, resetAttempts = false) {
+    if (typeof window === 'undefined') return;
+    if (resetAttempts) {
+      this.extensionCheckAttempts = 0;
+      this.extensionModalOpen.set(false);
+    }
+    if (this.shouldSkipExtensionCheck()) {
+      this.extensionModalOpen.set(false);
+      return;
+    }
+    if (this.extensionCheckHandle !== null) {
+      window.clearTimeout(this.extensionCheckHandle);
+    }
+    this.extensionCheckHandle = window.setTimeout(() => this.evaluateExtensionPresence(), delay);
+  }
+
+  private evaluateExtensionPresence() {
+    const markerPresent = typeof document !== 'undefined' && !!document.getElementById(this.extensionMarkerId);
+    if (markerPresent) {
+      this.extensionModalOpen.set(false);
+      this.extensionCheckHandle = null;
+      return;
+    }
+
+    this.extensionCheckAttempts += 1;
+    if (this.extensionCheckAttempts >= this.extensionCheckMaxAttempts) {
+      this.extensionModalOpen.set(true);
+      this.extensionCheckHandle = null;
+      return;
+    }
+
+    this.extensionCheckHandle = window.setTimeout(
+      () => this.evaluateExtensionPresence(),
+      this.extensionCheckInterval
+    );
+  }
+
+  private shouldSkipExtensionCheck(): boolean {
+    if (typeof window === 'undefined') return false;
+    try {
+      const stored = window.localStorage.getItem(this.extensionDismissKey);
+      if (!stored) return false;
+      const until = new Date(stored);
+      if (Number.isNaN(until.getTime())) {
+        this.clearExtensionDismissal();
+        return false;
+      }
+      if (until.getTime() > Date.now()) {
+        return true;
+      }
+      this.clearExtensionDismissal();
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  private storeExtensionDismissUntil(dateIso: string) {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.setItem(this.extensionDismissKey, dateIso);
+    } catch {
+      // ignore storage failures
+    }
+  }
+
+  private clearExtensionDismissal() {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.removeItem(this.extensionDismissKey);
+    } catch {
+      // ignore storage failures
+    }
+  }
+
+  private computeDismissUntilDate(): string {
+    const now = new Date();
+    now.setDate(now.getDate() + this.extensionDismissDays);
+    return now.toISOString();
+  }
+}
