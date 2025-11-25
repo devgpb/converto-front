@@ -1,0 +1,63 @@
+<ion-modal [isOpen]="isOpen" backdropDismiss="false" cssClass="extension-reminder-modal">
+  <ng-template>
+    <ion-content class="ion-padding extension-modal">
+      <div class="extension-modal__hero mb-2">
+        <ion-icon name="logo-whatsapp"></ion-icon>
+        <ion-icon name="logo-chrome"></ion-icon>
+      </div>
+      <ion-badge color="warning" class="extension-modal__badge">A extensão mais importante do Converto</ion-badge>
+      <h1>Instale a extensão do Converto</h1>
+      <p class="intro">Conecte seu CRM ao WhatsApp Web e destrave o fluxo mais poderoso do Converto.</p>
+      <p class="microcopy">A extensão é o coração do Converto: sem ela você perde velocidade, contexto e conversões.</p>
+
+      <ul class="extension-modal__benefits">
+        <li>
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          <div>
+            <h3>Integração total</h3>
+            <p>Sincronize contatos, status e follow-ups sem sair do WhatsApp Web.</p>
+          </div>
+        </li>
+        <li>
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <div>
+            <h3>Gestão em tempo real</h3>
+            <p>Atualize clientes direto na conversa e mantenha o time alinhado.</p>
+          </div>
+        </li>
+        <li>
+          <ion-icon name="rocket-outline"></ion-icon>
+          <div>
+            <h3>Produtividade máxima</h3>
+            <p>Centralize os atendimentos e transforme conversas em vendas.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="extension-modal__video">
+        <h2 class="text-center ">Veja como funciona!</h2>
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/rE3-ZgGG-_I?si=N-_z7AjOhXLCwlbE"
+            title="Como funciona a extensão do Converto"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="extension-modal__actions">
+        <ion-button expand="block" color="primary" [href]="installUrl" target="_blank" rel="noopener">
+          Baixar extensão do Converto
+        </ion-button>
+        <ion-button expand="block" fill="clear" color="primary" (click)="onRetry()">
+          Já instalei, verificar novamente
+        </ion-button>
+        <ion-button expand="block" fill="outline" color="medium" (click)="onDismiss()">
+          Continuar sem a extensão
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

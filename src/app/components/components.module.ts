@@ -10,11 +10,12 @@ import { CepBrDirective } from '../../shared/directives/cep-br.directive';
 import { DateFieldComponent } from './date-field/date-field.component';
 import { CardIlustratedComponent } from './card-ilustrated/card-ilustrated.component';
 import { HelpModalComponent } from './help-modal/help-modal.component';
+import { ExtensionReminderModalComponent } from './extension-reminder-modal/extension-reminder-modal.component';
 
 @NgModule({
-  declarations: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent, CardIlustratedComponent, HelpModalComponent],
+  declarations: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent, CardIlustratedComponent, HelpModalComponent, ExtensionReminderModalComponent],
   imports: [CommonModule, IonicModule],
-  exports: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent, CardIlustratedComponent, HelpModalComponent],
+  exports: [HeaderComponent, GearBackgroundComponent, TelefoneBrDirective, CpfBrDirective, CepBrDirective, DateFieldComponent, CardIlustratedComponent, HelpModalComponent, ExtensionReminderModalComponent],
 })
 export class ComponentsModule {}
 

@@ -194,55 +194,7 @@
       </ion-grid>
     }
 
-    <ion-modal [isOpen]="extensionModalOpen()" backdropDismiss="false" cssClass="extension-reminder-modal">
-      <ng-template>
-        <ion-content class="ion-padding extension-modal">
-          <div class="extension-modal__hero">
-            <ion-icon name="logo-whatsapp"></ion-icon>
-            <ion-icon name="logo-chrome"></ion-icon>
-          </div>
-          <h2>Instale a extensão do Converto</h2>
-          <p class="intro">
-            Para aproveitar todo o potencial do Converto, conecte seu CRM diretamente ao WhatsApp Web com a nossa extensão oficial.
-          </p>
-
-          <ul class="extension-modal__benefits">
-            <li>
-              <ion-icon name="logo-whatsapp"></ion-icon>
-              <div>
-                <h3>Integração total</h3>
-                <p>Sincronize contatos, status e follow-ups sem sair do WhatsApp Web.</p>
-              </div>
-            </li>
-            <li>
-              <ion-icon name="chatbubbles-outline"></ion-icon>
-              <div>
-                <h3>Gestão em tempo real</h3>
-                <p>Atualize clientes direto na conversa e mantenha o time alinhado.</p>
-              </div>
-            </li>
-            <li>
-              <ion-icon name="rocket-outline"></ion-icon>
-              <div>
-                <h3>Produtividade máxima</h3>
-                <p>Centralize os atendimentos e transforme conversas em vendas.</p>
-              </div>
-            </li>
-          </ul>
-
-          <ion-button expand="block" color="primary" [href]="extensionInstallUrl" target="_blank" rel="noopener">
-            Baixar extensão do Converto
-          </ion-button>
-          <ion-button expand="block" fill="clear" color="primary" (click)="retryExtensionCheck()">
-            Já instalei, verificar novamente
-          </ion-button>
-          <ion-button expand="block" fill="outline" color="medium" (click)="dismissExtensionReminder()">
-            Continuar sem a extensão
-          </ion-button>
-          
-        </ion-content>
-      </ng-template>
-    </ion-modal>
+    <app-extension-reminder-modal></app-extension-reminder-modal>
 
     <ion-modal [isOpen]="modalOpen()" (didDismiss)="closeModal()">
       <ng-template>

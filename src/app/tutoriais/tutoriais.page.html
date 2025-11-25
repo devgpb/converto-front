@@ -29,31 +29,41 @@
   </div>
 
   <div class="category-section" *ngFor="let category of tutorialCategories">
-    <div class="category-title">
-      <ion-icon name="albums-outline"></ion-icon>
-      <span>{{ category.title }}</span>
-    </div>
+    <button class="category-toggle" type="button" (click)="toggleCategory(category.title)">
+      <div class="category-title">
+        <ion-icon name="albums-outline"></ion-icon>
+        <span>{{ category.title }}</span>
+      </div>
+      <ion-icon name="chevron-down-outline" [class.rotated]="isExpanded(category.title)"></ion-icon>
+    </button>
 
-    <ion-grid class="cards-grid">
-      <ion-row>
-        <ion-col size="12" sizeMd="6" sizeLg="4" *ngFor="let v of category.videos">
-          <ion-card class="video-card" (click)="select(v)">
-            <div class="thumb">
-              <img [src]="getThumbnail(v.youtubeUrl)" alt="Thumbnail do vídeo" />
-              <div class="play-overlay">
-                <ion-icon name="play"></ion-icon>
+    <div
+      class="category-body"
+      [class.expanded]="isExpanded(category.title)"
+      [style.maxHeight]="isExpanded(category.title) ? '1200px' : '0px'"
+    >
+      <ion-grid class="cards-grid">
+        <ion-row>
+          <ion-col size="12" sizeMd="6" sizeLg="3" *ngFor="let v of category.videos">
+            <ion-card class="video-card" (click)="select(v)">
+              <div class="thumb">
+                <img [src]="getThumbnail(v.youtubeUrl)" alt="Thumbnail do video" />
+                <div class="play-overlay">
+                  <ion-icon name="play"></ion-icon>
+                </div>
               </div>
-            </div>
-            <ion-card-header>
-              <ion-card-title>
-                <ion-icon [name]="v.icon"></ion-icon>
-                {{ v.title }}
-              </ion-card-title>
-              <ion-card-subtitle>{{ v.description }}</ion-card-subtitle>
-            </ion-card-header>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon [name]="v.icon"></ion-icon>
+                  {{ v.title }}
+                </ion-card-title>
+                <ion-card-subtitle>{{ v.description }}</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
   </div>
 </ion-content>
+

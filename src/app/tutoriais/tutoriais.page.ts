@@ -20,11 +20,25 @@ interface TutorialCategory {
   standalone: false,
 })
 export class TutoriaisPage {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) {
+    this.expandedCategories = new Set(this.tutorialCategories.map((c) => c.title));
+  }
 
   private embedCache = new Map<string, SafeResourceUrl>(); // evita recriar iframes ao entrar em tela cheia
+  expandedCategories: Set<string>;
 
   tutorialCategories: TutorialCategory[] = [
+  {
+    title: 'Extensao do Converto',
+    videos: [
+      {
+        title: 'Extensao do Converto no WhatsApp Web',
+        description: 'Como instalar e usar a extensao oficial para conectar CRM e WhatsApp.',
+        icon: 'logo-chrome',
+        youtubeUrl: 'https://www.youtube.com/embed/rE3-ZgGG-_I?si=N-_z7AjOhXLCwlbE',
+      },
+    ],
+  },
   {
     title: 'Tutoriais do sistema',
     videos: [
@@ -101,6 +115,20 @@ export class TutoriaisPage {
 
   closeSelected(): void {
     this.selected = undefined;
+  }
+
+  toggleCategory(title: string): void {
+    if (this.expandedCategories.has(title)) {
+      this.expandedCategories.delete(title);
+    } else {
+      this.expandedCategories.add(title);
+    }
+    // trigger change detection by replacing the set reference
+    this.expandedCategories = new Set(this.expandedCategories);
+  }
+
+  isExpanded(title: string): boolean {
+    return this.expandedCategories.has(title);
   }
 
   getThumbnail(url: string): string {
